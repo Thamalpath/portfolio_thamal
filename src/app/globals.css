@@ -1,26 +1,159 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #02040a;
+  --foreground: #f8fafc;
+  --font-bebas: 'Bebas Neue', Impact, 'Arial Black', sans-serif;
+  --font-cinzel: 'Cinzel', serif;
+  --font-montserrat: 'Montserrat', sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-montserrat), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Typography Helpers */
+.font-bebas {
+  font-family: var(--font-bebas);
+}
+
+.font-cinzel {
+  font-family: var(--font-cinzel);
+}
+
+/* 
+  NATURAL WEATHERED CONCRETE & STONE TEXTURE (Matching Reference Image 1)
+  Full-height (100% 100%) organic matte concrete/stone stipple grain, subtle dark
+  hairline fractures, and smooth cyan-to-deep-sapphire gradient.
+*/
+.textured-hero-name {
+  font-family: var(--font-bebas);
+  background-image: url('/modern-hero-texture.jpg');
+  background-size: 100% 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.92))
+          drop-shadow(0 0 18px rgba(14, 165, 233, 0.22));
+}
+
+/* Character Dual Shadow (resolves Tailwind drop-shadow duplicate conflict) */
+.hero-character-shadow {
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 15px rgba(56, 189, 248, 0.18));
+}
+
+/* Initial Walking Entrance Animation (steps in from depth) */
+@keyframes walkingEntrance {
+  0% {
+    transform: translateY(50px) scale(0.88);
+    opacity: 0.15;
+    filter: brightness(0.65) blur(2px);
+  }
+  60% {
+    opacity: 1;
+    filter: brightness(1) blur(0px);
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+    filter: brightness(1) blur(0px);
+  }
+}
+
+.animate-walking-entrance {
+  animation: walkingEntrance 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Continuous Stylish Walking Kinematics (Swagger stride, dynamic bounce & sway) */
+@keyframes stylishWalk {
+  0% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-8px) rotate(-0.6deg) scale(1.009);
+  }
+  50% {
+    transform: translateY(-1px) rotate(0.3deg) scale(1.002);
+  }
+  75% {
+    transform: translateY(-9px) rotate(0.7deg) scale(1.011);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+}
+
+/* Floor Shadow Pulse synced with walking stride */
+@keyframes walkShadowPulse {
+  0%, 100% {
+    transform: scaleX(1) scaleY(1);
+    opacity: 0.85;
+  }
+  25%, 75% {
+    transform: scaleX(0.91) scaleY(0.86);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scaleX(0.97) scaleY(0.94);
+    opacity: 0.8;
+  }
+}
+
+.animate-stylish-walk {
+  animation: stylishWalk 3s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  transform-origin: bottom center;
+  will-change: transform;
+}
+
+.animate-walk-shadow {
+  animation: walkShadowPulse 3s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+/* Chevrons Staggered Glow in Electric Cyan */
+@keyframes chevronGlow {
+  0%, 100% {
+    opacity: 0.25;
+    color: #94a3b8;
+    text-shadow: none;
+  }
+  50% {
+    opacity: 1;
+    color: #38bdf8;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.9);
+  }
+}
+
+.animate-chevron-1 { animation: chevronGlow 3s ease-in-out infinite 0.0s; }
+.animate-chevron-2 { animation: chevronGlow 3s ease-in-out infinite 0.2s; }
+.animate-chevron-3 { animation: chevronGlow 3s ease-in-out infinite 0.4s; }
+.animate-chevron-4 { animation: chevronGlow 3s ease-in-out infinite 0.6s; }
+.animate-chevron-5 { animation: chevronGlow 3s ease-in-out infinite 0.8s; }
+
+/* Wet Ground Shimmer */
+@keyframes groundGleam {
+  0% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0.55;
+  }
+}
+
+.animate-ground-gleam {
+  animation: groundGleam 5s ease-in-out infinite;
 }
