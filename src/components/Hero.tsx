@@ -645,13 +645,46 @@ export function Hero() {
 
   const navItems = [
     { label: "HOME", href: "#home" },
-    { label: "JOURNEY", href: "#about" },
+    { label: "JOURNEY", href: "#journey" },
     { label: "SKILLS", href: "#skills" },
     { label: "EXPERIENCE", href: "#experience" },
     { label: "PROJECTS", href: "#projects" },
     { label: "CERTIFICATIONS", href: "#skills" },
     { label: "CONTACT", href: "#contact" },
   ];
+
+  const handleSmoothScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+    label?: string
+  ) => {
+    if (label) setActiveNav(label);
+    if (!href.startsWith("#")) return;
+    const target = document.querySelector<HTMLElement>(href);
+    if (!target) return;
+    e.preventDefault();
+
+    const startY = window.scrollY;
+    const targetY = target.getBoundingClientRect().top + startY;
+    const distance = targetY - startY;
+    const duration = 1050;
+    let startTime: number | null = null;
+
+    const easeInOutQuart = (t: number) =>
+      t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
+
+    const step = (timestamp: number) => {
+      if (startTime === null) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      window.scrollTo(0, startY + distance * easeInOutQuart(progress));
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    };
+
+    requestAnimationFrame(step);
+  };
 
   const isIgnited = introPhase !== "walking";
 
@@ -696,7 +729,7 @@ export function Hero() {
             <a
               key={item.label}
               href={item.href}
-              onClick={() => setActiveNav(item.label)}
+              onClick={(e) => handleSmoothScroll(e, item.href, item.label)}
               className="relative py-1 transition-colors hover:text-white group"
             >
               <span
@@ -819,12 +852,12 @@ export function Hero() {
           */}
           <div
             ref={characterRef}
-            className="relative z-20 flex flex-col items-center justify-end pointer-events-none will-change-transform animate-walking-entrance translate-y-2 sm:translate-y-3"
+            className="relative z-20 flex flex-col items-center justify-end pointer-events-none will-change-transform animate-walking-entrance -translate-y-3 sm:-translate-y-5"
           >
             {/* Walking Kinematics Container */}
             <div className="relative animate-stylish-walk flex flex-col items-center">
-              {/* Vertical Constraint Sizing: Enlarged heroic scale while preserving full head-to-toe visibility */}
-              <div className="relative z-10 h-[54vh] sm:h-[60vh] md:h-[65vh] lg:h-[71vh] max-h-185 min-h-80 aspect-489/1153 hero-character-shadow">
+              {/* Vertical Constraint Sizing: Enlarged heroic scale while preserving clear space above bottom HUD */}
+              <div className="relative z-10 h-[50vh] sm:h-[55vh] md:h-[60vh] lg:h-[65vh] max-h-170 min-h-75 aspect-489/1153 hero-character-shadow">
                 <Image
                   src="/hero-character-blue.png?v=13"
                   alt="Thamalpath in tailored suit walking forward"
@@ -927,10 +960,24 @@ export function Hero() {
           )}
         </button>
 
+        {/* Bottom Center: Minimal Text-Free Animated Scroll Down Indicator */}
+        <a
+          href="#journey"
+          onClick={(e) => handleSmoothScroll(e, "#journey", "JOURNEY")}
+          aria-label="Scroll down to Journey"
+          title="Explore Journey"
+          className="group inline-flex flex-col items-center justify-center gap-1 p-1.5 rounded-full transition-all cursor-pointer"
+        >
+          <span className="w-5 h-8 rounded-full border border-cyan-400/55 bg-black/55 backdrop-blur-xs flex items-start justify-center pt-1.5 group-hover:border-cyan-300 group-hover:shadow-[0_0_16px_rgba(56,189,248,0.55)] transition-all">
+            <span className="w-1 h-1.5 rounded-full bg-cyan-400 animate-bounce shadow-[0_0_6px_#38bdf8]" />
+          </span>
+        </a>
+
         {/* Bottom Right: Pagination Dots in Electric Cyan */}
         <div className="flex items-center gap-2">
           <a
             href="#home"
+            onClick={(e) => handleSmoothScroll(e, "#home", "HOME")}
             title="Home"
             className="h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_10px_#38bdf8] transition-transform hover:scale-125"
           />
@@ -938,6 +985,7 @@ export function Hero() {
             <a
               key={idx}
               href={item.href}
+              onClick={(e) => handleSmoothScroll(e, item.href, item.label)}
               title={item.label}
               className="h-2 w-2 rounded-full bg-zinc-600 hover:bg-zinc-300 transition-colors hover:scale-125"
             />
