@@ -253,7 +253,7 @@ export function Hero() {
       wobbleAmp: number;
     }
 
-    const emberCount = 36;
+    const emberCount = 18;
     const embers: Ember[] = Array.from({ length: emberCount }, () => ({
       x: Math.random() * width,
       y: height * 0.68 + Math.random() * (height * 0.28),
@@ -266,6 +266,94 @@ export function Hero() {
       wobbleSpeed: Math.random() * 0.03 + 0.015,
       wobbleAmp: Math.random() * 0.6 + 0.3,
     }));
+
+    // 3. Pre-render Organic Turbulent Fire-Tendril Sprites (for natural, non-geometric rising flames)
+    const createFlameTendrilSprite = (
+      rCore: number,
+      gCore: number,
+      bCore: number,
+      rOuter: number,
+      gOuter: number,
+      bOuter: number,
+      seed: number,
+    ) => {
+      const sz = 128;
+      const off = document.createElement("canvas");
+      off.width = sz;
+      off.height = sz;
+      const octx = off.getContext("2d");
+      if (!octx) return off;
+
+      const imgData = octx.createImageData(sz, sz);
+      const data = imgData.data;
+
+      for (let py = 0; py < sz; py++) {
+        const ny = (py / (sz - 1)) * 2.0 - 1.0; // -1 top, +1 bottom
+        for (let px = 0; px < sz; px++) {
+          const nx = (px / (sz - 1)) * 2.0 - 1.0;
+          // Teardrop distortion: narrower toward top, wider near base
+          const taperX = nx / (0.72 + (ny + 1.0) * 0.22);
+          const dist = Math.sqrt(taperX * taperX + ny * ny);
+          if (dist >= 1.0) continue;
+
+          // Organic S-curve & ridged fire tendril modulation
+          const angle = Math.atan2(ny, nx);
+          const turb =
+            Math.sin(nx * 5.2 + ny * 3.8 + seed) * 0.28 +
+            Math.cos(nx * 9.5 - ny * 7.2 + seed * 1.7) * 0.16 +
+            Math.sin(angle * 3.0 + dist * 4.5 + seed) * 0.14;
+          const ridge = Math.max(0, 1.0 - Math.abs(turb) * 1.45);
+          const falloff = Math.pow(1.0 - dist, 1.75) * (0.55 + 0.45 * ridge);
+
+          const idx = (py * sz + px) * 4;
+          const coreMix = Math.pow(falloff, 1.5);
+          data[idx] = Math.round(rOuter + (rCore - rOuter) * coreMix);
+          data[idx + 1] = Math.round(gOuter + (gCore - gOuter) * coreMix);
+          data[idx + 2] = Math.round(bOuter + (bCore - bOuter) * coreMix);
+          data[idx + 3] = Math.round(Math.min(255, falloff * 230));
+        }
+      }
+      octx.putImageData(imgData, 0, 0);
+      return off;
+    };
+
+    const flameSprites = [
+      // Deep Sapphire to Azure flame wisp
+      createFlameTendrilSprite(14, 165, 233, 30, 58, 138, 1.1),
+      // Electric Cyan to Royal Sapphire flame wisp
+      createFlameTendrilSprite(56, 189, 248, 2, 132, 199, 2.7),
+      // Hot Sky-Ice to Electric Cyan flame wisp
+      createFlameTendrilSprite(224, 242, 254, 14, 165, 233, 4.3),
+    ];
+
+    interface FlamePlume {
+      normX: number;
+      progress: number;
+      speed: number;
+      swayFreq: number;
+      swayAmp: number;
+      phase: number;
+      widthScale: number;
+      heightScale: number;
+      spriteIdx: number;
+    }
+
+    const plumeCount = 64;
+    const flamePlumes: FlamePlume[] = Array.from({ length: plumeCount }, (_, idx) => {
+      const u = (idx + 0.5) / plumeCount;
+      const centeredU = 0.05 + u * 0.9;
+      return {
+        normX: centeredU + (Math.random() - 0.5) * 0.025,
+        progress: Math.random(),
+        speed: Math.random() * 0.0055 + 0.0038,
+        swayFreq: Math.random() * 2.2 + 1.4,
+        swayAmp: Math.random() * 16 + 6,
+        phase: Math.random() * Math.PI * 2,
+        widthScale: Math.random() * 0.55 + 0.75,
+        heightScale: Math.random() * 0.6 + 0.8,
+        spriteIdx: idx % 3,
+      };
+    });
 
     let time = 0;
 
@@ -352,89 +440,158 @@ export function Hero() {
         ctx.fill();
       });
 
-      // 4. Photorealistic Multi-Layered Flame Tongues Licking Through the Mist
-      const segments = 55;
-      const step = width / segments;
+      // 4. Natural Volumetric Fire & Flame Tendrils Behind Name Text
+      // Uses soft-blurred standing convection flames (no sharp vector lines or fast sideways conveyor waves)
+      // combined with 64 rising organic turbulent fire-tendril sprites.
+      const segments = 160;
 
-      // Layer A: Deep Sapphire Flame Base
-      ctx.beginPath();
-      ctx.moveTo(0, horizonY + 22);
-      for (let i = 0; i <= segments; i++) {
-        const x = i * step;
-        const wave =
-          Math.sin(x * 0.006 + time * 2.2) * 28 +
-          Math.sin(x * 0.015 - time * 3.1) * 16 +
-          Math.cos(x * 0.03 + time * 4.2) * 10;
-        ctx.lineTo(x, horizonY - 14 - wave);
-      }
-      ctx.lineTo(width, horizonY + 22);
-      ctx.closePath();
+      // Standing-convection flame oscillation: flickers vertically in place with gentle organic drift
+      const naturalConvectionFlame = (
+        x: number,
+        freq: number,
+        flickerSpeed: number,
+        seed: number,
+      ) => {
+        const stand1 =
+          Math.sin(x * freq + seed) * Math.sin(time * flickerSpeed + seed) +
+          Math.cos(x * (freq * 1.65) - seed) *
+            Math.cos(time * (flickerSpeed * 0.82) + seed * 1.4);
+        const slowDrift = Math.sin(x * (freq * 2.4) - time * (flickerSpeed * 0.45) + seed * 2.1);
+        const ridge = Math.pow(Math.max(0, 1.0 - Math.abs(stand1 * 0.55)), 1.4);
+        return ridge * 0.65 + (slowDrift + 1.0) * 0.18;
+      };
 
-      const flameGradA = ctx.createLinearGradient(
-        0,
-        horizonY - 60,
-        0,
+      const drawSoftFlameBed = (
+        startX: number,
+        endX: number,
+        baseY: number,
+        baseHeight: number,
+        flameAmp: number,
+        waveFn: (x: number) => number,
+      ) => {
+        const span = endX - startX;
+        const segStep = span / segments;
+        const pts: { x: number; y: number }[] = [];
+
+        for (let i = 0; i <= segments; i++) {
+          const t = i / segments;
+          const x = startX + i * segStep;
+          const envelope = Math.sin(t * Math.PI) ** 1.5;
+          const centerBoost = 1.0 + 0.3 * Math.exp(-((t - 0.5) ** 2) / 0.09);
+          const wave = (baseHeight + waveFn(x) * flameAmp) * envelope * centerBoost;
+          pts.push({ x, y: baseY - wave });
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, baseY);
+        for (let i = 0; i < pts.length - 1; i++) {
+          const midX = (pts[i].x + pts[i + 1].x) * 0.5;
+          const midY = (pts[i].y + pts[i + 1].y) * 0.5;
+          ctx.quadraticCurveTo(pts[i].x, pts[i].y, midX, midY);
+        }
+        ctx.lineTo(pts[pts.length - 1].x, baseY);
+        ctx.closePath();
+      };
+
+      // A. Soft-Blurred Volumetric Horizon Flame Beds (blur eliminates artificial hard 1px vector outlines!)
+      ctx.save();
+      ctx.filter = "blur(11px)";
+
+      // Outer Deep Sapphire & Cobalt Volumetric Flame Bed
+      drawSoftFlameBed(
+        -20,
+        width + 20,
         horizonY + 22,
+        28,
+        74,
+        (x) => naturalConvectionFlame(x, 0.007, 2.1, 0.4),
       );
-      flameGradA.addColorStop(0, "rgba(14, 165, 233, 0)");
-      flameGradA.addColorStop(0.45, "rgba(2, 132, 199, 0.35)");
-      flameGradA.addColorStop(1, "rgba(30, 64, 175, 0.7)");
+      const flameGradA = ctx.createLinearGradient(0, horizonY - 110, 0, horizonY + 22);
+      flameGradA.addColorStop(0, "rgba(30, 64, 175, 0)");
+      flameGradA.addColorStop(0.4, "rgba(2, 132, 199, 0.34)");
+      flameGradA.addColorStop(0.78, "rgba(29, 78, 216, 0.62)");
+      flameGradA.addColorStop(1, "rgba(30, 58, 138, 0.85)");
       ctx.fillStyle = flameGradA;
       ctx.fill();
 
-      // Layer B: Vibrant Electric Cyan Flame Body
-      ctx.beginPath();
-      ctx.moveTo(0, horizonY + 16);
-      for (let i = 0; i <= segments; i++) {
-        const x = i * step;
-        const wave =
-          Math.sin(x * 0.009 - time * 2.8) * 34 +
-          Math.sin(x * 0.022 + time * 3.8) * 18 +
-          Math.cos(x * 0.045 - time * 5.1) * 11;
-        ctx.lineTo(x, horizonY - 10 - wave);
-      }
-      ctx.lineTo(width, horizonY + 16);
-      ctx.closePath();
-
-      const flameGradB = ctx.createLinearGradient(
-        0,
-        horizonY - 75,
-        0,
-        horizonY + 16,
+      // Middle Electric Cyan Volumetric Flame Body
+      drawSoftFlameBed(
+        -20,
+        width + 20,
+        horizonY + 15,
+        20,
+        58,
+        (x) => naturalConvectionFlame(x, 0.011, 2.8, 1.9),
       );
-      flameGradB.addColorStop(0, "rgba(224, 242, 254, 0)");
-      flameGradB.addColorStop(0.35, "rgba(56, 189, 248, 0.45)");
-      flameGradB.addColorStop(0.85, "rgba(14, 165, 233, 0.75)");
-      flameGradB.addColorStop(1, "rgba(3, 105, 161, 0.85)");
+      const flameGradB = ctx.createLinearGradient(0, horizonY - 88, 0, horizonY + 15);
+      flameGradB.addColorStop(0, "rgba(56, 189, 248, 0)");
+      flameGradB.addColorStop(0.38, "rgba(56, 189, 248, 0.45)");
+      flameGradB.addColorStop(0.8, "rgba(14, 165, 233, 0.75)");
+      flameGradB.addColorStop(1, "rgba(3, 105, 161, 0.88)");
       ctx.fillStyle = flameGradB;
       ctx.fill();
 
-      // Layer C: Radiant White-Hot Licking Flame Crests
-      ctx.beginPath();
-      ctx.moveTo(width * 0.12, horizonY + 10);
-      const coreSegments = 40;
-      const coreStep = (width * 0.76) / coreSegments;
-      for (let i = 0; i <= coreSegments; i++) {
-        const x = width * 0.12 + i * coreStep;
-        const wave =
-          Math.sin(x * 0.016 + time * 3.6) * 22 +
-          Math.sin(x * 0.038 - time * 4.9) * 14;
-        ctx.lineTo(x, horizonY - 4 - wave);
-      }
-      ctx.lineTo(width * 0.88, horizonY + 10);
-      ctx.closePath();
-
-      const flameGradC = ctx.createLinearGradient(
-        0,
-        horizonY - 45,
-        0,
+      // Inner Hot Sky-Cyan Horizon Core
+      ctx.filter = "blur(6px)";
+      drawSoftFlameBed(
+        width * 0.06,
+        width * 0.94,
         horizonY + 10,
+        10,
+        36,
+        (x) => naturalConvectionFlame(x, 0.016, 3.6, 3.5),
       );
-      flameGradC.addColorStop(0, "rgba(255, 255, 255, 0)");
-      flameGradC.addColorStop(0.35, "rgba(224, 242, 254, 0.55)");
+      const flameGradC = ctx.createLinearGradient(0, horizonY - 52, 0, horizonY + 10);
+      flameGradC.addColorStop(0, "rgba(224, 242, 254, 0)");
+      flameGradC.addColorStop(0.45, "rgba(125, 211, 252, 0.55)");
       flameGradC.addColorStop(1, "rgba(56, 189, 248, 0.85)");
       ctx.fillStyle = flameGradC;
       ctx.fill();
+      ctx.restore();
+
+      // B. 64 Rising & Curling Organic Turbulent Fire-Tendril Sprites Behind Name Text
+      for (let i = 0; i < flamePlumes.length; i++) {
+        const fp = flamePlumes[i];
+        fp.progress += fp.speed;
+        if (fp.progress >= 1.0) {
+          fp.progress = 0;
+          fp.phase = Math.random() * Math.PI * 2;
+        }
+
+        const p = fp.progress; // 0 at horizon base -> 1 at upper flame tip
+        const envX = Math.sin(fp.normX * Math.PI) ** 1.35;
+        const maxRise =
+          (height * 0.16 + (1.0 - Math.abs(fp.normX - 0.5) * 1.3) * (height * 0.08)) *
+          fp.heightScale *
+          envX;
+        const baseX = fp.normX * width + centerOffsetX * 0.35;
+        const sway =
+          Math.sin(time * fp.swayFreq + fp.phase + p * 4.2) * fp.swayAmp * Math.pow(p, 0.85);
+        const px = baseX + sway;
+        const py = horizonY + 16 - p * maxRise;
+
+        const sizeCurve = Math.sin(p * Math.PI) * (1.2 - p * 0.5);
+        const wSize = (92 * fp.widthScale * sizeCurve + 14) * envX;
+        const hSize = wSize * 1.65;
+        if (wSize <= 4) continue;
+
+        const alpha = Math.sin(p * Math.PI) * (1.0 - p * 0.35) * 0.42 * envX;
+        const sprite =
+          p < 0.32
+            ? flameSprites[2]
+            : p < 0.68
+              ? flameSprites[1]
+              : flameSprites[0];
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(px, py);
+        const curlAngle =
+          Math.cos(time * fp.swayFreq + fp.phase + p * 4.2) * 0.28 * p;
+        ctx.rotate(curlAngle);
+        ctx.drawImage(sprite, -wSize * 0.5, -hSize * 0.5, wSize, hSize);
+        ctx.restore();
+      }
 
       // 5. Rising Hot Fire Embers & Ash Sparks
       for (let i = 0; i < embers.length; i++) {
@@ -662,41 +819,42 @@ export function Hero() {
           */}
           <div
             ref={characterRef}
-            className="relative z-20 flex flex-col items-center justify-end pointer-events-none will-change-transform animate-walking-entrance"
+            className="relative z-20 flex flex-col items-center justify-end pointer-events-none will-change-transform animate-walking-entrance translate-y-2 sm:translate-y-3"
           >
             {/* Walking Kinematics Container */}
             <div className="relative animate-stylish-walk flex flex-col items-center">
-              {/* Vertical Constraint Sizing: Preserves full head-to-toe visibility without clipping */}
-              <div className="relative h-[49vh] sm:h-[54vh] md:h-[59vh] lg:h-[64vh] max-h-165 min-h-72.5 aspect-489/1153 hero-character-shadow">
+              {/* Vertical Constraint Sizing: Enlarged heroic scale while preserving full head-to-toe visibility */}
+              <div className="relative z-10 h-[54vh] sm:h-[60vh] md:h-[65vh] lg:h-[71vh] max-h-185 min-h-80 aspect-489/1153 hero-character-shadow">
                 <Image
-                  src="/hero-character-blue.png?v=3"
+                  src="/hero-character-blue.png?v=13"
                   alt="Thamalpath in tailored suit walking forward"
                   fill
                   priority
                   unoptimized
                   className="object-contain contrast-105 brightness-100"
-                  sizes="(max-height: 550px) 240px, (max-height: 750px) 290px, 360px"
+                  sizes="(max-height: 550px) 270px, (max-height: 750px) 330px, 410px"
                 />
               </div>
 
-              {/* Ground Contact Shadow (Rhythmically pulses with stride in deep black & sapphire) */}
+              {/* Ground Contact Shadow & Wet Puddle Ripple Under Shoes */}
+              <div className="absolute -bottom-2 w-[140%] h-7 bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.32)_0%,rgba(2,132,199,0.16)_45%,transparent_75%)] rounded-[100%] blur-[3px] animate-walk-shadow z-0" />
               <div className="absolute -bottom-1 w-[82%] h-4 sm:h-5 bg-black/95 rounded-[100%] blur-sm animate-walk-shadow z-10" />
-              <div className="absolute -bottom-1.5 w-[92%] h-4 bg-cyan-950/50 rounded-[100%] blur-md z-10" />
+              <div className="absolute -bottom-1.5 w-[96%] h-4 bg-cyan-950/70 rounded-[100%] blur-md z-10" />
 
               {/* Wet Floor Reflection (Pure cool sapphire & cyan reflection, zero red tint) */}
               <div
                 aria-hidden="true"
-                className="absolute top-[98%] w-full h-[40%] origin-top opacity-30 blur-[1px] scale-y-[-1] pointer-events-none select-none overflow-hidden"
+                className="absolute top-[98%] w-full h-[40%] origin-top opacity-35 blur-[1px] scale-y-[-1] pointer-events-none select-none overflow-hidden"
                 style={{
                   maskImage:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 40%, transparent 80%)",
+                    "linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 40%, transparent 80%)",
                   WebkitMaskImage:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 40%, transparent 80%)",
+                    "linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 40%, transparent 80%)",
                 }}
               >
                 <div className="relative w-full h-full">
                   <Image
-                    src="/hero-character-blue.png?v=3"
+                    src="/hero-character-blue.png?v=13"
                     alt="Floor reflection"
                     fill
                     unoptimized
@@ -710,12 +868,29 @@ export function Hero() {
         </div>
       </div>
 
-      {/* 5. Wet Reflective Asphalt Ground Plane (Lower Horizon) in Sapphire Blue */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/wet-floor-blue.jpg')] bg-cover bg-bottom opacity-25 mix-blend-screen" />
-        <div className="absolute inset-0 bg-linear-to-t from-[#010206] via-[#010206]/50 to-transparent" />
-        {/* Specular Cyan Horizon Light Spill */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4/5 h-12 bg-linear-to-t from-cyan-400/12 via-blue-600/6 to-transparent blur-2xl animate-ground-gleam" />
+      {/* 5. Wet Reflective Asphalt Ground Plane (Spans from Horizon Line 31vh to Bottom so Character Walks ON the Floor) */}
+      <div
+        className={`absolute bottom-0 left-0 right-0 h-[28vh] sm:h-[31vh] z-5 pointer-events-none overflow-hidden transition-opacity duration-1000 ${
+          isIgnited ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {/* Authentic Wet Asphalt & Puddle Reflections */}
+        <div
+          className="absolute inset-0 bg-[url('/wet-floor-blue.jpg?v=6')] bg-bottom bg-no-repeat opacity-95 mix-blend-screen"
+          style={{
+            backgroundSize: "100% 100%",
+            maskImage:
+              "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 12%, black 28%, black 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 12%, black 28%, black 100%)",
+          }}
+        />
+        {/* Crisp Horizon Reflection Line Where Smoke Meets Wet Floor */}
+        <div className="absolute top-[4%] left-1/2 -translate-x-1/2 w-[88%] h-0.5 bg-linear-to-r from-transparent via-cyan-400/45 to-transparent blur-[1px]" />
+        {/* Specular Cyan Puddle Light Spill Along Center Walking Path */}
+        <div className="absolute inset-x-0 bottom-0 h-full bg-[radial-gradient(ellipse_42%_65%_at_50%_35%,rgba(56,189,248,0.18)_0%,rgba(2,132,199,0.08)_50%,transparent_80%)] animate-ground-gleam" />
+        {/* Subtle Bottom Edge Vignette for HUD Readability */}
+        <div className="absolute inset-x-0 bottom-0 h-10 bg-linear-to-t from-[#010206]/80 to-transparent" />
       </div>
 
       {/* 6. Bottom HUD: Sound Toggle & Pagination Dots */}

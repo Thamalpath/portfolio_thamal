@@ -3,9 +3,9 @@
 :root {
   --background: #02040a;
   --foreground: #f8fafc;
-  --font-bebas: 'Bebas Neue', Impact, 'Arial Black', sans-serif;
-  --font-cinzel: 'Cinzel', serif;
-  --font-montserrat: 'Montserrat', sans-serif;
+  --font-bebas: "Bebas Neue", Impact, "Arial Black", sans-serif;
+  --font-cinzel: "Cinzel", serif;
+  --font-montserrat: "Montserrat", sans-serif;
 }
 
 @theme inline {
@@ -36,7 +36,7 @@ body {
 */
 .textured-hero-name {
   font-family: var(--font-bebas);
-  background-image: url('/modern-hero-texture.jpg');
+  background-image: url("/modern-hero-texture.jpg");
   background-size: 100% 100%;
   background-position: center center;
   background-repeat: no-repeat;
@@ -44,12 +44,13 @@ body {
   background-clip: text;
   color: transparent;
   filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.92))
-          drop-shadow(0 0 18px rgba(14, 165, 233, 0.22));
+    drop-shadow(0 0 18px rgba(14, 165, 233, 0.22));
 }
 
 /* Character Dual Shadow (resolves Tailwind drop-shadow duplicate conflict) */
 .hero-character-shadow {
-  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 15px rgba(56, 189, 248, 0.18));
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.98))
+    drop-shadow(0 0 15px rgba(56, 189, 248, 0.18));
 }
 
 /* Initial Walking Entrance Animation (steps in from depth) */
@@ -95,11 +96,13 @@ body {
 
 /* Floor Shadow Pulse synced with walking stride */
 @keyframes walkShadowPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scaleX(1) scaleY(1);
     opacity: 0.85;
   }
-  25%, 75% {
+  25%,
+  75% {
     transform: scaleX(0.91) scaleY(0.86);
     opacity: 0.6;
   }
@@ -123,7 +126,8 @@ body {
 
 /* Chevrons Staggered Glow in Electric Cyan */
 @keyframes chevronGlow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.25;
     color: #94a3b8;
     text-shadow: none;
@@ -135,11 +139,21 @@ body {
   }
 }
 
-.animate-chevron-1 { animation: chevronGlow 3s ease-in-out infinite 0.0s; }
-.animate-chevron-2 { animation: chevronGlow 3s ease-in-out infinite 0.2s; }
-.animate-chevron-3 { animation: chevronGlow 3s ease-in-out infinite 0.4s; }
-.animate-chevron-4 { animation: chevronGlow 3s ease-in-out infinite 0.6s; }
-.animate-chevron-5 { animation: chevronGlow 3s ease-in-out infinite 0.8s; }
+.animate-chevron-1 {
+  animation: chevronGlow 3s ease-in-out infinite 0s;
+}
+.animate-chevron-2 {
+  animation: chevronGlow 3s ease-in-out infinite 0.2s;
+}
+.animate-chevron-3 {
+  animation: chevronGlow 3s ease-in-out infinite 0.4s;
+}
+.animate-chevron-4 {
+  animation: chevronGlow 3s ease-in-out infinite 0.6s;
+}
+.animate-chevron-5 {
+  animation: chevronGlow 3s ease-in-out infinite 0.8s;
+}
 
 /* Wet Ground Shimmer */
 @keyframes groundGleam {
