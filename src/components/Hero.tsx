@@ -667,7 +667,7 @@ export function Hero() {
     const startY = window.scrollY;
     const targetY = target.getBoundingClientRect().top + startY;
     const distance = targetY - startY;
-    const duration = 1050;
+    const duration = 1450;
     let startTime: number | null = null;
 
     const easeInOutQuart = (t: number) =>

@@ -152,6 +152,11 @@ export function Journey() {
   const activeMilestone = MILESTONES[activeIndex];
   const sectionRef = useRef<HTMLElement | null>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const clockLayerRef = useRef<HTMLDivElement | null>(null);
+  const leftHeaderRef = useRef<HTMLDivElement | null>(null);
+  const rightHeaderRef = useRef<HTMLDivElement | null>(null);
+  const cardMotionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const footerRef = useRef<HTMLDivElement | null>(null);
 
   const [clockMetrics, setClockMetrics] = useState<{
     cx: number;
@@ -215,30 +220,111 @@ export function Journey() {
     };
   }, [measureClockTargets]);
 
-  // Trigger choreographed motion reveal when scrolling from Hero into Journey
+  // Modern 60fps scroll-scrubbed & spring-smoothed entrance animation for clock, headers, and staggered cards
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section || typeof IntersectionObserver === "undefined") {
-      setIsInView(true);
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsInView(true);
-            setTimeout(measureClockTargets, 350);
-            setTimeout(measureClockTargets, 950);
-          } else if (entry.boundingClientRect.top > 120) {
-            // Reset when scrolled back up to Hero so scrolling down again replays the motion
-            setIsInView(false);
-          }
-        });
-      },
-      { threshold: 0.14 }
-    );
-    io.observe(section);
-    return () => io.disconnect();
+    if (!section) return;
+
+    let rafId = 0;
+    let current = 0;
+    let target = 0;
+    let handsTriggered = false;
+
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+    const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
+
+    const applyVisuals = (p: number) => {
+      // 1. Clock Dial: unfolds, scales & rotates gracefully into place with scroll
+      const clockP = easeOutCubic(clamp01((p - 0.02) / 0.85));
+      if (clockLayerRef.current) {
+        clockLayerRef.current.style.opacity = (clockP * 0.95).toFixed(3);
+        clockLayerRef.current.style.transform = `translate3d(0, ${((1 - clockP) * -90).toFixed(1)}px, 0) scale(${(0.72 + clockP * 0.28).toFixed(4)}) rotate(${((1 - clockP) * -14).toFixed(2)}deg)`;
+      }
+
+      // 2. Left & Right Editorial Headers: glide inward smoothly
+      const headerP = easeOutCubic(clamp01((p - 0.05) / 0.72));
+      if (leftHeaderRef.current) {
+        leftHeaderRef.current.style.opacity = headerP.toFixed(3);
+        leftHeaderRef.current.style.transform = `translate3d(${((1 - headerP) * -68).toFixed(1)}px, ${((1 - headerP) * 36).toFixed(1)}px, 0)`;
+      }
+      if (rightHeaderRef.current) {
+        rightHeaderRef.current.style.opacity = headerP.toFixed(3);
+        rightHeaderRef.current.style.transform = `translate3d(${((1 - headerP) * 68).toFixed(1)}px, ${((1 - headerP) * 36).toFixed(1)}px, 0)`;
+      }
+
+      // 3. Staggered 2021–2026 Cards Wave Cascade (noticeable unhurried wave)
+      MILESTONES.forEach((_, idx) => {
+        const el = cardMotionRefs.current[idx];
+        if (!el) return;
+        const start = 0.08 + idx * 0.085;
+        const span = 0.48;
+        const cardP = easeOutCubic(clamp01((p - start) / span));
+        el.style.opacity = cardP.toFixed(3);
+        el.style.transform = `translate3d(0, ${((1 - cardP) * 110).toFixed(1)}px, 0) scale(${(0.86 + cardP * 0.14).toFixed(4)})`;
+      });
+
+      // 4. Bottom Footnotes
+      const footP = easeOutCubic(clamp01((p - 0.62) / 0.36));
+      if (footerRef.current) {
+        footerRef.current.style.opacity = footP.toFixed(3);
+        footerRef.current.style.transform = `translate3d(0, ${((1 - footP) * 30).toFixed(1)}px, 0)`;
+      }
+    };
+
+    const computeTarget = () => {
+      const rect = section.getBoundingClientRect();
+      const vh = Math.max(window.innerHeight, 1);
+      // Progress 0 when section top enters bottom of viewport -> 1 when section top reaches near top of viewport
+      target = clamp01((vh - rect.top) / (vh * 0.92));
+
+      // Trigger the clock hands sweep once the user has scrolled halfway into Journey
+      if (target >= 0.45 && !handsTriggered) {
+        handsTriggered = true;
+        setIsInView(true);
+        setTimeout(measureClockTargets, 600);
+        setTimeout(measureClockTargets, 1400);
+      } else if (target < 0.12 && handsTriggered) {
+        handsTriggered = false;
+        setIsInView(false);
+      }
+    };
+
+    const tick = () => {
+      const diff = target - current;
+      if (Math.abs(diff) < 0.001) {
+        current = target;
+        applyVisuals(current);
+        rafId = 0;
+        if (current >= 0.98) {
+          measureClockTargets();
+        }
+        return;
+      }
+      // Slower silky spring damping so the user clearly sees every element glide in
+      current += diff * 0.045;
+      applyVisuals(current);
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const onScroll = () => {
+      computeTarget();
+      if (!rafId) {
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+
+    computeTarget();
+    current = target;
+    applyVisuals(current);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [measureClockTargets]);
 
   const handlePrev = () => {
@@ -257,11 +343,13 @@ export function Journey() {
   const BASE_BEAM_LEN = 400;
   const CONE_HALF_WIDTH = Math.tan((8.5 * Math.PI) / 180) * BASE_BEAM_LEN;
   const targetNeedleDeg = activeTarget.angleDeg - 90;
-  const needleRotationDeg = isInView ? targetNeedleDeg : 68;
-  const beamScaleY = isInView ? activeTarget.beamLen / BASE_BEAM_LEN : 0.45;
+  const needleRotationDeg = isInView ? targetNeedleDeg : 82;
+  const beamScaleY = isInView ? activeTarget.beamLen / BASE_BEAM_LEN : 0.15;
   // Maintain an exact 60° angle between small hand and big hand
   const smallHandRotationDeg = needleRotationDeg - 60;
-  const handTransition = "transform 750ms cubic-bezier(0.22, 1, 0.36, 1)";
+  const handTransition = isInView
+    ? "transform 1150ms cubic-bezier(0.22, 1, 0.36, 1)"
+    : "transform 500ms ease-out";
 
   return (
     <section
@@ -277,12 +365,9 @@ export function Journey() {
 
       {/* 2. Giant Horological Clock Dial & Glowing Cyan Flashlight Beam SVG */}
       <div
+        ref={clockLayerRef}
         aria-hidden="true"
-        className={`hidden lg:block absolute inset-0 pointer-events-none overflow-hidden z-10 transition-all duration-1000 ease-out origin-top ${
-          isInView
-            ? "opacity-95 translate-y-0 scale-100"
-            : "opacity-0 -translate-y-8 scale-95"
-        }`}
+        className="hidden lg:block absolute inset-0 pointer-events-none overflow-hidden z-10 origin-top will-change-transform"
       >
         <svg className="w-full h-full">
           <defs>
@@ -656,13 +741,7 @@ export function Journey() {
       {/* 3. Top Header Row: Left Editorial Title & Right Interactive Prompt */}
       <div className="relative z-20 w-full max-w-7xl mx-auto flex items-start justify-between gap-6">
         {/* Top-Left Stacked Editorial Title */}
-        <div
-          className={`flex flex-col transition-all duration-800 ease-out delay-100 ${
-            isInView
-              ? "opacity-100 translate-x-0 translate-y-0"
-              : "opacity-0 -translate-x-8 translate-y-4"
-          }`}
-        >
+        <div ref={leftHeaderRef} className="flex flex-col will-change-transform">
           <h2 className="font-cinzel text-2xl sm:text-3xl md:text-4xl font-bold tracking-[0.18em] leading-[1.15] text-zinc-100 uppercase">
             A
             <br />
@@ -693,11 +772,8 @@ export function Journey() {
 
         {/* Top-Right Interactive Control Prompt */}
         <div
-          className={`flex flex-col items-end text-right gap-3 transition-all duration-800 ease-out delay-200 ${
-            isInView
-              ? "opacity-100 translate-x-0 translate-y-0"
-              : "opacity-0 translate-x-8 translate-y-4"
-          }`}
+          ref={rightHeaderRef}
+          className="flex flex-col items-end text-right gap-3 will-change-transform"
         >
           <p className="font-cinzel text-[10px] sm:text-xs tracking-[0.26em] text-zinc-400 uppercase leading-relaxed">
             SELECT A YEAR TO TRAVEL
@@ -749,14 +825,10 @@ export function Journey() {
               >
                 {/* Year Header & Modern Glowing Accent Bar (Uniform Distance Above Every Card) */}
                 <div
-                  style={{
-                    transitionDelay: isInView ? `${120 + idx * 95}ms` : "0ms",
+                  ref={(el) => {
+                    cardMotionRefs.current[idx] = el;
                   }}
-                  className={`w-full flex flex-col items-center transition-all duration-700 ease-out ${
-                    isInView
-                      ? "opacity-100 translate-y-0 scale-100"
-                      : "opacity-0 translate-y-12 scale-95"
-                  }`}
+                  className="w-full flex flex-col items-center will-change-transform"
                 >
                   <button
                     type="button"
@@ -853,9 +925,8 @@ export function Journey() {
 
       {/* 5. Bottom Row: Editorial Footnotes */}
       <div
-        className={`relative z-20 w-full max-w-7xl mx-auto flex items-end justify-between pt-2 transition-all duration-800 ease-out delay-700 ${
-          isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
+        ref={footerRef}
+        className="relative z-20 w-full max-w-7xl mx-auto flex items-end justify-between pt-2 will-change-transform"
       >
         <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.28em] text-zinc-500 uppercase leading-relaxed">
           SAME
