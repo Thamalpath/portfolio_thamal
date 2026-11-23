@@ -2,9 +2,8 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Hero } from "@/components/Hero";
-import { Journey } from "@/components/Journey";
+import { JourneySkillsDeck } from "@/components/JourneySkillsDeck";
 import { PageLoader } from "@/components/PageLoader";
-import { Skills } from "@/components/Skills";
 
 export function PortfolioShell() {
   const [showPortfolio, setShowPortfolio] = useState<boolean>(false);
@@ -38,6 +37,7 @@ export function PortfolioShell() {
       el.style.transform = `scale(${(1 - p * 0.055).toFixed(4)}) translate3d(0, ${(-p * 32).toFixed(1)}px, 0)`;
       el.style.opacity = (1 - p * 0.72).toFixed(3);
       el.style.filter = p > 0.01 ? `blur(${(p * 3.5).toFixed(2)}px)` : "none";
+      el.style.visibility = p >= 1 ? "hidden" : "visible";
     };
 
     const onScroll = () => {
@@ -86,8 +86,7 @@ export function PortfolioShell() {
               aria-hidden="true"
               className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-cyan-400/55 to-transparent shadow-[0_0_20px_rgba(56,189,248,0.5)] z-30"
             />
-            <Journey />
-            <Skills />
+            <JourneySkillsDeck />
           </div>
         </>
       )}
