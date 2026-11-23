@@ -2,11 +2,12 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Volume2, VolumeX } from "lucide-react";
+import { Menu, Volume2, VolumeX, X } from "lucide-react";
 
 export function Hero() {
   const [activeNav, setActiveNav] = useState("HOME");
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [introPhase, setIntroPhase] = useState<"walking" | "ignited" | "ready">(
     "walking",
   );
@@ -339,21 +340,24 @@ export function Hero() {
     }
 
     const plumeCount = 64;
-    const flamePlumes: FlamePlume[] = Array.from({ length: plumeCount }, (_, idx) => {
-      const u = (idx + 0.5) / plumeCount;
-      const centeredU = 0.05 + u * 0.9;
-      return {
-        normX: centeredU + (Math.random() - 0.5) * 0.025,
-        progress: Math.random(),
-        speed: Math.random() * 0.0055 + 0.0038,
-        swayFreq: Math.random() * 2.2 + 1.4,
-        swayAmp: Math.random() * 16 + 6,
-        phase: Math.random() * Math.PI * 2,
-        widthScale: Math.random() * 0.55 + 0.75,
-        heightScale: Math.random() * 0.6 + 0.8,
-        spriteIdx: idx % 3,
-      };
-    });
+    const flamePlumes: FlamePlume[] = Array.from(
+      { length: plumeCount },
+      (_, idx) => {
+        const u = (idx + 0.5) / plumeCount;
+        const centeredU = 0.05 + u * 0.9;
+        return {
+          normX: centeredU + (Math.random() - 0.5) * 0.025,
+          progress: Math.random(),
+          speed: Math.random() * 0.0055 + 0.0038,
+          swayFreq: Math.random() * 2.2 + 1.4,
+          swayAmp: Math.random() * 16 + 6,
+          phase: Math.random() * Math.PI * 2,
+          widthScale: Math.random() * 0.55 + 0.75,
+          heightScale: Math.random() * 0.6 + 0.8,
+          spriteIdx: idx % 3,
+        };
+      },
+    );
 
     let time = 0;
 
@@ -456,7 +460,9 @@ export function Hero() {
           Math.sin(x * freq + seed) * Math.sin(time * flickerSpeed + seed) +
           Math.cos(x * (freq * 1.65) - seed) *
             Math.cos(time * (flickerSpeed * 0.82) + seed * 1.4);
-        const slowDrift = Math.sin(x * (freq * 2.4) - time * (flickerSpeed * 0.45) + seed * 2.1);
+        const slowDrift = Math.sin(
+          x * (freq * 2.4) - time * (flickerSpeed * 0.45) + seed * 2.1,
+        );
         const ridge = Math.pow(Math.max(0, 1.0 - Math.abs(stand1 * 0.55)), 1.4);
         return ridge * 0.65 + (slowDrift + 1.0) * 0.18;
       };
@@ -478,7 +484,8 @@ export function Hero() {
           const x = startX + i * segStep;
           const envelope = Math.sin(t * Math.PI) ** 1.5;
           const centerBoost = 1.0 + 0.3 * Math.exp(-((t - 0.5) ** 2) / 0.09);
-          const wave = (baseHeight + waveFn(x) * flameAmp) * envelope * centerBoost;
+          const wave =
+            (baseHeight + waveFn(x) * flameAmp) * envelope * centerBoost;
           pts.push({ x, y: baseY - wave });
         }
 
@@ -498,15 +505,15 @@ export function Hero() {
       ctx.filter = "blur(11px)";
 
       // Outer Deep Sapphire & Cobalt Volumetric Flame Bed
-      drawSoftFlameBed(
-        -20,
-        width + 20,
-        horizonY + 22,
-        28,
-        74,
-        (x) => naturalConvectionFlame(x, 0.007, 2.1, 0.4),
+      drawSoftFlameBed(-20, width + 20, horizonY + 22, 28, 74, (x) =>
+        naturalConvectionFlame(x, 0.007, 2.1, 0.4),
       );
-      const flameGradA = ctx.createLinearGradient(0, horizonY - 110, 0, horizonY + 22);
+      const flameGradA = ctx.createLinearGradient(
+        0,
+        horizonY - 110,
+        0,
+        horizonY + 22,
+      );
       flameGradA.addColorStop(0, "rgba(30, 64, 175, 0)");
       flameGradA.addColorStop(0.4, "rgba(2, 132, 199, 0.34)");
       flameGradA.addColorStop(0.78, "rgba(29, 78, 216, 0.62)");
@@ -515,15 +522,15 @@ export function Hero() {
       ctx.fill();
 
       // Middle Electric Cyan Volumetric Flame Body
-      drawSoftFlameBed(
-        -20,
-        width + 20,
-        horizonY + 15,
-        20,
-        58,
-        (x) => naturalConvectionFlame(x, 0.011, 2.8, 1.9),
+      drawSoftFlameBed(-20, width + 20, horizonY + 15, 20, 58, (x) =>
+        naturalConvectionFlame(x, 0.011, 2.8, 1.9),
       );
-      const flameGradB = ctx.createLinearGradient(0, horizonY - 88, 0, horizonY + 15);
+      const flameGradB = ctx.createLinearGradient(
+        0,
+        horizonY - 88,
+        0,
+        horizonY + 15,
+      );
       flameGradB.addColorStop(0, "rgba(56, 189, 248, 0)");
       flameGradB.addColorStop(0.38, "rgba(56, 189, 248, 0.45)");
       flameGradB.addColorStop(0.8, "rgba(14, 165, 233, 0.75)");
@@ -533,15 +540,15 @@ export function Hero() {
 
       // Inner Hot Sky-Cyan Horizon Core
       ctx.filter = "blur(6px)";
-      drawSoftFlameBed(
-        width * 0.06,
-        width * 0.94,
-        horizonY + 10,
-        10,
-        36,
-        (x) => naturalConvectionFlame(x, 0.016, 3.6, 3.5),
+      drawSoftFlameBed(width * 0.06, width * 0.94, horizonY + 10, 10, 36, (x) =>
+        naturalConvectionFlame(x, 0.016, 3.6, 3.5),
       );
-      const flameGradC = ctx.createLinearGradient(0, horizonY - 52, 0, horizonY + 10);
+      const flameGradC = ctx.createLinearGradient(
+        0,
+        horizonY - 52,
+        0,
+        horizonY + 10,
+      );
       flameGradC.addColorStop(0, "rgba(224, 242, 254, 0)");
       flameGradC.addColorStop(0.45, "rgba(125, 211, 252, 0.55)");
       flameGradC.addColorStop(1, "rgba(56, 189, 248, 0.85)");
@@ -561,12 +568,15 @@ export function Hero() {
         const p = fp.progress; // 0 at horizon base -> 1 at upper flame tip
         const envX = Math.sin(fp.normX * Math.PI) ** 1.35;
         const maxRise =
-          (height * 0.16 + (1.0 - Math.abs(fp.normX - 0.5) * 1.3) * (height * 0.08)) *
+          (height * 0.16 +
+            (1.0 - Math.abs(fp.normX - 0.5) * 1.3) * (height * 0.08)) *
           fp.heightScale *
           envX;
         const baseX = fp.normX * width + centerOffsetX * 0.35;
         const sway =
-          Math.sin(time * fp.swayFreq + fp.phase + p * 4.2) * fp.swayAmp * Math.pow(p, 0.85);
+          Math.sin(time * fp.swayFreq + fp.phase + p * 4.2) *
+          fp.swayAmp *
+          Math.pow(p, 0.85);
         const px = baseX + sway;
         const py = horizonY + 16 - p * maxRise;
 
@@ -656,7 +666,7 @@ export function Hero() {
   const handleSmoothScroll = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string,
-    label?: string
+    label?: string,
   ) => {
     if (label) setActiveNav(label);
     if (!href.startsWith("#")) return;
@@ -748,14 +758,54 @@ export function Hero() {
           ))}
         </nav>
 
-        {/* Top Right Status Indicators */}
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
-          </span>
-          <span className="h-2 w-2 rounded-full bg-zinc-600" />
+        {/* Top Right Status Indicators & Mobile Menu Toggle */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
+            </span>
+            <span className="h-2 w-2 rounded-full bg-zinc-600 hidden sm:inline-block" />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-1.5 rounded-sm border border-cyan-900/70 bg-black/70 text-zinc-300 hover:text-cyan-300 hover:border-cyan-400/80 transition cursor-pointer"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-4 h-4 text-cyan-400" />
+            ) : (
+              <Menu className="w-4 h-4" />
+            )}
+          </button>
         </div>
+
+        {/* Mobile Navigation Dropdown Overlay */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden absolute top-full inset-x-4 sm:inset-x-8 mt-2 p-3.5 rounded-xl bg-[#030918]/95 backdrop-blur-2xl border border-cyan-500/30 shadow-[0_16px_40px_rgba(0,0,0,0.95),0_0_25px_rgba(6,182,212,0.2)] z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+            <nav className="flex flex-col gap-1.5">
+              {navItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={(e) => {
+                    setMobileMenuOpen(false);
+                    handleSmoothScroll(e, item.href, item.label);
+                  }}
+                  className={`px-3 py-2 rounded-lg text-xs font-bold tracking-[0.2em] font-cinzel transition-all ${
+                    activeNav === item.label
+                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
+                      : "text-zinc-300 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* 3. Left and Right Vertical Chevrons (▶ ▶ ▶ ▶ ▶) in Electric Cyan */}
@@ -793,10 +843,10 @@ export function Hero() {
             isIgnited ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
           }`}
         >
-          <p className="inline-flex items-center justify-center text-xs sm:text-sm md:text-base lg:text-lg xl:text-[20px] font-cinzel font-semibold tracking-[0.32em] sm:tracking-[0.38em] text-zinc-100 uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+          <p className="inline-flex items-center justify-center text-[10px] xs:text-xs sm:text-sm md:text-base lg:text-lg xl:text-[20px] font-cinzel font-semibold tracking-[0.24em] sm:tracking-[0.38em] text-zinc-100 uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
             <span
               aria-hidden="true"
-              className="inline-flex items-center gap-1.5 sm:gap-2 mr-3 sm:mr-5"
+              className="inline-flex items-center gap-1 sm:gap-2 mr-2 sm:mr-5"
             >
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-zinc-200 shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-zinc-200 shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
@@ -811,7 +861,7 @@ export function Hero() {
             </span>
             <span
               aria-hidden="true"
-              className="inline-flex items-center gap-1.5 sm:gap-2 ml-3 sm:ml-5"
+              className="inline-flex items-center gap-1 sm:gap-2 ml-2 sm:ml-5"
             >
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-zinc-200 shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-zinc-200 shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
@@ -824,7 +874,7 @@ export function Hero() {
         <div className="relative w-full flex items-center justify-center flex-1 min-h-0 max-h-[82vh] px-1 sm:px-3">
           {/* 
             A. STATIC SMOOTH FADE GRADIENT TEXTURED NAME: "THAMALPATH"
-            Towering blockbuster height (scale-y-[1.5]) and expansive width matching background colors
+            Responsive scaling without horizontal cutoff on mobile screens
           */}
           <div
             ref={titleRef}
@@ -834,7 +884,7 @@ export function Hero() {
                 : "opacity-0 scale-95 blur-sm"
             }`}
           >
-            <h1 className="textured-hero-name text-[21.5vw] sm:text-[21vw] md:text-[20vw] lg:text-[19.5vw] xl:text-[19vw] font-black uppercase tracking-[-0.035em] leading-none text-center transform scale-y-[1.5] origin-center whitespace-nowrap">
+            <h1 className="textured-hero-name text-[16vw] xs:text-[18vw] sm:text-[19.5vw] md:text-[20vw] lg:text-[19.5vw] xl:text-[19vw] font-black uppercase tracking-[-0.035em] leading-none text-center transform scale-y-[1.5] origin-center whitespace-nowrap select-none max-w-full">
               THAMALPATH
             </h1>
           </div>
@@ -848,7 +898,7 @@ export function Hero() {
 
           {/* 
             B. FOREGROUND ANIMATED PERSON (Stylish Suit Swagger)
-            Prominent heroic presence, 100% visible from top of hair to shoes
+            Prominent heroic presence, responsive height for mobile & tablet
           */}
           <div
             ref={characterRef}
@@ -857,9 +907,9 @@ export function Hero() {
             {/* Walking Kinematics Container */}
             <div className="relative animate-stylish-walk flex flex-col items-center">
               {/* Vertical Constraint Sizing: Enlarged heroic scale while preserving clear space above bottom HUD */}
-              <div className="relative z-10 h-[50vh] sm:h-[55vh] md:h-[60vh] lg:h-[65vh] max-h-170 min-h-75 aspect-489/1153 hero-character-shadow">
+              <div className="relative z-10 h-[44vh] sm:h-[50vh] md:h-[58vh] lg:h-[65vh] max-h-170 min-h-60 sm:min-h-75 aspect-1312/3214 hero-character-shadow">
                 <Image
-                  src="/hero-character-blue.png?v=13"
+                  src="/hero-character-blue.png"
                   alt="Thamalpath in tailored suit walking forward"
                   fill
                   priority
@@ -887,7 +937,7 @@ export function Hero() {
               >
                 <div className="relative w-full h-full">
                   <Image
-                    src="/hero-character-blue.png?v=13"
+                    src="/hero-character-blue.png"
                     alt="Floor reflection"
                     fill
                     unoptimized
@@ -928,7 +978,7 @@ export function Hero() {
 
       {/* 6. Bottom HUD: Sound Toggle & Pagination Dots */}
       <footer
-        className={`relative z-30 w-full pb-4 sm:pb-6 px-4 sm:px-8 md:px-12 flex items-center justify-between text-xs tracking-wider shrink-0 transition-all duration-700 delay-500 ${
+        className={`relative z-30 w-full pb-3 sm:pb-6 px-3 sm:px-8 md:px-12 flex items-center justify-between text-xs tracking-wider shrink-0 transition-all duration-700 delay-500 ${
           isIgnited ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
         }`}
       >
@@ -941,18 +991,18 @@ export function Hero() {
               ? "Mute ambient audio"
               : "Enable cinematic ambient audio"
           }
-          className="group inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-sm border border-zinc-700/70 bg-black/60 backdrop-blur-sm text-zinc-300 hover:border-cyan-400/80 hover:text-white transition-all shadow-[0_4px_20px_rgba(0,0,0,0.8)] cursor-pointer"
+          className="group inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-sm border border-zinc-700/70 bg-black/60 backdrop-blur-sm text-zinc-300 hover:border-cyan-400/80 hover:text-white transition-all shadow-[0_4px_20px_rgba(0,0,0,0.8)] cursor-pointer"
         >
           {soundEnabled ? (
-            <Volume2 className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+            <Volume2 className="h-3 sm:h-3.5 w-3 sm:w-3.5 text-cyan-400 animate-pulse" />
           ) : (
-            <VolumeX className="h-3.5 w-3.5 text-zinc-500 group-hover:text-cyan-400" />
+            <VolumeX className="h-3 sm:h-3.5 w-3 sm:w-3.5 text-zinc-500 group-hover:text-cyan-400" />
           )}
-          <span className="font-mono text-[10px] sm:text-[11px] font-bold tracking-[0.2em]">
+          <span className="font-mono text-[9px] sm:text-[11px] font-bold tracking-[0.16em] sm:tracking-[0.2em]">
             {soundEnabled ? "SOUND ON" : "SOUND OFF"}
           </span>
           {soundEnabled && (
-            <span className="flex items-center gap-0.5 ml-1">
+            <span className="flex items-center gap-0.5 ml-0.5 sm:ml-1">
               <span className="h-2 w-0.5 bg-cyan-400 animate-[bounce_1s_infinite_100ms]" />
               <span className="h-3 w-0.5 bg-sky-300 animate-[bounce_1s_infinite_300ms]" />
               <span className="h-1.5 w-0.5 bg-cyan-400 animate-[bounce_1s_infinite_200ms]" />
@@ -966,20 +1016,20 @@ export function Hero() {
           onClick={(e) => handleSmoothScroll(e, "#journey", "JOURNEY")}
           aria-label="Scroll down to Journey"
           title="Explore Journey"
-          className="group inline-flex flex-col items-center justify-center gap-1 p-1.5 rounded-full transition-all cursor-pointer"
+          className="group inline-flex flex-col items-center justify-center gap-1 p-1 rounded-full transition-all cursor-pointer"
         >
-          <span className="w-5 h-8 rounded-full border border-cyan-400/55 bg-black/55 backdrop-blur-xs flex items-start justify-center pt-1.5 group-hover:border-cyan-300 group-hover:shadow-[0_0_16px_rgba(56,189,248,0.55)] transition-all">
-            <span className="w-1 h-1.5 rounded-full bg-cyan-400 animate-bounce shadow-[0_0_6px_#38bdf8]" />
+          <span className="w-4.5 sm:w-5 h-7 sm:h-8 rounded-full border border-cyan-400/55 bg-black/55 backdrop-blur-xs flex items-start justify-center pt-1 sm:pt-1.5 group-hover:border-cyan-300 group-hover:shadow-[0_0_16px_rgba(56,189,248,0.55)] transition-all">
+            <span className="w-1 h-1 sm:h-1.5 rounded-full bg-cyan-400 animate-bounce shadow-[0_0_6px_#38bdf8]" />
           </span>
         </a>
 
         {/* Bottom Right: Pagination Dots in Electric Cyan */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <a
             href="#home"
             onClick={(e) => handleSmoothScroll(e, "#home", "HOME")}
             title="Home"
-            className="h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_10px_#38bdf8] transition-transform hover:scale-125"
+            className="h-2 sm:h-2.5 w-2 sm:w-2.5 rounded-full bg-cyan-400 shadow-[0_0_10px_#38bdf8] transition-transform hover:scale-125"
           />
           {navItems.slice(1).map((item, idx) => (
             <a
@@ -987,7 +1037,7 @@ export function Hero() {
               href={item.href}
               onClick={(e) => handleSmoothScroll(e, item.href, item.label)}
               title={item.label}
-              className="h-2 w-2 rounded-full bg-zinc-600 hover:bg-zinc-300 transition-colors hover:scale-125"
+              className="h-1.5 sm:h-2 w-1.5 sm:w-2 rounded-full bg-zinc-600 hover:bg-zinc-300 transition-colors hover:scale-125"
             />
           ))}
         </div>
