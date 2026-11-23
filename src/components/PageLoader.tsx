@@ -10,6 +10,22 @@ const PRELOAD_ASSETS = [
 
 const BRAND_LETTERS = "THAMALPATH".split("");
 
+const TICK_MARKS = Array.from({ length: 36 }, (_, idx) => {
+  const rad = (idx * 10 * Math.PI) / 180;
+  const isMajor = idx % 3 === 0;
+  const r1 = isMajor ? 81 : 84;
+  const r2 = 88;
+  return {
+    key: idx,
+    x1: Number((100 + Math.cos(rad) * r1).toFixed(2)),
+    y1: Number((100 + Math.sin(rad) * r1).toFixed(2)),
+    x2: Number((100 + Math.cos(rad) * r2).toFixed(2)),
+    y2: Number((100 + Math.sin(rad) * r2).toFixed(2)),
+    stroke: isMajor ? "rgba(125, 211, 252, 0.55)" : "rgba(56, 189, 248, 0.22)",
+    strokeWidth: isMajor ? "1.3" : "0.7",
+  };
+});
+
 function getLoadingStage(progress: number): string {
   if (progress < 40) return "PREPARING EXPERIENCE";
   if (progress < 85) return "LOADING ASSETS";
@@ -183,10 +199,12 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
   // SVG Gyroscopic Progress Ring Math
   const radius = 56;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference * (1 - progress / 100);
+  const strokeDashoffset = Number(
+    (circumference * (1 - progress / 100)).toFixed(2),
+  );
   const angleRad = ((progress / 100) * 360 - 90) * (Math.PI / 180);
-  const sparkX = 100 + Math.cos(angleRad) * radius;
-  const sparkY = 100 + Math.sin(angleRad) * radius;
+  const sparkX = Number((100 + Math.cos(angleRad) * radius).toFixed(2));
+  const sparkY = Number((100 + Math.sin(angleRad) * radius).toFixed(2));
   const isSplitting = phase === "splitting";
 
   return (
@@ -318,27 +336,17 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
                   stroke="rgba(56, 189, 248, 0.16)"
                   strokeWidth="1"
                 />
-                {Array.from({ length: 36 }, (_, idx) => {
-                  const rad = (idx * 10 * Math.PI) / 180;
-                  const isMajor = idx % 3 === 0;
-                  const r1 = isMajor ? 81 : 84;
-                  const r2 = 88;
-                  return (
-                    <line
-                      key={idx}
-                      x1={100 + Math.cos(rad) * r1}
-                      y1={100 + Math.sin(rad) * r1}
-                      x2={100 + Math.cos(rad) * r2}
-                      y2={100 + Math.sin(rad) * r2}
-                      stroke={
-                        isMajor
-                          ? "rgba(125, 211, 252, 0.55)"
-                          : "rgba(56, 189, 248, 0.22)"
-                      }
-                      strokeWidth={isMajor ? "1.3" : "0.7"}
-                    />
-                  );
-                })}
+                {TICK_MARKS.map((tick) => (
+                  <line
+                    key={tick.key}
+                    x1={tick.x1}
+                    y1={tick.y1}
+                    x2={tick.x2}
+                    y2={tick.y2}
+                    stroke={tick.stroke}
+                    strokeWidth={tick.strokeWidth}
+                  />
+                ))}
               </g>
 
               {/* Counter-Rotating Segmented Gyro Ring */}
