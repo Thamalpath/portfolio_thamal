@@ -121,7 +121,7 @@ function MilestoneVisual({
   isActive: boolean;
 }) {
   return (
-    <div className="relative w-full h-28 sm:h-32 overflow-hidden rounded-t-lg bg-[#040914] border-b border-cyan-500/20">
+    <div className="relative w-full h-40 sm:h-36 md:h-32 lg:h-28 xl:h-32 overflow-hidden rounded-t-lg bg-[#040914] border-b border-cyan-500/20">
       <Image
         src={image}
         alt={`${year} - ${chapter}`}
@@ -355,7 +355,7 @@ export function Journey() {
     <section
       ref={sectionRef}
       id="journey"
-      className="relative w-full overflow-hidden bg-[#010206] text-white pt-14 sm:pt-18 pb-8 sm:pb-10 px-4 sm:px-8 md:px-12 flex flex-col border-t border-cyan-950/50 select-none"
+      className="relative w-full overflow-hidden bg-[#010206] text-white pt-10 sm:pt-14 pb-14 sm:pb-20 px-4 sm:px-8 md:px-12 flex flex-col border-t border-cyan-950/50 select-none"
     >
       {/* 1. Atmospheric Background Glow (Synced with Hero Cyan/Sapphire Palette) */}
       <div
@@ -498,10 +498,10 @@ export function Journey() {
             return (
               <line
                 key={`spoke-${idx}`}
-                x1={cx + Math.cos(angle) * 48}
-                y1={cy + Math.sin(angle) * 48}
-                x2={cx + Math.cos(angle) * 236}
-                y2={cy + Math.sin(angle) * 236}
+                x1={Number((cx + Math.cos(angle) * 48).toFixed(2))}
+                y1={Number((cy + Math.sin(angle) * 48).toFixed(2))}
+                x2={Number((cx + Math.cos(angle) * 236).toFixed(2))}
+                y2={Number((cy + Math.sin(angle) * 236).toFixed(2))}
                 stroke="rgba(56, 189, 248, 0.1)"
                 strokeWidth="0.9"
               />
@@ -515,15 +515,15 @@ export function Journey() {
             const isMajor = idx % 5 === 0;
             const r1 = isMajor ? 279 : 286;
             const r2 = 302;
-            const pipX = cx + Math.cos(angle) * 272;
-            const pipY = cy + Math.sin(angle) * 272;
+            const pipX = Number((cx + Math.cos(angle) * 272).toFixed(2));
+            const pipY = Number((cy + Math.sin(angle) * 272).toFixed(2));
             return (
               <g key={`tick-${idx}`}>
                 <line
-                  x1={cx + Math.cos(angle) * r1}
-                  y1={cy + Math.sin(angle) * r1}
-                  x2={cx + Math.cos(angle) * r2}
-                  y2={cy + Math.sin(angle) * r2}
+                  x1={Number((cx + Math.cos(angle) * r1).toFixed(2))}
+                  y1={Number((cy + Math.sin(angle) * r1).toFixed(2))}
+                  x2={Number((cx + Math.cos(angle) * r2).toFixed(2))}
+                  y2={Number((cy + Math.sin(angle) * r2).toFixed(2))}
                   stroke={
                     isMajor
                       ? "rgba(186, 230, 253, 0.72)"
@@ -555,8 +555,8 @@ export function Journey() {
           ].map(({ numeral, deg }) => {
             const rad = (deg * Math.PI) / 180;
             const rNum = 260;
-            const nx = cx + Math.cos(rad) * rNum;
-            const ny = cy + Math.sin(rad) * rNum;
+            const nx = Number((cx + Math.cos(rad) * rNum).toFixed(2));
+            const ny = Number((cy + Math.sin(rad) * rNum).toFixed(2));
             const rot = deg - 90;
             return (
               <text
@@ -739,9 +739,12 @@ export function Journey() {
       </div>
 
       {/* 3. Top Header Row: Left Editorial Title & Right Interactive Prompt */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto flex items-start justify-between gap-6">
+      <div className="relative z-20 w-full max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
         {/* Top-Left Stacked Editorial Title */}
-        <div ref={leftHeaderRef} className="flex flex-col will-change-transform">
+        <div
+          ref={leftHeaderRef}
+          className="flex flex-col will-change-transform"
+        >
           <h2 className="font-cinzel text-2xl sm:text-3xl md:text-4xl font-bold tracking-[0.18em] leading-[1.15] text-zinc-100 uppercase">
             A
             <br />
@@ -754,7 +757,7 @@ export function Journey() {
             </span>
           </h2>
 
-          <div className="mt-5 pl-0.5 border-l border-cyan-500/40 flex flex-col gap-1.5 text-[9px] sm:text-[10px] font-mono tracking-[0.28em] text-zinc-500 uppercase">
+          <div className="mt-3 sm:mt-5 pl-2 sm:pl-0.5 border-l border-cyan-500/40 flex flex-wrap sm:flex-col gap-x-3 gap-y-1 sm:gap-1.5 text-[9px] sm:text-[10px] font-mono tracking-[0.18em] sm:tracking-[0.28em] text-zinc-500 uppercase">
             <span className={activeIndex <= 1 ? "text-cyan-300" : ""}>
               2021–2023 · HND
             </span>
@@ -773,11 +776,11 @@ export function Journey() {
         {/* Top-Right Interactive Control Prompt */}
         <div
           ref={rightHeaderRef}
-          className="flex flex-col items-end text-right gap-3 will-change-transform"
+          className="flex flex-row sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto text-left sm:text-right gap-3 will-change-transform"
         >
-          <p className="font-cinzel text-[10px] sm:text-xs tracking-[0.26em] text-zinc-400 uppercase leading-relaxed">
+          <p className="font-cinzel text-[10px] sm:text-xs tracking-[0.24em] sm:tracking-[0.26em] text-zinc-400 uppercase leading-relaxed">
             SELECT A YEAR TO TRAVEL
-            <br />
+            <br className="hidden sm:inline" />{" "}
             <span className="text-cyan-400">THROUGH TIME</span>
           </p>
 
@@ -805,9 +808,102 @@ export function Journey() {
         </div>
       </div>
 
-      {/* 4. Stepped Year Headers & Milestone Cards (2021 – 2026) with Uniform Modern Spacing */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto mt-10 lg:mt-20 mb-2">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 sm:gap-5 lg:gap-3 items-start lg:pb-8">
+      {/* 4. Stepped Year Headers & Milestone Cards (2021 – 2026) */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto mt-4 sm:mt-6 lg:mt-16 xl:mt-20 mb-2">
+        {/* MOBILE & TABLET INTERACTIVE MILESTONE SHOWCASE (< lg) */}
+        <div className="lg:hidden w-full flex flex-col items-center">
+          {/* Timeline Year Tabs Scroller */}
+          <div className="w-full flex items-center justify-between sm:justify-center gap-1.5 sm:gap-2.5 overflow-x-auto py-1 px-1 no-scrollbar mb-3">
+            {MILESTONES.map((item, idx) => {
+              const isSelected = idx === activeIndex;
+              return (
+                <button
+                  key={item.year}
+                  type="button"
+                  onClick={() => setActiveIndex(idx)}
+                  className={`flex flex-col items-center px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border transition-all duration-300 cursor-pointer ${
+                    isSelected
+                      ? "bg-[#061838] border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(56,189,248,0.5)] scale-105"
+                      : "bg-[#030712]/90 border-cyan-950/70 text-zinc-400 hover:text-zinc-200"
+                  }`}
+                >
+                  <span className="font-cinzel text-xs sm:text-sm font-bold tracking-wider">
+                    {item.year}
+                  </span>
+                  <span className="text-[8px] font-mono tracking-widest uppercase opacity-75">
+                    {item.chapter.slice(0, 5)}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Active Milestone Card (Fits mobile/tablet viewport without scroll trapping) */}
+          <div className="relative w-full max-w-xs sm:max-w-sm rounded-xl border border-cyan-400/80 bg-[#061126]/95 shadow-[0_0_26px_rgba(56,189,248,0.22)] overflow-hidden">
+            <MilestoneVisual
+              year={activeMilestone.year}
+              chapter={activeMilestone.chapter}
+              image={activeMilestone.image}
+              isActive={true}
+            />
+
+            <div className="p-3 sm:p-3.5">
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="font-cinzel text-base sm:text-lg font-bold tracking-wider text-cyan-300">
+                  {activeMilestone.year}
+                </span>
+                <span className="text-[9px] font-mono tracking-[0.2em] text-cyan-400 uppercase bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-500/30">
+                  {activeMilestone.chapter}
+                </span>
+              </div>
+
+              <h3 className="mt-1 text-xs font-bold text-white leading-snug">
+                {activeMilestone.role}
+              </h3>
+              <p className="text-[10px] text-cyan-300/85 font-medium mt-0.5">
+                {activeMilestone.institution}
+              </p>
+
+              <ul className="mt-2 space-y-0.5 border-t border-cyan-950/80 pt-1.5">
+                {activeMilestone.highlights.map((line, lIdx) => (
+                  <li
+                    key={lIdx}
+                    className="text-[9px] font-mono tracking-wider text-zinc-300 leading-relaxed flex items-center gap-1.5"
+                  >
+                    <span className="w-1 h-1 rounded-full bg-cyan-400 shrink-0" />
+                    <span className="truncate">{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Quick Prev / Next controls */}
+            <div className="flex items-center justify-between px-3 pb-2 pt-0.5 text-xs text-zinc-400 border-t border-cyan-950/50">
+              <button
+                type="button"
+                onClick={handlePrev}
+                className="inline-flex items-center gap-0.5 text-[10px] font-cinzel text-cyan-400/80 hover:text-cyan-300 py-0.5 px-1 cursor-pointer"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+                <span>Prev</span>
+              </button>
+              <span className="text-[8.5px] font-mono text-zinc-500">
+                {activeIndex + 1} / {MILESTONES.length}
+              </span>
+              <button
+                type="button"
+                onClick={handleNext}
+                className="inline-flex items-center gap-0.5 text-[10px] font-cinzel text-cyan-400/80 hover:text-cyan-300 py-0.5 px-1 cursor-pointer"
+              >
+                <span>Next</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* DESKTOP STEPPED CASCADE (lg: and above) */}
+        <div className="hidden lg:grid lg:grid-cols-6 gap-3 items-start lg:pb-8">
           {MILESTONES.map((item, idx) => {
             const isActive = idx === activeIndex;
             return (
