@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Journey } from "./Journey";
 import { Skills } from "./Skills";
 
@@ -21,9 +21,6 @@ export function JourneySkillsDeck() {
   const slide2Ref = useRef<HTMLDivElement | null>(null);
   const content1Ref = useRef<HTMLDivElement | null>(null);
   const content2Ref = useRef<HTMLDivElement | null>(null);
-
-  const [activeSlide, setActiveSlide] = useState<number>(0); // 0 = Journey, 1 = Skills
-  const [transitionProgress, setTransitionProgress] = useState<number>(0);
 
   const metricsRef = useRef<DeckMetrics>({
     vh: 800,
@@ -162,9 +159,7 @@ export function JourneySkillsDeck() {
       const diff = targetY - currentY;
       if (Math.abs(diff) < 0.4) {
         currentY = targetY;
-        const res = applyTransforms(currentY);
-        setTransitionProgress(res.transP);
-        setActiveSlide(res.activeSlide);
+        applyTransforms(currentY);
         rafId = 0;
         return;
       }
@@ -172,9 +167,7 @@ export function JourneySkillsDeck() {
       // Responsive spring speed
       const speed = Math.abs(diff) > 250 ? 0.22 : 0.12;
       currentY += diff * speed;
-      const res = applyTransforms(currentY);
-      setTransitionProgress(res.transP);
-      setActiveSlide(res.activeSlide);
+      applyTransforms(currentY);
       rafId = requestAnimationFrame(tick);
     };
 
@@ -189,18 +182,14 @@ export function JourneySkillsDeck() {
       measureMetrics();
       computeTarget();
       currentY = targetY;
-      const res = applyTransforms(currentY);
-      setTransitionProgress(res.transP);
-      setActiveSlide(res.activeSlide);
+      applyTransforms(currentY);
     };
 
     // Initial measurement & layout
     measureMetrics();
     computeTarget();
     currentY = targetY;
-    const res = applyTransforms(currentY);
-    setTransitionProgress(res.transP);
-    setActiveSlide(res.activeSlide);
+    applyTransforms(currentY);
 
     // Dynamic ResizeObserver to adapt immediately to any DOM size changes
     let resizeObserver: ResizeObserver | null = null;
@@ -221,29 +210,6 @@ export function JourneySkillsDeck() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
-  }, []);
-
-  // Smooth scroll to target slide when user taps HUD buttons
-  const scrollToSlide = useCallback((slideIdx: number) => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const rect = container.getBoundingClientRect();
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const containerTop = scrollTop + rect.top;
-    const m = metricsRef.current;
-
-    // Slide 0: top of Journey
-    // Slide 1: top of Skills
-    const targetY =
-      slideIdx === 0
-        ? containerTop
-        : containerTop + m.delta1 + m.transDist;
-
-    window.scrollTo({
-      top: targetY,
-      behavior: "smooth",
-    });
   }, []);
 
   return (
@@ -284,58 +250,11 @@ export function JourneySkillsDeck() {
           </div>
         </div>
 
-        {/* Floating Futuristic Slideshow Deck Indicator HUD */}
-        <div className="pointer-events-auto absolute bottom-3 sm:bottom-6 right-3 sm:right-8 z-40 flex items-center gap-1.5 sm:gap-3 rounded-full bg-[#030918]/90 backdrop-blur-xl border border-cyan-500/35 px-2.5 sm:px-4 py-1 sm:py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.9),0_0_20px_rgba(6,182,212,0.2)]">
-          {/* Button Slide 1: Journey */}
-          <button
-            type="button"
-            onClick={() => scrollToSlide(0)}
-            className={`flex items-center gap-1 sm:gap-1.5 font-cinzel text-[9.5px] sm:text-[11px] font-bold tracking-[0.14em] uppercase transition-all duration-300 cursor-pointer ${
-              activeSlide === 0
-                ? "text-cyan-300 drop-shadow-[0_0_8px_rgba(56,189,248,0.7)]"
-                : "text-zinc-500 hover:text-zinc-300"
-            }`}
-          >
-            <span
-              className={`inline-block h-1.5 w-1.5 rounded-full transition-all duration-300 ${
-                activeSlide === 0
-                  ? "bg-cyan-400 shadow-[0_0_8px_#38bdf8] scale-125"
-                  : "bg-zinc-600"
-              }`}
-            />
-            <span>01 · Journey</span>
-          </button>
-
-          {/* Animated Connecting Horizon Progress Bar */}
-          <div className="relative w-6 sm:w-12 h-1 rounded-full bg-cyan-950/80 overflow-hidden">
-            <div
-              className="absolute inset-y-0 left-0 bg-linear-to-r from-cyan-400 to-sky-300 shadow-[0_0_8px_rgba(56,189,248,0.8)] rounded-full transition-all duration-150"
-              style={{
-                width: `${Math.round(transitionProgress * 100)}%`,
-              }}
-            />
-          </div>
-
-          {/* Button Slide 2: Skills */}
-          <button
-            type="button"
-            onClick={() => scrollToSlide(1)}
-            className={`flex items-center gap-1 sm:gap-1.5 font-cinzel text-[9.5px] sm:text-[11px] font-bold tracking-[0.14em] uppercase transition-all duration-300 cursor-pointer ${
-              activeSlide === 1
-                ? "text-cyan-300 drop-shadow-[0_0_8px_rgba(56,189,248,0.7)]"
-                : "text-zinc-500 hover:text-zinc-300"
-            }`}
-          >
-            <span
-              className={`inline-block h-1.5 w-1.5 rounded-full transition-all duration-300 ${
-                activeSlide === 1
-                  ? "bg-cyan-400 shadow-[0_0_8px_#38bdf8] scale-125"
-                  : "bg-zinc-600"
-              }`}
-            />
-            <span>02 · Skills</span>
-          </button>
-        </div>
+        {/* Atmospheric Bottom Horizon Bridge to Experience */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-[#010206] via-[#010206]/70 to-transparent z-30"
+        />
       </div>
     </div>
   );

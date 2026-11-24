@@ -29,7 +29,7 @@ interface SkillCategory {
 
 function ReactLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <circle cx="18" cy="18" r="2.9" fill="#61DAFB" />
       <ellipse
         cx="18"
@@ -63,7 +63,7 @@ function ReactLogo() {
 
 function NextLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <circle cx="18" cy="18" r="14.5" fill="#FFFFFF" />
       <path
         d="M12.5 24.5V11.5L25.5 27.5"
@@ -84,7 +84,7 @@ function NextLogo() {
 
 function TypeScriptLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <rect x="4" y="4" width="28" height="28" rx="5" fill="#3178C6" />
       <text
         x="29.5"
@@ -103,7 +103,7 @@ function TypeScriptLogo() {
 
 function JavaScriptLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <rect x="4" y="4" width="28" height="28" rx="5" fill="#F7DF1E" />
       <text
         x="29.5"
@@ -122,7 +122,7 @@ function JavaScriptLogo() {
 
 function TailwindLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <path
         d="M18 10C13.6 10 10.9 12.2 9.8 16.5C11.5 14.3 13.5 13.5 15.6 14.1C16.9 14.4 17.8 15.3 18.7 16.3C20.3 17.9 22.1 19.7 26.2 19.7C30.6 19.7 33.3 17.5 34.4 13.2C32.7 15.4 30.7 16.2 28.6 15.6C27.3 15.3 26.4 14.4 25.5 13.4C23.9 11.8 22.1 10 18 10ZM9.8 19.7C5.4 19.7 2.7 21.9 1.6 26.2C3.3 24 5.3 23.2 7.4 23.8C8.7 24.1 9.6 25 10.5 26C12.1 27.6 13.9 29.4 18 29.4C22.4 29.4 25.1 27.2 26.2 22.9C24.5 25.1 22.5 25.9 20.4 25.3C19.1 25 18.2 24.1 17.3 23.1C15.7 21.5 13.9 19.7 9.8 19.7Z"
         fill="#38BDF8"
@@ -133,7 +133,7 @@ function TailwindLogo() {
 
 function HtmlCssLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <path d="M6.5 5L8.7 28.5L18 31.5L27.3 28.5L29.5 5H6.5Z" fill="#E34F26" />
       <path d="M18 7.2V29.1L25.4 26.8L27.2 7.2H18Z" fill="#EF652A" />
       <path
@@ -150,7 +150,7 @@ function HtmlCssLogo() {
 
 function LaravelLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <path
         d="M6 10.5L12.5 6.8L19 10.5V19.8L25.5 16L31 19.2V26L19 32.5L6 25.2V10.5Z"
         stroke="#FF2D20"
@@ -170,7 +170,7 @@ function LaravelLogo() {
 
 function NodeLogo() {
   return (
-    <svg viewBox="0 0 71 80" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 71 80" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <defs>
         <linearGradient
           id="nodeGrad"
@@ -208,7 +208,7 @@ function NodeLogo() {
 
 function ExpressLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       {/* Solid High-Contrast Rounded Badge matching Next/TS standard */}
       <rect x="4" y="4" width="28" height="28" rx="6" fill="#F8FAFC" />
       {/* Bold, Crisp Official Stylized 'ex' Lettermark */}
@@ -222,7 +222,7 @@ function ExpressLogo() {
 
 function SpringBootLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <path
         d="M30 8.5C28.8 11.4 26.8 13.2 24.4 14.1C21.6 15.1 17.5 15.2 14.3 18.2C11.9 20.5 10.8 23.6 10.6 25.8C13.2 28.4 17.6 29.8 22.2 28.4C27.8 26.6 31.6 20.4 30 8.5Z"
         fill="#6DB33F"
@@ -240,7 +240,7 @@ function SpringBootLogo() {
 
 function PhpLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <ellipse
         cx="18"
         cy="18"
@@ -266,52 +266,9 @@ function PhpLogo() {
   );
 }
 
-function JavaLogo() {
-  return (
-    <svg viewBox="0 0 32 32" className="w-9 h-9" fill="none">
-      <path
-        d="M16.05 8.44C22.64 3.33 19.26 0 19.26 0C19.76 5.29 13.81 6.54 12.22 10.17C11.13 12.65 12.96 14.82 16.05 17.56C15.77 16.95 15.35 16.36 14.93 15.76C13.48 13.73 11.96 11.61 16.05 8.44Z"
-        fill="#EA2D2E"
-      />
-      <path
-        d="M17.1 18.68C17.1 18.68 19.08 17.08 17.51 15.3C12.19 9.27 23.33 6.54 23.33 6.54C16.53 9.81 17.55 11.76 19.26 14.12C21.09 16.65 17.1 18.68 17.1 18.68Z"
-        fill="#F89820"
-      />
-      <path
-        d="M22.94 23.45C29.04 20.33 26.22 17.33 24.25 17.73C23.77 17.83 23.55 17.92 23.55 17.92C23.55 17.92 23.73 17.64 24.07 17.52C27.97 16.17 30.97 21.49 22.81 23.6C22.81 23.6 22.91 23.52 22.94 23.45Z"
-        fill="#5382A1"
-      />
-      <path
-        d="M10.23 19.5C6.41 19 12.33 17.61 12.33 17.61C12.33 17.61 10.03 17.46 7.21 18.8C3.87 20.39 15.47 21.12 21.47 19.56C22.1 19.14 22.96 18.78 22.96 18.78C22.96 18.78 20.5 19.21 18.06 19.41C15.06 19.66 11.85 19.71 10.23 19.5Z"
-        fill="#5382A1"
-      />
-      <path
-        d="M11.69 22.48C9.56 22.26 10.95 21.24 10.95 21.24C5.44 23.04 14.02 25.08 21.72 22.87C20.9 22.58 20.38 22.07 20.38 22.07C16.62 22.78 14.44 22.76 11.69 22.48Z"
-        fill="#5382A1"
-      />
-      <path
-        d="M13.44 26.26C18.42 26.66 21.85 25.01 21.85 25.01C21.85 25.01 18.4 27.27 12.64 26.89C7.57 26.55 5.38 24.57 5.38 24.57C5.38 24.57 8.23 25.85 13.44 26.26Z"
-        fill="#5382A1"
-      />
-      <path
-        d="M12.39 28.54C15.66 28.79 18.38 27.96 18.38 27.96C18.38 27.96 15.55 29.29 11.8 29.05C7.82 28.8 7.01 27.69 7.01 27.69C7.01 27.69 8.79 28.26 12.39 28.54Z"
-        fill="#5382A1"
-      />
-      <path
-        d="M19.14 30.64C17.78 31.05 15.02 31.1 13.57 31.03C10.78 30.89 9.87 30.34 9.87 30.34C9.87 30.34 10.96 30.74 13.79 30.84C15.58 30.91 17.68 30.82 19.14 30.64Z"
-        fill="#5382A1"
-      />
-      <path
-        d="M21.38 23.36C21.82 20.89 21.06 16.59 17.49 14.45C19.27 16.71 20.08 20.17 18.73 23.82C20.02 23.82 20.93 23.64 21.38 23.36Z"
-        fill="#5382A1"
-      />
-    </svg>
-  );
-}
-
 function MySqlLogo() {
   return (
-    <svg viewBox="0 0 128 128" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 128 128" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <defs>
         <linearGradient
           id="mysqlDolphinGrad"
@@ -335,7 +292,7 @@ function MySqlLogo() {
 
 function PostgresLogo() {
   return (
-    <svg viewBox="0 0 128 128" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 128 128" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       {/* Official PostgreSQL Slonik Elephant Head */}
       <path
         fill="#29557B"
@@ -359,7 +316,7 @@ function PostgresLogo() {
 
 function SqlServerLogo() {
   return (
-    <svg viewBox="0 0 128 128" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 128 128" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <defs>
         <linearGradient
           id="mssqlGradA"
@@ -418,7 +375,7 @@ function SqlServerLogo() {
 
 function MongoDbLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <defs>
         <linearGradient id="mongoLeft" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#47A248" />
@@ -457,7 +414,7 @@ function MongoDbLogo() {
 
 function SchemaDesignLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <defs>
         <linearGradient id="tableHead" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#0284C7" />
@@ -567,7 +524,7 @@ function SchemaDesignLogo() {
 
 function OptimizationLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <defs>
         <linearGradient id="optGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#10B981" />
@@ -623,7 +580,7 @@ function OptimizationLogo() {
 
 function AwsLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <text
         x="18"
         y="19"
@@ -654,7 +611,7 @@ function AwsLogo() {
 
 function DockerLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <rect x="8" y="14" width="4" height="3.6" rx="0.6" fill="#2496ED" />
       <rect x="13" y="14" width="4" height="3.6" rx="0.6" fill="#2496ED" />
       <rect x="18" y="14" width="4" height="3.6" rx="0.6" fill="#2496ED" />
@@ -674,7 +631,7 @@ function DockerLogo() {
 
 function GitHubActionsLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <circle
         cx="18"
         cy="18"
@@ -690,7 +647,7 @@ function GitHubActionsLogo() {
 
 function CiCdLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <path
         d="M12.5 23.5C9.2 23.5 6.5 21 6.5 18C6.5 15 9.2 12.5 12.5 12.5C15.5 12.5 17 15 18 18C19 21 20.5 23.5 23.5 23.5C26.8 23.5 29.5 21 29.5 18C29.5 15 26.8 12.5 23.5 12.5C20.5 12.5 19 15 18 18C17 21 15.5 23.5 12.5 23.5Z"
         stroke="#2DD4BF"
@@ -703,7 +660,7 @@ function CiCdLogo() {
 
 function CpanelLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       {/* Official cPanel Orange Rounded Emblem */}
       <rect x="3" y="3" width="30" height="30" rx="7" fill="#FF6C2C" />
       {/* Official stylized cPanel 'c' */}
@@ -727,7 +684,7 @@ function CpanelLogo() {
 
 function VsCodeLogo() {
   return (
-    <svg viewBox="0 0 24 24" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 24 24" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <defs>
         <linearGradient id="vscodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#38BDF8" />
@@ -745,7 +702,7 @@ function VsCodeLogo() {
 
 function GitLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <rect
         x="18"
         y="3.5"
@@ -770,7 +727,7 @@ function GitLogo() {
 
 function GitHubLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -783,7 +740,7 @@ function GitHubLogo() {
 
 function PostmanLogo() {
   return (
-    <svg viewBox="0 0 24 24" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 24 24" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <path
         fill="#FF6C37"
         d="M19.914 5.888C16.54 1.518 10.26.71 5.888 4.086C1.518 7.46.71 13.74 4.086 18.112c3.375 4.37 9.655 5.178 14.026 1.802l.002-.002c4.369-3.376 5.175-9.654 1.8-14.024m-2.559 2.495l-.78-.768l-.169-.168l.047-.047l1.184-1.118c.212.257.328.58.328.915-.001.39-.157.765-.434 1.041q-.083.08-.176.145M6.698 16.738l.139.13l.725.725l-1.614-.105zM16.49 5.73c.325.002.641.11.9.308l-1.3 1.308a.14.14 0 0 0-.043.059l-.001.005l-.002.006a.13.13 0 0 0 .045.139l.984.983a1.46 1.46 0 0 1-1.616-.308a1.47 1.47 0 0 1-.315-1.594a1.46 1.46 0 0 1 1.348-.906m-.909 3.266a.46.46 0 0 1-.158.334l-3.895 3.389l-.013.011l-.142-.142l-.062-.062l-.03-.03l-.087-.087l-.033-.033l-.067-.067l3.687-3.654a.46.46 0 0 1 .585-.06a.5.5 0 0 1 .074.06l.037.038q.048.072.083.15q.023.075.021.153m-4.498 3.74l.007.019l.034.033l.146.143l-.054.007l-.809.099l.1-.1l.391-.39zm3.93-4.499a.76.76 0 0 0-.44.218l-3.675 3.658l-.72-.72c1.905-1.898 3.07-2.888 3.795-3.213a.9.9 0 0 1 1.04.057m-5.048 3.368l.015.015l.595.595l-1.552.332zm-2.033 4.858a.23.23 0 0 0-.125.266l.166.725a.05.05 0 0 1 0 .059a.05.05 0 0 1-.066 0l-.984-.992l3.03-3.075l1.569-.243l.576.576a20.5 20.5 0 0 1-4.166 2.684m4.441-2.9l-.608-.608l3.829-3.358c-.272 1.08-1.716 2.544-3.221 3.966m5.275-6.55a.125.125 0 0 0-.159-.05a.117.117 0 0 0-.05.158a.36.36 0 0 1-.041.376a.1.1 0 0 0-.031.079q0 .046.03.079a.1.1 0 0 0 .067 0a.11.11 0 0 0 .109-.033a.57.57 0 0 0 .075-.609"
@@ -794,7 +751,7 @@ function PostmanLogo() {
 
 function SwaggerLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <circle cx="18" cy="18" r="13.5" fill="#85EA2D" />
       <text
         x="18"
@@ -813,7 +770,7 @@ function SwaggerLogo() {
 
 function JwtLogo() {
   return (
-    <svg viewBox="0 0 36 36" className="w-9 h-9" fill="none">
+    <svg viewBox="0 0 36 36" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
       <line
         x1="18"
         y1="5.5"
@@ -868,7 +825,6 @@ const SKILL_CATEGORIES: SkillCategory[] = [
       { name: "Express.js", icon: <ExpressLogo /> },
       { name: "Spring Boot", icon: <SpringBootLogo /> },
       { name: "PHP", icon: <PhpLogo /> },
-      { name: "Java", icon: <JavaLogo /> },
     ],
   },
   {
@@ -912,23 +868,23 @@ const SKILL_CATEGORIES: SkillCategory[] = [
     skills: [
       {
         name: "Problem Solving",
-        icon: <Lightbulb className="w-8 h-8 text-cyan-300" />,
+        icon: <Lightbulb className="w-10 h-10 sm:w-11 sm:h-11 text-cyan-300" />,
       },
       {
         name: "Agile / Scrum",
-        icon: <TrendingUp className="w-8 h-8 text-blue-400" />,
+        icon: <TrendingUp className="w-10 h-10 sm:w-11 sm:h-11 text-blue-400" />,
       },
       {
         name: "Code Reviews",
-        icon: <ShieldCheck className="w-8 h-8 text-emerald-400" />,
+        icon: <ShieldCheck className="w-10 h-10 sm:w-11 sm:h-11 text-emerald-400" />,
       },
       {
         name: "Collaboration",
-        icon: <Users className="w-8 h-8 text-purple-400" />,
+        icon: <Users className="w-10 h-10 sm:w-11 sm:h-11 text-purple-400" />,
       },
       {
         name: "Communication",
-        icon: <MessageSquare className="w-8 h-8 text-slate-300" />,
+        icon: <MessageSquare className="w-10 h-10 sm:w-11 sm:h-11 text-slate-300" />,
       },
     ],
   },
@@ -1227,9 +1183,9 @@ export function Skills() {
               {activeCategory.skills.map((skill) => (
                 <div
                   key={skill.name}
-                  className="group/tile relative flex flex-col items-center justify-center gap-1 rounded-lg bg-[#02050d]/95 border border-cyan-950/70 py-1.5 sm:py-2 px-1 overflow-hidden transition-all duration-300 ease-out hover:border-cyan-400/80 hover:bg-linear-to-b hover:from-[#091b38] hover:to-[#02050e] hover:shadow-[0_8px_20px_rgba(14,165,233,0.25)]"
+                  className="group/tile relative flex flex-col items-center justify-center gap-1 rounded-lg bg-[#02050d]/95 border border-cyan-950/70 py-2 sm:py-2.5 px-1 overflow-hidden transition-all duration-300 ease-out hover:border-cyan-400/80 hover:bg-linear-to-b hover:from-[#091b38] hover:to-[#02050e] hover:shadow-[0_8px_20px_rgba(14,165,233,0.25)]"
                 >
-                  <div className="relative z-10 flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8">
+                  <div className="relative z-10 flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10">
                     {skill.icon}
                   </div>
                   <span className="relative z-10 text-[9px] sm:text-[9.5px] font-medium tracking-wide text-zinc-300 text-center leading-tight truncate max-w-full px-1">
@@ -1336,7 +1292,7 @@ export function Skills() {
                   {category.skills.map((skill) => (
                     <div
                       key={skill.name}
-                      className="group/tile relative flex flex-col items-center justify-center gap-1 rounded-lg bg-[#02050d]/95 border border-cyan-950/70 py-1.5 sm:py-2 px-1 overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.03] hover:border-cyan-400/80 hover:bg-linear-to-b hover:from-[#091b38] hover:to-[#02050e] hover:shadow-[0_8px_22px_rgba(14,165,233,0.28),0_0_10px_rgba(56,189,248,0.2)] cursor-pointer"
+                      className="group/tile relative flex flex-col items-center justify-center gap-1.5 rounded-lg bg-[#02050d]/95 border border-cyan-950/70 py-2 sm:py-2.5 px-1.5 overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.03] hover:border-cyan-400/80 hover:bg-linear-to-b hover:from-[#091b38] hover:to-[#02050e] hover:shadow-[0_8px_22px_rgba(14,165,233,0.28),0_0_10px_rgba(56,189,248,0.2)] cursor-pointer"
                     >
                       {/* Subtle Radial Blue Shimmer Core on Hover */}
                       <div
@@ -1351,7 +1307,7 @@ export function Skills() {
                       />
 
                       {/* Icon with Scale, Float & Luminous Drop-Shadow */}
-                      <div className="relative z-10 flex items-center justify-center h-8 w-8 sm:h-8.5 sm:w-8.5 transition-all duration-300 ease-out group-hover/tile:scale-115 group-hover/tile:-translate-y-0.5 group-hover/tile:drop-shadow-[0_4px_12px_rgba(56,189,248,0.45)]">
+                      <div className="relative z-10 flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 transition-all duration-300 ease-out group-hover/tile:scale-115 group-hover/tile:-translate-y-0.5 group-hover/tile:drop-shadow-[0_4px_12px_rgba(56,189,248,0.45)]">
                         {skill.icon}
                       </div>
 

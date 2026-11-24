@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Hero } from "@/components/Hero";
 import { JourneySkillsDeck } from "@/components/JourneySkillsDeck";
+import { Experience } from "@/components/Experience";
 import { PageLoader } from "@/components/PageLoader";
 
 export function PortfolioShell() {
@@ -87,6 +88,7 @@ export function PortfolioShell() {
               className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-cyan-400/55 to-transparent shadow-[0_0_20px_rgba(56,189,248,0.5)] z-30"
             />
             <JourneySkillsDeck />
+            <Experience />
           </div>
         </>
       )}
