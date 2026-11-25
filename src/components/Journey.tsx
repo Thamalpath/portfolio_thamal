@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 
 interface Milestone {
   year: string;
@@ -121,7 +121,7 @@ function MilestoneVisual({
   isActive: boolean;
 }) {
   return (
-    <div className="relative w-full h-40 sm:h-36 md:h-32 lg:h-28 xl:h-32 overflow-hidden rounded-t-lg bg-[#040914] border-b border-cyan-500/20">
+    <div className="relative w-full h-40 sm:h-36 md:h-32 lg:h-28 xl:h-32 overflow-hidden rounded-t-lg bg-[#040914] border-b border-sky-500/20">
       <Image
         src={image}
         alt={`${year} - ${chapter}`}
@@ -161,10 +161,12 @@ export function Journey() {
   const [clockMetrics, setClockMetrics] = useState<{
     cx: number;
     cy: number;
+    clockScale: number;
     targets: { angleDeg: number; beamLen: number }[];
   }>(() => ({
     cx: 740,
     cy: 72,
+    clockScale: 1,
     targets: MILESTONES.map((m) => ({
       angleDeg: m.clockAngle,
       beamLen: m.beamLength,
@@ -177,10 +179,30 @@ export function Journey() {
     const sectionRect = section.getBoundingClientRect();
     if (sectionRect.width === 0) return;
 
-    const nextCx = sectionRect.width * 0.62;
-    const nextCy = 72;
+    const isMobile = sectionRect.width < 1024;
+
+    const nextCx = isMobile
+      ? sectionRect.width * 0.54
+      : sectionRect.width * 0.62;
+
+    const nextCy = isMobile ? 40 : 72;
+
+    const nextScale = isMobile
+      ? Math.min(0.64, Math.max(0.48, sectionRect.width / 540))
+      : 1.0;
 
     const nextTargets = MILESTONES.map((m, idx) => {
+      if (isMobile) {
+        // Mobile layout: beam shoots diagonally from top clock center down to the active year on the left
+        const targetX = Math.max(38, sectionRect.width * 0.16);
+        const targetY = 115 + idx * 42;
+        const dx = targetX - nextCx;
+        const dy = targetY - nextCy;
+        return {
+          angleDeg: (Math.atan2(dy, dx) * 180) / Math.PI,
+          beamLen: Math.hypot(dx, dy) / nextScale,
+        };
+      }
       const cardEl = cardRefs.current[idx];
       if (!cardEl) {
         return { angleDeg: m.clockAngle, beamLen: m.beamLength };
@@ -195,11 +217,16 @@ export function Journey() {
       const dy = targetY - nextCy;
       return {
         angleDeg: (Math.atan2(dy, dx) * 180) / Math.PI,
-        beamLen: Math.hypot(dx, dy),
+        beamLen: Math.hypot(dx, dy) / nextScale,
       };
     });
 
-    setClockMetrics({ cx: nextCx, cy: nextCy, targets: nextTargets });
+    setClockMetrics({
+      cx: nextCx,
+      cy: nextCy,
+      clockScale: nextScale,
+      targets: nextTargets,
+    });
   }, []);
 
   useEffect(() => {
@@ -277,13 +304,15 @@ export function Journey() {
       // Progress 0 when section top enters bottom of viewport -> 1 when section top reaches near top of viewport
       target = clamp01((vh - rect.top) / (vh * 0.92));
 
-      // Trigger the clock hands sweep once the user has scrolled halfway into Journey
-      if (target >= 0.45 && !handsTriggered) {
+      // Trigger the clock hands sweep once the user has scrolled into Journey
+      const triggerThreshold =
+        typeof window !== "undefined" && window.innerWidth < 1024 ? 0.05 : 0.4;
+      if (target >= triggerThreshold && !handsTriggered) {
         handsTriggered = true;
         setIsInView(true);
         setTimeout(measureClockTargets, 600);
         setTimeout(measureClockTargets, 1400);
-      } else if (target < 0.12 && handsTriggered) {
+      } else if (target <= 0.01 && handsTriggered) {
         handsTriggered = false;
         setIsInView(false);
       }
@@ -327,12 +356,33 @@ export function Journey() {
     };
   }, [measureClockTargets]);
 
+  const handleSelectYear = (idx: number) => {
+    setActiveIndex(idx);
+  };
+
   const handlePrev = () => {
     setActiveIndex((prev) => (prev > 0 ? prev - 1 : MILESTONES.length - 1));
   };
 
   const handleNext = () => {
     setActiveIndex((prev) => (prev < MILESTONES.length - 1 ? prev + 1 : 0));
+  };
+
+  const touchStartY = useRef<number>(0);
+  const touchStartX = useRef<number>(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diffY = e.changedTouches[0].clientY - touchStartY.current;
+    const diffX = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 35) {
+      if (diffX < 0) handleNext();
+      else handlePrev();
+    }
   };
 
   const { cx, cy, targets } = clockMetrics;
@@ -355,19 +405,20 @@ export function Journey() {
     <section
       ref={sectionRef}
       id="journey"
-      className="relative w-full overflow-hidden bg-[#010206] text-white pt-10 sm:pt-14 pb-14 sm:pb-20 px-4 sm:px-8 md:px-12 flex flex-col border-t border-cyan-950/50 select-none"
+      className="relative w-full overflow-hidden bg-[#010206] text-white pt-1.5 sm:pt-6 lg:pt-14 pb-4 sm:pb-8 lg:pb-16 px-4 sm:px-8 md:px-12 flex flex-col border-t border-blue-950/50 select-none"
     >
-      {/* 1. Atmospheric Background Glow (Synced with Hero Cyan/Sapphire Palette) */}
+      {/* 1. Atmospheric Background Glow (Synced with Hero Sapphire/Sky Palette) */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_75%_55%_at_55%_25%,rgba(14,165,233,0.14)_0%,rgba(30,64,175,0.08)_45%,transparent_80%)]"
       />
 
-      {/* 2. Giant Horological Clock Dial & Glowing Cyan Flashlight Beam SVG */}
+      {/* 2. Giant Horological Clock Dial & Glowing Flashlight Beam SVG */}
       <div
         ref={clockLayerRef}
         aria-hidden="true"
-        className="hidden lg:block absolute inset-0 pointer-events-none overflow-hidden z-10 origin-top will-change-transform"
+        className="block absolute inset-0 pointer-events-none overflow-hidden z-10 origin-top will-change-transform"
+        style={{ opacity: 0.95 }}
       >
         <svg className="w-full h-full">
           <defs>
@@ -412,7 +463,7 @@ export function Journey() {
               <stop offset="55%" stopColor="#7dd3fc" stopOpacity="0.9" />
               <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.85" />
             </linearGradient>
-            <filter id="cyanGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <filter id="blueGlow" x="-60%" y="-60%" width="220%" height="220%">
               <feGaussianBlur stdDeviation="6" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
@@ -421,325 +472,516 @@ export function Journey() {
             </filter>
           </defs>
 
-          {/* Stylish Classic Horological Clock Dial, Railroad Chapter Ring & Roman Numerals */}
-          {/* Outer Architectural Bezel & Double Railroad Chapter Track */}
-          <circle
-            cx={cx}
-            cy={cy}
-            r="310"
-            fill="none"
-            stroke="rgba(56, 189, 248, 0.18)"
-            strokeWidth="1"
-          />
-          <circle
-            cx={cx}
-            cy={cy}
-            r="302"
-            fill="none"
-            stroke="rgba(125, 211, 252, 0.42)"
-            strokeWidth="1.7"
-          />
-          <circle
-            cx={cx}
-            cy={cy}
-            r="286"
-            fill="none"
-            stroke="rgba(56, 189, 248, 0.34)"
-            strokeWidth="1.2"
-          />
+          {/* Scalable Clock Dial Container: Centered at (cx, cy) and scaled smoothly for all screen sizes */}
+          <g
+            transform={`translate(${cx}, ${cy}) scale(${clockMetrics.clockScale}) translate(${-cx}, ${-cy})`}
+          >
+            {/* Stylish Classic Horological Clock Dial, Railroad Chapter Ring & Roman Numerals */}
+            {/* Outer Architectural Bezel & Double Railroad Chapter Track */}
+            <circle
+              cx={cx}
+              cy={cy}
+              r="310"
+              fill="none"
+              stroke="rgba(56, 189, 248, 0.18)"
+              strokeWidth="1"
+            />
+            <circle
+              cx={cx}
+              cy={cy}
+              r="302"
+              fill="none"
+              stroke="rgba(125, 211, 252, 0.42)"
+              strokeWidth="1.7"
+            />
+            <circle
+              cx={cx}
+              cy={cy}
+              r="286"
+              fill="none"
+              stroke="rgba(56, 189, 248, 0.34)"
+              strokeWidth="1.2"
+            />
 
-          {/* Inner Numeral Track & Filigree Rings */}
-          <circle
-            cx={cx}
-            cy={cy}
-            r="244"
-            fill="none"
-            stroke="rgba(56, 189, 248, 0.24)"
-            strokeWidth="1.1"
-          />
-          <circle
-            cx={cx}
-            cy={cy}
-            r="236"
-            fill="none"
-            stroke="rgba(125, 211, 252, 0.25)"
-            strokeWidth="1"
-            strokeDasharray="2 6"
-          />
-          <circle
-            cx={cx}
-            cy={cy}
-            r="172"
-            fill="none"
-            stroke="rgba(30, 64, 175, 0.32)"
-            strokeWidth="1"
-          />
-          <circle
-            cx={cx}
-            cy={cy}
-            r="48"
-            fill="none"
-            stroke="rgba(56, 189, 248, 0.28)"
-            strokeWidth="1"
-          />
-          <circle
-            cx={cx}
-            cy={cy}
-            r="35"
-            fill="none"
-            stroke="rgba(125, 211, 252, 0.32)"
-            strokeWidth="1"
-            strokeDasharray="3 4"
-          />
+            {/* Inner Numeral Track & Filigree Rings */}
+            <circle
+              cx={cx}
+              cy={cy}
+              r="244"
+              fill="none"
+              stroke="rgba(56, 189, 248, 0.24)"
+              strokeWidth="1.1"
+            />
+            <circle
+              cx={cx}
+              cy={cy}
+              r="236"
+              fill="none"
+              stroke="rgba(125, 211, 252, 0.25)"
+              strokeWidth="1"
+              strokeDasharray="2 6"
+            />
+            <circle
+              cx={cx}
+              cy={cy}
+              r="172"
+              fill="none"
+              stroke="rgba(30, 64, 175, 0.32)"
+              strokeWidth="1"
+            />
+            <circle
+              cx={cx}
+              cy={cy}
+              r="48"
+              fill="none"
+              stroke="rgba(56, 189, 248, 0.28)"
+              strokeWidth="1"
+            />
+            <circle
+              cx={cx}
+              cy={cy}
+              r="35"
+              fill="none"
+              stroke="rgba(125, 211, 252, 0.32)"
+              strokeWidth="1"
+              strokeDasharray="3 4"
+            />
 
-          {/* 12 Classic Radial Hour Division Hairlines */}
-          {Array.from({ length: 12 }, (_, idx) => {
-            const angle = idx * 30 * (Math.PI / 180);
-            return (
-              <line
-                key={`spoke-${idx}`}
-                x1={Number((cx + Math.cos(angle) * 48).toFixed(2))}
-                y1={Number((cy + Math.sin(angle) * 48).toFixed(2))}
-                x2={Number((cx + Math.cos(angle) * 236).toFixed(2))}
-                y2={Number((cy + Math.sin(angle) * 236).toFixed(2))}
-                stroke="rgba(56, 189, 248, 0.1)"
-                strokeWidth="0.9"
-              />
-            );
-          })}
-
-          {/* Full Railroad Chapter Ring Ticks & Classic Diamond Hour Pips */}
-          {Array.from({ length: 72 }, (_, idx) => {
-            const deg = -15 + idx * 3;
-            const angle = deg * (Math.PI / 180);
-            const isMajor = idx % 5 === 0;
-            const r1 = isMajor ? 279 : 286;
-            const r2 = 302;
-            const pipX = Number((cx + Math.cos(angle) * 272).toFixed(2));
-            const pipY = Number((cy + Math.sin(angle) * 272).toFixed(2));
-            return (
-              <g key={`tick-${idx}`}>
+            {/* 12 Classic Radial Hour Division Hairlines */}
+            {Array.from({ length: 12 }, (_, idx) => {
+              const angle = idx * 30 * (Math.PI / 180);
+              return (
                 <line
-                  x1={Number((cx + Math.cos(angle) * r1).toFixed(2))}
-                  y1={Number((cy + Math.sin(angle) * r1).toFixed(2))}
-                  x2={Number((cx + Math.cos(angle) * r2).toFixed(2))}
-                  y2={Number((cy + Math.sin(angle) * r2).toFixed(2))}
-                  stroke={
-                    isMajor
-                      ? "rgba(186, 230, 253, 0.72)"
-                      : "rgba(56, 189, 248, 0.28)"
-                  }
-                  strokeWidth={isMajor ? "1.9" : "0.9"}
+                  key={`spoke-${idx}`}
+                  x1={Number((cx + Math.cos(angle) * 48).toFixed(2))}
+                  y1={Number((cy + Math.sin(angle) * 48).toFixed(2))}
+                  x2={Number((cx + Math.cos(angle) * 236).toFixed(2))}
+                  y2={Number((cy + Math.sin(angle) * 236).toFixed(2))}
+                  stroke="rgba(56, 189, 248, 0.1)"
+                  strokeWidth="0.9"
                 />
-                {isMajor && (
-                  <circle
-                    cx={pipX}
-                    cy={pipY}
-                    r="1.9"
-                    fill="rgba(186, 230, 253, 0.75)"
+              );
+            })}
+
+            {/* Full Railroad Chapter Ring Ticks & Classic Diamond Hour Pips */}
+            {Array.from({ length: 72 }, (_, idx) => {
+              const deg = -15 + idx * 3;
+              const angle = deg * (Math.PI / 180);
+              const isMajor = idx % 5 === 0;
+              const r1 = isMajor ? 279 : 286;
+              const r2 = 302;
+              const pipX = Number((cx + Math.cos(angle) * 272).toFixed(2));
+              const pipY = Number((cy + Math.sin(angle) * 272).toFixed(2));
+              return (
+                <g key={`tick-${idx}`}>
+                  <line
+                    x1={Number((cx + Math.cos(angle) * r1).toFixed(2))}
+                    y1={Number((cy + Math.sin(angle) * r1).toFixed(2))}
+                    x2={Number((cx + Math.cos(angle) * r2).toFixed(2))}
+                    y2={Number((cy + Math.sin(angle) * r2).toFixed(2))}
+                    stroke={
+                      isMajor
+                        ? "rgba(186, 230, 253, 0.72)"
+                        : "rgba(56, 189, 248, 0.28)"
+                    }
+                    strokeWidth={isMajor ? "1.9" : "0.9"}
                   />
-                )}
-              </g>
-            );
-          })}
+                  {isMajor && (
+                    <circle
+                      cx={pipX}
+                      cy={pipY}
+                      r="1.9"
+                      fill="rgba(186, 230, 253, 0.75)"
+                    />
+                  )}
+                </g>
+              );
+            })}
 
-          {/* Classic Roman Numerals Along the Lower Chapter Ring */}
-          {[
-            { numeral: "III", deg: 0 },
-            { numeral: "IV", deg: 30 },
-            { numeral: "V", deg: 60 },
-            { numeral: "VI", deg: 90 },
-            { numeral: "VII", deg: 120 },
-            { numeral: "VIII", deg: 150 },
-            { numeral: "IX", deg: 180 },
-          ].map(({ numeral, deg }) => {
-            const rad = (deg * Math.PI) / 180;
-            const rNum = 260;
-            const nx = Number((cx + Math.cos(rad) * rNum).toFixed(2));
-            const ny = Number((cy + Math.sin(rad) * rNum).toFixed(2));
-            const rot = deg - 90;
-            return (
-              <text
-                key={numeral}
-                x={nx}
-                y={ny}
-                fill="rgba(125, 211, 252, 0.38)"
-                fontSize="12.5"
-                fontWeight="600"
-                letterSpacing="0.12em"
-                textAnchor="middle"
-                dominantBaseline="central"
-                transform={`rotate(${rot}, ${nx}, ${ny})`}
-                className="font-cinzel select-none"
-              >
-                {numeral}
-              </text>
-            );
-          })}
+            {/* Classic Roman Numerals Along the Lower Chapter Ring */}
+            {[
+              { numeral: "III", deg: 0 },
+              { numeral: "IV", deg: 30 },
+              { numeral: "V", deg: 60 },
+              { numeral: "VI", deg: 90 },
+              { numeral: "VII", deg: 120 },
+              { numeral: "VIII", deg: 150 },
+              { numeral: "IX", deg: 180 },
+            ].map(({ numeral, deg }) => {
+              const rad = (deg * Math.PI) / 180;
+              const rNum = 260;
+              const nx = Number((cx + Math.cos(rad) * rNum).toFixed(2));
+              const ny = Number((cy + Math.sin(rad) * rNum).toFixed(2));
+              const rot = deg - 90;
+              return (
+                <text
+                  key={numeral}
+                  x={nx}
+                  y={ny}
+                  fill="rgba(125, 211, 252, 0.38)"
+                  fontSize="12.5"
+                  fontWeight="600"
+                  letterSpacing="0.12em"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  transform={`rotate(${rot}, ${nx}, ${ny})`}
+                  className="font-cinzel select-none"
+                >
+                  {numeral}
+                </text>
+              );
+            })}
 
-          {/* Pivot-Anchored Hands & Center Joint (0,0 local origin for buttery 60fps CSS transforms) */}
-          <g transform={`translate(${cx}, ${cy})`}>
-            {/* Stylish Classic Breguet / Wall-Clock Ornamental Small Hand ("Podi Katta") */}
-            <g
-              style={{
-                transform: `rotate(${smallHandRotationDeg}deg)`,
-                transformOrigin: "0px 0px",
-                transition: handTransition,
-                willChange: "transform",
-              }}
-              filter="url(#cyanGlow)"
-            >
-              {/* Classic ornamental counterweight tail */}
-              <polygon
-                points="-1.5,0 1.5,0 2.6,-20 0,-30 -2.6,-20"
-                fill="url(#modernHandGrad)"
-              />
-              <circle
-                cx="0"
-                cy="-20"
-                r="3.8"
-                fill="#010206"
-                stroke="url(#modernHandGrad)"
-                strokeWidth="1.5"
-              />
-
-              {/* Sculpted main shaft with decorative collar */}
-              <polygon
-                points="-2.8,0 2.8,0 2.1,37 4.2,42 1.7,47 1.7,78 -1.7,78 -1.7,47 -4.2,42 -2.1,37"
-                fill="url(#modernHandGrad)"
-              />
-
-              {/* Classic Breguet / antique wall-clock hollow medallion ring */}
-              <circle
-                cx="0"
-                cy="90"
-                r="11.5"
-                fill="#010206"
-                stroke="url(#modernHandGrad)"
-                strokeWidth="2.8"
-              />
-              <circle
-                cx="0"
-                cy="90"
-                r="7.2"
-                fill="none"
-                stroke="rgba(186, 230, 253, 0.6)"
-                strokeWidth="0.85"
-              />
-
-              {/* Elongated diamond-spear blade tapering to a sharp needle point */}
-              <polygon
-                points="-1.9,101 1.9,101 3.8,117 0,170 -3.8,117"
-                fill="url(#modernHandGrad)"
-              />
-            </g>
-
-            {/* Sweeping Big Clock Hand ("Loku Katta") & Flashlight Cone */}
-            <g
-              style={{
-                transform: `rotate(${needleRotationDeg}deg)`,
-                transformOrigin: "0px 0px",
-                transition: handTransition,
-                willChange: "transform",
-              }}
-            >
-              {/* Scaled Beam & Flashlight Cone */}
+            {/* Pivot-Anchored Hands & Center Joint (0,0 local origin for buttery 60fps CSS transforms) */}
+            <g transform={`translate(${cx}, ${cy})`}>
+              {/* Stylish Classic Breguet / Wall-Clock Ornamental Small Hand ("Podi Katta") */}
               <g
                 style={{
-                  transform: `scaleY(${beamScaleY})`,
+                  transform: `rotate(${smallHandRotationDeg}deg)`,
+                  transformOrigin: "0px 0px",
+                  transition: handTransition,
+                  willChange: "transform",
+                }}
+                filter="url(#blueGlow)"
+              >
+                {/* Classic ornamental counterweight tail */}
+                <polygon
+                  points="-1.5,0 1.5,0 2.6,-20 0,-30 -2.6,-20"
+                  fill="url(#modernHandGrad)"
+                />
+                <circle
+                  cx="0"
+                  cy="-20"
+                  r="3.8"
+                  fill="#010206"
+                  stroke="url(#modernHandGrad)"
+                  strokeWidth="1.5"
+                />
+
+                {/* Sculpted main shaft with decorative collar */}
+                <polygon
+                  points="-2.8,0 2.8,0 2.1,37 4.2,42 1.7,47 1.7,78 -1.7,78 -1.7,47 -4.2,42 -2.1,37"
+                  fill="url(#modernHandGrad)"
+                />
+
+                {/* Classic Breguet / antique wall-clock hollow medallion ring */}
+                <circle
+                  cx="0"
+                  cy="90"
+                  r="11.5"
+                  fill="#010206"
+                  stroke="url(#modernHandGrad)"
+                  strokeWidth="2.8"
+                />
+                <circle
+                  cx="0"
+                  cy="90"
+                  r="7.2"
+                  fill="none"
+                  stroke="rgba(186, 230, 253, 0.6)"
+                  strokeWidth="0.85"
+                />
+
+                {/* Elongated diamond-spear blade tapering to a sharp needle point */}
+                <polygon
+                  points="-1.9,101 1.9,101 3.8,117 0,170 -3.8,117"
+                  fill="url(#modernHandGrad)"
+                />
+              </g>
+
+              {/* Sweeping Big Clock Hand ("Loku Katta") & Flashlight Cone */}
+              <g
+                style={{
+                  transform: `rotate(${needleRotationDeg}deg)`,
                   transformOrigin: "0px 0px",
                   transition: handTransition,
                   willChange: "transform",
                 }}
               >
-                <polygon
-                  points={`0,0 ${-CONE_HALF_WIDTH},${BASE_BEAM_LEN} ${CONE_HALF_WIDTH},${BASE_BEAM_LEN}`}
-                  fill="url(#flashlightConeGrad)"
-                />
-                <line
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2={BASE_BEAM_LEN}
-                  stroke="url(#beamGrad)"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
-                  filter="url(#cyanGlow)"
-                />
+                {/* Scaled Beam & Flashlight Cone */}
+                <g
+                  style={{
+                    transform: `scaleY(${beamScaleY})`,
+                    transformOrigin: "0px 0px",
+                    transition: handTransition,
+                    willChange: "transform",
+                  }}
+                >
+                  <polygon
+                    points={`0,0 ${-CONE_HALF_WIDTH},${BASE_BEAM_LEN} ${CONE_HALF_WIDTH},${BASE_BEAM_LEN}`}
+                    fill="url(#flashlightConeGrad)"
+                  />
+                  <line
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2={BASE_BEAM_LEN}
+                    stroke="url(#beamGrad)"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                    filter="url(#blueGlow)"
+                  />
+                </g>
+
+                {/* Classic Horological Base Ornament on the Big Hand */}
+                <g filter="url(#blueGlow)">
+                  <polygon
+                    points="-1.8,0 1.8,0 2.8,-24 0,-32 -2.8,-24"
+                    fill="url(#modernHandGrad)"
+                  />
+                  <polygon points="-2.8,0 2.8,0 2,43 -2,43" fill="#e0f2fe" />
+                  <circle
+                    cx="0"
+                    cy="52"
+                    r="7.5"
+                    fill="#010206"
+                    stroke="#e0f2fe"
+                    strokeWidth="2.2"
+                  />
+                </g>
+
+                {/* Flashlight Impact Hotspot Burst on Active Card Top Edge */}
+                <g
+                  style={{
+                    transform: `translateY(${activeTarget.beamLen}px)`,
+                    transition: handTransition,
+                    willChange: "transform",
+                  }}
+                >
+                  <circle cx="0" cy="0" r="52" fill="url(#hotspotGrad)" />
+                  <circle
+                    cx="0"
+                    cy="0"
+                    r="5"
+                    fill="#ffffff"
+                    filter="url(#blueGlow)"
+                  />
+                </g>
               </g>
 
-              {/* Classic Horological Base Ornament on the Big Hand */}
-              <g filter="url(#cyanGlow)">
-                <polygon
-                  points="-1.8,0 1.8,0 2.8,-24 0,-32 -2.8,-24"
-                  fill="url(#modernHandGrad)"
-                />
-                <polygon points="-2.8,0 2.8,0 2,43 -2,43" fill="#e0f2fe" />
-                <circle
-                  cx="0"
-                  cy="52"
-                  r="7.5"
-                  fill="#010206"
-                  stroke="#e0f2fe"
-                  strokeWidth="2.2"
-                />
-              </g>
-
-              {/* Flashlight Impact Hotspot Burst on Active Card Top Edge */}
-              <g
-                style={{
-                  transform: `translateY(${activeTarget.beamLen}px)`,
-                  transition: handTransition,
-                  willChange: "transform",
-                }}
-              >
-                <circle cx="0" cy="0" r="52" fill="url(#hotspotGrad)" />
+              {/* Classic Ornate Center Rosette & Arbor Joint Point */}
+              <g>
                 <circle
                   cx="0"
                   cy="0"
-                  r="5"
-                  fill="#ffffff"
-                  filter="url(#cyanGlow)"
+                  r="14"
+                  fill="#020617"
+                  stroke="rgba(56, 189, 248, 0.4)"
+                  strokeWidth="1"
                 />
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="10.5"
+                  fill="none"
+                  stroke="rgba(186, 230, 253, 0.65)"
+                  strokeWidth="1.2"
+                  strokeDasharray="2 2.5"
+                />
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="7"
+                  fill="#0f172a"
+                  stroke="#7dd3fc"
+                  strokeWidth="1.4"
+                />
+                <circle cx="0" cy="0" r="3" fill="#f0f9ff" />
               </g>
-            </g>
-
-            {/* Classic Ornate Center Rosette & Arbor Joint Point */}
-            <g>
-              <circle
-                cx="0"
-                cy="0"
-                r="14"
-                fill="#020617"
-                stroke="rgba(56, 189, 248, 0.4)"
-                strokeWidth="1"
-              />
-              <circle
-                cx="0"
-                cy="0"
-                r="10.5"
-                fill="none"
-                stroke="rgba(186, 230, 253, 0.65)"
-                strokeWidth="1.2"
-                strokeDasharray="2 2.5"
-              />
-              <circle
-                cx="0"
-                cy="0"
-                r="7"
-                fill="#0f172a"
-                stroke="#7dd3fc"
-                strokeWidth="1.4"
-              />
-              <circle cx="0" cy="0" r="3" fill="#f0f9ff" />
             </g>
           </g>
         </svg>
       </div>
 
+      {/* ============================================================ */}
+      {/* MOBILE CINEMATIC TIMELINE STAGE (lg:hidden)                  */}
+      {/* Vertical Timeline Cascade, Focused Active Card,              */}
+      {/* Cyan Beacon Flare, Floor Rings & Character Silhouette        */}
+      {/* ============================================================ */}
+      <div
+        className="lg:hidden relative z-20 w-full flex flex-col justify-start gap-2.5 min-h-0 sm:min-h-155 pt-0.5 pb-2"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Top Header Row: Mobile Title & Stepper */}
+        <div className="w-full flex items-start justify-between gap-3 pt-1">
+          <div className="flex flex-col text-left">
+            <span className="font-cinzel text-[9px] tracking-[0.3em] text-zinc-400 uppercase">
+              A
+            </span>
+            <h2 className="font-cinzel text-xl xs:text-2xl font-bold tracking-[0.16em] text-white leading-tight">
+              JOURNEY
+            </h2>
+            <span className="font-cinzel text-xs xs:text-sm font-bold tracking-[0.24em] text-sky-400">
+              THROUGH TIME
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 pt-1">
+            <button
+              type="button"
+              onClick={handlePrev}
+              aria-label="Previous year"
+              className="p-1.5 rounded-sm border border-blue-900/70 bg-[#050b18]/85 text-zinc-300 hover:text-sky-300 active:scale-95 transition"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+            <span className="font-cinzel text-xs font-bold tracking-[0.18em] text-sky-300 min-w-10 text-center">
+              {activeMilestone.year}
+            </span>
+            <button
+              type="button"
+              onClick={handleNext}
+              aria-label="Next year"
+              className="p-1.5 rounded-sm border border-blue-900/70 bg-[#050b18]/85 text-zinc-300 hover:text-sky-300 active:scale-95 transition"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Center Stage: Left Vertical Years Track + Right Focused Active Milestone Card */}
+        <div className="relative w-full my-1 sm:my-auto py-1 flex items-center justify-between gap-2 xs:gap-3">
+          {/* Left Column: Stacked Timeline Years (2021 - 2026) */}
+          <div className="flex flex-col items-start gap-2.5 xs:gap-3.5 shrink-0 pl-1 z-20">
+            {MILESTONES.map((item, idx) => {
+              const isActive = idx === activeIndex;
+              return (
+                <button
+                  key={item.year}
+                  type="button"
+                  onClick={() => setActiveIndex(idx)}
+                  className="group relative flex items-center gap-2 cursor-pointer focus:outline-none transition-all duration-300 py-0.5"
+                >
+                  {/* Glowing Lens Flare behind Active Year */}
+                  {isActive && (
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -inset-x-4 -inset-y-3 rounded-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.5)_0%,rgba(14,165,233,0.22)_45%,transparent_75%)] animate-pulse z-0"
+                    />
+                  )}
+
+                  {/* Marker Beacon on Active Year */}
+                  <span
+                    className={`relative z-10 rounded-full transition-all duration-300 ${
+                      isActive
+                        ? "w-2 h-2 bg-sky-300 shadow-[0_0_12px_#38bdf8]"
+                        : "w-1.5 h-1.5 bg-zinc-600/70 group-hover:bg-sky-500/70"
+                    }`}
+                  />
+
+                  {/* Large Stylized Year Text */}
+                  <span
+                    className={`relative z-10 font-cinzel font-bold tracking-widest transition-all duration-300 ${
+                      isActive
+                        ? "text-3xl xs:text-4xl text-white drop-shadow-[0_0_18px_rgba(56,189,248,0.95)] scale-105"
+                        : "text-lg xs:text-xl text-zinc-500/75 group-hover:text-zinc-300"
+                    }`}
+                  >
+                    {item.year}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right Column: Focused Active Milestone Card */}
+          <div className="flex-1 max-w-[62%] xs:max-w-[64%] sm:max-w-[66%] z-20">
+            <div
+              key={activeMilestone.year}
+              className="relative w-full rounded-xl border border-sky-400/80 bg-[#040916]/95 backdrop-blur-md shadow-[0_0_28px_rgba(56,189,248,0.28)] overflow-hidden transition-all duration-500 animate-in fade-in zoom-in-95"
+            >
+              {/* Flashlight beam impact flare along top edge */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-1 inset-x-0 h-10 rounded-t-xl"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 70% 90% at 50% 0%, rgba(165, 243, 252, 0.5) 0%, rgba(56, 189, 248, 0.25) 50%, transparent 85%)",
+                }}
+              />
+
+              {/* Milestone Image */}
+              <div className="relative w-full h-28 xs:h-32 sm:h-36 overflow-hidden bg-[#030712] border-b border-sky-500/20">
+                <Image
+                  src={activeMilestone.image}
+                  alt={`${activeMilestone.year} - ${activeMilestone.chapter}`}
+                  fill
+                  sizes="320px"
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                  priority
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-[#040916]/90 via-transparent to-transparent" />
+              </div>
+
+              {/* Card Content */}
+              <div className="p-3 xs:p-3.5">
+                <div className="flex items-baseline justify-between gap-1.5">
+                  <span className="font-cinzel text-base xs:text-lg font-bold tracking-wider text-sky-300">
+                    {activeMilestone.year}
+                  </span>
+                  <span className="text-[8px] xs:text-[8.5px] font-mono tracking-[0.2em] text-sky-400/90 uppercase">
+                    {activeMilestone.chapter}
+                  </span>
+                </div>
+
+                <h3 className="mt-1 text-[11px] xs:text-xs font-bold text-white leading-snug line-clamp-1">
+                  {activeMilestone.role}
+                </h3>
+                <p className="text-[9px] xs:text-[9.5px] text-sky-300/80 font-medium line-clamp-1">
+                  {activeMilestone.institution}
+                </p>
+
+                <ul className="mt-2 space-y-0.5 border-t border-blue-950/80 pt-1.5">
+                  {activeMilestone.highlights.map((line, lIdx) => (
+                    <li
+                      key={lIdx}
+                      className="text-[7.5px] xs:text-[8px] font-mono tracking-wider text-zinc-400 leading-tight"
+                    >
+                      • {line}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Bottom Link Arrow matching reference image */}
+                <div className="mt-1.5 flex justify-end">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-sky-400/90 hover:text-sky-300 transition" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Row: Editorial Footnotes (Clean, matching desktop view) */}
+        <div className="relative z-20 w-full flex items-end justify-between pt-4 pb-1">
+          <p className="font-cinzel text-[8.5px] xs:text-[9.5px] tracking-[0.26em] text-zinc-500 uppercase leading-relaxed text-left">
+            SAME
+            <br />
+            CURIOSITY
+            <br />
+            A BRIGHTER
+            <br />
+            <span className="text-zinc-300">TOMORROW</span>
+          </p>
+
+          <p className="font-cinzel text-[8.5px] xs:text-[9.5px] tracking-[0.26em] text-zinc-500 uppercase text-right leading-relaxed">
+            STILL
+            <br />
+            BUILDING
+            <br />
+            WHAT&apos;S
+            <br />
+            <span className="text-sky-400 font-bold">NEXT</span>
+          </p>
+        </div>
+      </div>
+
+      {/* ============================================================ */}
+      {/* DESKTOP EXPERIENCE (hidden lg:block / hidden lg:flex)        */}
+      {/* ============================================================ */}
       {/* 3. Top Header Row: Left Editorial Title & Right Interactive Prompt */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
+      <div className="hidden lg:flex relative z-20 w-full max-w-7xl mx-auto flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
         {/* Top-Left Stacked Editorial Title */}
         <div
           ref={leftHeaderRef}
@@ -752,22 +994,22 @@ export function Journey() {
             <br />
             THROUGH
             <br />
-            <span className="text-cyan-400 drop-shadow-[0_0_15px_rgba(56,189,248,0.65)]">
+            <span className="text-sky-400 drop-shadow-[0_0_15px_rgba(56,189,248,0.65)]">
               TIME
             </span>
           </h2>
 
-          <div className="mt-3 sm:mt-5 pl-2 sm:pl-0.5 border-l border-cyan-500/40 flex flex-wrap sm:flex-col gap-x-3 gap-y-1 sm:gap-1.5 text-[9px] sm:text-[10px] font-mono tracking-[0.18em] sm:tracking-[0.28em] text-zinc-500 uppercase">
-            <span className={activeIndex <= 1 ? "text-cyan-300" : ""}>
+          <div className="mt-3 sm:mt-5 pl-2 sm:pl-0.5 border-l border-sky-500/40 flex flex-wrap sm:flex-col gap-x-3 gap-y-1 sm:gap-1.5 text-[9px] sm:text-[10px] font-mono tracking-[0.18em] sm:tracking-[0.28em] text-zinc-500 uppercase">
+            <span className={activeIndex <= 1 ? "text-sky-300" : ""}>
               2021–2023 · HND
             </span>
-            <span className={activeIndex === 2 ? "text-cyan-300" : ""}>
+            <span className={activeIndex === 2 ? "text-sky-300" : ""}>
               2023–2024 · TOP-UP
             </span>
-            <span className={activeIndex === 3 ? "text-cyan-300" : ""}>
+            <span className={activeIndex === 3 ? "text-sky-300" : ""}>
               2024–2025 · INTERN
             </span>
-            <span className={activeIndex >= 4 ? "text-cyan-300" : ""}>
+            <span className={activeIndex >= 4 ? "text-sky-300" : ""}>
               2025–PRESENT · SOFTWARE ENGINEER
             </span>
           </div>
@@ -781,7 +1023,7 @@ export function Journey() {
           <p className="font-cinzel text-[10px] sm:text-xs tracking-[0.24em] sm:tracking-[0.26em] text-zinc-400 uppercase leading-relaxed">
             SELECT A YEAR TO TRAVEL
             <br className="hidden sm:inline" />{" "}
-            <span className="text-cyan-400">THROUGH TIME</span>
+            <span className="text-sky-400">THROUGH TIME</span>
           </p>
 
           <div className="flex items-center gap-2">
@@ -789,18 +1031,18 @@ export function Journey() {
               type="button"
               onClick={handlePrev}
               aria-label="Previous year"
-              className="p-2 rounded-sm border border-cyan-900/70 bg-[#050b18]/80 text-zinc-300 hover:text-cyan-300 hover:border-cyan-400/70 transition cursor-pointer"
+              className="p-2 rounded-sm border border-blue-900/70 bg-[#050b18]/80 text-zinc-300 hover:text-sky-300 hover:border-sky-400/70 transition cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="font-cinzel text-sm font-bold tracking-[0.2em] text-cyan-300 min-w-13.5 text-center">
+            <span className="font-cinzel text-sm font-bold tracking-[0.2em] text-sky-300 min-w-13.5 text-center">
               {activeMilestone.year}
             </span>
             <button
               type="button"
               onClick={handleNext}
               aria-label="Next year"
-              className="p-2 rounded-sm border border-cyan-900/70 bg-[#050b18]/80 text-zinc-300 hover:text-cyan-300 hover:border-cyan-400/70 transition cursor-pointer"
+              className="p-2 rounded-sm border border-blue-900/70 bg-[#050b18]/80 text-zinc-300 hover:text-sky-300 hover:border-sky-400/70 transition cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -809,14 +1051,14 @@ export function Journey() {
       </div>
 
       {/* 4. Stepped Year Headers & Milestone Cards (2021 – 2026) - All 6 Milestones Visible On All Screen Resolutions */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto mt-4 sm:mt-6 lg:mt-16 xl:mt-20 mb-2">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-3 items-start pb-6 sm:pb-8">
+      <div className="hidden lg:block relative z-20 w-full max-w-7xl mx-auto mt-4 sm:mt-6 lg:mt-16 xl:mt-20 mb-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-3 items-start pb-3 sm:pb-6 lg:pb-8">
           {MILESTONES.map((item, idx) => {
             const isActive = idx === activeIndex;
             return (
               <div
                 key={item.year}
-                onClick={() => setActiveIndex(idx)}
+                onClick={() => handleSelectYear(idx)}
                 onMouseEnter={() => setActiveIndex(idx)}
                 style={{
                   // Stepped diagonal cascade applied on desktop
@@ -835,13 +1077,13 @@ export function Journey() {
                 >
                   <button
                     type="button"
-                    onClick={() => setActiveIndex(idx)}
+                    onClick={() => handleSelectYear(idx)}
                     className="flex flex-col items-center gap-1.5 mb-3 cursor-pointer focus:outline-none"
                   >
                     <span
                       className={`font-cinzel text-lg sm:text-xl md:text-2xl font-bold tracking-[0.14em] transition-all duration-300 ${
                         isActive
-                          ? "text-cyan-300 scale-110 drop-shadow-[0_0_14px_rgba(56,189,248,0.9)]"
+                          ? "text-sky-300 scale-110 drop-shadow-[0_0_14px_rgba(56,189,248,0.9)]"
                           : "text-zinc-400 opacity-75 group-hover:opacity-100 group-hover:text-zinc-200"
                       }`}
                     >
@@ -851,8 +1093,8 @@ export function Journey() {
                       aria-hidden="true"
                       className={`h-0.5 rounded-full transition-all duration-500 ${
                         isActive
-                          ? "w-12 bg-cyan-400 shadow-[0_0_12px_#38bdf8]"
-                          : "w-6 bg-cyan-900/60 group-hover:w-9 group-hover:bg-cyan-500/70"
+                          ? "w-12 bg-sky-400 shadow-[0_0_12px_#38bdf8]"
+                          : "w-6 bg-blue-900/60 group-hover:w-9 group-hover:bg-sky-500/70"
                       }`}
                     />
                   </button>
@@ -864,8 +1106,8 @@ export function Journey() {
                     }}
                     className={`relative w-full rounded-lg border transition-all duration-500 backdrop-blur-md ${
                       isActive
-                        ? "bg-[#061126]/95 border-cyan-400/85 shadow-[0_0_28px_rgba(56,189,248,0.32)] scale-[1.03]"
-                        : "bg-[#040914]/85 border-cyan-950/70 group-hover:border-cyan-600/60 opacity-85 group-hover:opacity-100"
+                        ? "bg-[#061126]/95 border-sky-400/85 shadow-[0_0_28px_rgba(56,189,248,0.32)] scale-[1.03]"
+                        : "bg-[#040914]/85 border-blue-950/70 group-hover:border-sky-500/60 opacity-85 group-hover:opacity-100"
                     }`}
                   >
                     {/* Flashlight beam impact flare along the top edge of the targeted card */}
@@ -890,12 +1132,12 @@ export function Journey() {
                       <div className="flex items-baseline justify-between gap-2">
                         <span
                           className={`font-cinzel text-lg font-bold tracking-wider ${
-                            isActive ? "text-cyan-300" : "text-zinc-200"
+                            isActive ? "text-sky-300" : "text-zinc-200"
                           }`}
                         >
                           {item.year}
                         </span>
-                        <span className="text-[9px] font-mono tracking-[0.2em] text-cyan-400/90 uppercase">
+                        <span className="text-[9px] font-mono tracking-[0.2em] text-sky-400/90 uppercase">
                           {item.chapter}
                         </span>
                       </div>
@@ -903,11 +1145,11 @@ export function Journey() {
                       <h3 className="mt-1.5 text-xs font-bold text-white leading-snug">
                         {item.role}
                       </h3>
-                      <p className="text-[10px] text-cyan-300/80 font-medium mt-0.5">
+                      <p className="text-[10px] text-sky-300/80 font-medium mt-0.5">
                         {item.institution}
                       </p>
 
-                      <ul className="mt-3 space-y-1 border-t border-cyan-950/80 pt-2.5">
+                      <ul className="mt-3 space-y-1 border-t border-blue-950/80 pt-2.5">
                         {item.highlights.map((line, lIdx) => (
                           <li
                             key={lIdx}
@@ -929,7 +1171,7 @@ export function Journey() {
       {/* 5. Bottom Row: Editorial Footnotes */}
       <div
         ref={footerRef}
-        className="relative z-20 w-full max-w-7xl mx-auto flex items-end justify-between pt-2 will-change-transform"
+        className="hidden lg:flex relative z-20 w-full max-w-7xl mx-auto items-end justify-between pt-2 will-change-transform"
       >
         <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.28em] text-zinc-500 uppercase leading-relaxed">
           SAME
@@ -948,7 +1190,7 @@ export function Journey() {
           <br />
           WHAT&apos;S
           <br />
-          <span className="text-cyan-400">NEXT</span>
+          <span className="text-sky-400">NEXT</span>
         </p>
       </div>
     </section>

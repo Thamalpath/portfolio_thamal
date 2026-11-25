@@ -59,7 +59,7 @@ export function PortfolioShell() {
   }, [showPortfolio]);
 
   return (
-    <main className="relative min-h-screen bg-[#010206] text-zinc-100 selection:bg-cyan-500 selection:text-black overflow-x-clip">
+    <main className="relative min-h-screen bg-[#010206] text-zinc-100 selection:bg-sky-500 selection:text-black overflow-x-clip">
       {!loaderDone && (
         <PageLoader
           onRevealStart={handleRevealStart}
@@ -77,15 +77,15 @@ export function PortfolioShell() {
             <Hero />
           </div>
 
-          {/* Journey Layer gliding smoothly over Hero with an atmospheric obsidian-cyan horizon bridge */}
-          <div className="relative z-10 bg-[#010206] shadow-[0_-40px_90px_rgba(1,2,6,0.98)]">
+          {/* Journey Layer gliding smoothly over Hero with an atmospheric obsidian-blue horizon bridge */}
+          <div className="relative z-10 bg-[#010206] shadow-[0_-15px_30px_rgba(1,2,6,0.95)] sm:shadow-[0_-40px_90px_rgba(1,2,6,0.98)]">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -top-28 inset-x-0 h-28 bg-linear-to-b from-transparent via-[#010206]/80 to-[#010206]"
+              className="pointer-events-none absolute -top-4 sm:-top-20 inset-x-0 h-4 sm:h-20 bg-linear-to-b from-transparent via-[#010206]/50 to-[#010206]"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-cyan-400/55 to-transparent shadow-[0_0_20px_rgba(56,189,248,0.5)] z-30"
+              className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-sky-400/55 to-transparent shadow-[0_0_20px_rgba(56,189,248,0.5)] z-30"
             />
             <JourneySkillsDeck />
             <Experience />

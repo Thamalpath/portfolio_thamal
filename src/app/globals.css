@@ -43,21 +43,35 @@ body {
   font-family: var(--font-playfair), Georgia, serif;
 }
 
-/* Cyan / Sapphire Cyber Gradient Utilities */
+/* Sapphire Cyber Blue Gradient Utilities (Hero Theme) */
+.blue-text-gradient,
 .cyan-text-gradient {
-  background: linear-gradient(180deg, #ffffff 0%, #bae6fd 28%, #38bdf8 65%, #0284c7 100%);
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #bae6fd 25%,
+    #38bdf8 60%,
+    #0284c7 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
+.blue-glow,
 .cyan-glow {
   filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.45));
 }
 
 /* Luxury Gold & Champagne Shimmer Gradients */
 .gold-text-gradient {
-  background: linear-gradient(180deg, #fff7db 0%, #f6d88c 28%, #d4af37 65%, #946d14 100%);
+  background: linear-gradient(
+    180deg,
+    #fff7db 0%,
+    #f6d88c 28%,
+    #d4af37 65%,
+    #946d14 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

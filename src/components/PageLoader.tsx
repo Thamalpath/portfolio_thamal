@@ -162,7 +162,7 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
 
       if (assetsReady && timeRatio >= 1) {
         setProgress(100);
-        // Step A: Center cyan laser seam flash
+        // Step A: Center electric blue laser seam flash
         flashTimer = setTimeout(() => {
           if (cancelled) return;
           setPhase("flash");
@@ -217,7 +217,7 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
       {/* Top Split Shutter Panel */}
       <div
         aria-hidden="true"
-        className={`absolute top-0 left-0 right-0 h-1/2 bg-[#010206] border-b border-cyan-500/20 transition-transform duration-800 ease-[cubic-bezier(0.76,0,0.24,1)] ${
+        className={`absolute top-0 left-0 right-0 h-1/2 bg-[#010206] border-b border-sky-500/20 transition-transform duration-800 ease-[cubic-bezier(0.76,0,0.24,1)] ${
           isSplitting ? "-translate-y-full" : "translate-y-0"
         }`}
       />
@@ -225,15 +225,15 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
       {/* Bottom Split Shutter Panel */}
       <div
         aria-hidden="true"
-        className={`absolute bottom-0 left-0 right-0 h-1/2 bg-[#010206] border-t border-cyan-500/20 transition-transform duration-800 ease-[cubic-bezier(0.76,0,0.24,1)] ${
+        className={`absolute bottom-0 left-0 right-0 h-1/2 bg-[#010206] border-t border-sky-500/20 transition-transform duration-800 ease-[cubic-bezier(0.76,0,0.24,1)] ${
           isSplitting ? "translate-y-full" : "translate-y-0"
         }`}
       />
 
-      {/* Horizontal Cyan Laser Seam Flash right before panels part */}
+      {/* Horizontal Blue Laser Seam Flash right before panels part */}
       <div
         aria-hidden="true"
-        className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-linear-to-r from-transparent via-cyan-300 to-transparent shadow-[0_0_24px_#38bdf8,0_0_48px_#0ea5e9] transition-all duration-300 ${
+        className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-linear-to-r from-transparent via-sky-300 to-transparent shadow-[0_0_24px_#38bdf8,0_0_48px_#0ea5e9] transition-all duration-300 ${
           phase === "flash" ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
         }`}
       />
@@ -273,7 +273,7 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
         >
-          <span className="font-bebas text-[28vw] sm:text-[22vw] leading-none tracking-wider text-cyan-400/[0.035] tabular-nums">
+          <span className="font-bebas text-[28vw] sm:text-[22vw] leading-none tracking-wider text-sky-400/[0.035] tabular-nums">
             {String(progress).padStart(2, "0")}
           </span>
         </div>
@@ -282,8 +282,8 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
         <div className="relative z-10 flex items-center justify-between text-[9px] sm:text-[10px] font-mono tracking-[0.28em] text-zinc-400 uppercase">
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-400 shadow-[0_0_8px_#38bdf8]" />
             </span>
             <span className="text-zinc-300">PORTFOLIO</span>
           </div>
@@ -293,7 +293,7 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
         {/* Center Gyroscopic Horological Core + Letter-by-Letter Brand Reveal */}
         <div className="relative z-10 flex flex-col items-center justify-center my-auto">
           <div className="relative w-60 h-60 sm:w-72 sm:h-72 md:w-80 md:h-80 flex items-center justify-center">
-            <div className="absolute inset-6 rounded-full bg-cyan-500/12 blur-2xl animate-pulse" />
+            <div className="absolute inset-6 rounded-full bg-sky-500/12 blur-2xl animate-pulse" />
 
             <svg
               viewBox="0 0 200 200"
@@ -434,7 +434,7 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
             })}
           </div>
 
-          <p className="mt-3 text-[10px] sm:text-xs font-mono tracking-[0.38em] text-cyan-400/85 uppercase">
+          <p className="mt-3 text-[10px] sm:text-xs font-mono tracking-[0.38em] text-sky-400/85 uppercase">
             FULL-STACK ENGINEER · ARCHITECT · DESIGNER
           </p>
         </div>
@@ -447,7 +447,7 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
               <span className="text-zinc-500">
                 DEVELOPER · DESIGNER · ENGINEER
               </span>
-              <span className="text-cyan-300/90">
+              <span className="text-sky-300/90">
                 {getLoadingStage(progress)}
               </span>
             </div>
@@ -456,7 +456,7 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
             <div className="flex flex-col items-end">
               <span className="font-bebas text-4xl sm:text-5xl leading-none tracking-wider text-zinc-100 tabular-nums drop-shadow-[0_0_16px_rgba(56,189,248,0.45)]">
                 {String(progress).padStart(2, "0")}
-                <span className="text-cyan-400 text-2xl sm:text-3xl ml-0.5">
+                <span className="text-sky-400 text-2xl sm:text-3xl ml-0.5">
                   %
                 </span>
               </span>
@@ -464,9 +464,9 @@ export function PageLoader({ onRevealStart, onComplete }: PageLoaderProps) {
           </div>
 
           {/* Edge-to-Edge Laser Progress Rail */}
-          <div className="relative h-0.5 w-full bg-cyan-950/70 overflow-hidden rounded-full">
+          <div className="relative h-0.5 w-full bg-blue-950/70 overflow-hidden rounded-full">
             <div
-              className="h-full bg-linear-to-r from-blue-700 via-cyan-400 to-white shadow-[0_0_14px_#38bdf8] transition-[width] duration-100 ease-out"
+              className="h-full bg-linear-to-r from-blue-700 via-sky-400 to-white shadow-[0_0_14px_#38bdf8] transition-[width] duration-100 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>

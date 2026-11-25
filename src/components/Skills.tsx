@@ -266,7 +266,11 @@ function PhpLogo() {
 
 function MySqlLogo() {
   return (
-    <svg viewBox="0 0 128 128" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
+    <svg
+      viewBox="0 0 128 128"
+      className="w-10 h-10 sm:w-11 sm:h-11"
+      fill="none"
+    >
       <defs>
         <linearGradient
           id="mysqlDolphinGrad"
@@ -290,7 +294,11 @@ function MySqlLogo() {
 
 function PostgresLogo() {
   return (
-    <svg viewBox="0 0 128 128" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
+    <svg
+      viewBox="0 0 128 128"
+      className="w-10 h-10 sm:w-11 sm:h-11"
+      fill="none"
+    >
       {/* Official PostgreSQL Slonik Elephant Head */}
       <path
         fill="#29557B"
@@ -314,7 +322,11 @@ function PostgresLogo() {
 
 function SqlServerLogo() {
   return (
-    <svg viewBox="0 0 128 128" className="w-10 h-10 sm:w-11 sm:h-11" fill="none">
+    <svg
+      viewBox="0 0 128 128"
+      className="w-10 h-10 sm:w-11 sm:h-11"
+      fill="none"
+    >
       <defs>
         <linearGradient
           id="mssqlGradA"
@@ -866,15 +878,19 @@ const SKILL_CATEGORIES: SkillCategory[] = [
     skills: [
       {
         name: "Problem Solving",
-        icon: <Lightbulb className="w-10 h-10 sm:w-11 sm:h-11 text-cyan-300" />,
+        icon: <Lightbulb className="w-10 h-10 sm:w-11 sm:h-11 text-sky-300" />,
       },
       {
         name: "Agile / Scrum",
-        icon: <TrendingUp className="w-10 h-10 sm:w-11 sm:h-11 text-blue-400" />,
+        icon: (
+          <TrendingUp className="w-10 h-10 sm:w-11 sm:h-11 text-blue-400" />
+        ),
       },
       {
         name: "Code Reviews",
-        icon: <ShieldCheck className="w-10 h-10 sm:w-11 sm:h-11 text-emerald-400" />,
+        icon: (
+          <ShieldCheck className="w-10 h-10 sm:w-11 sm:h-11 text-emerald-400" />
+        ),
       },
       {
         name: "Collaboration",
@@ -882,7 +898,9 @@ const SKILL_CATEGORIES: SkillCategory[] = [
       },
       {
         name: "Communication",
-        icon: <MessageSquare className="w-10 h-10 sm:w-11 sm:h-11 text-slate-300" />,
+        icon: (
+          <MessageSquare className="w-10 h-10 sm:w-11 sm:h-11 text-slate-300" />
+        ),
       },
     ],
   },
@@ -909,57 +927,79 @@ export function Skills() {
     const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
 
     const applyVisuals = (p: number) => {
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
+      const vh = typeof window !== "undefined" ? window.innerHeight : 800;
+
       // 1. Dynamic Horizon Laser Beam on the seam between Journey & Skills
-      const horizonP = clamp01(p * 1.5);
+      const horizonP = clamp01(p * 1.6);
       if (horizonBeamRef.current) {
-        horizonBeamRef.current.style.transform = `scaleX(${(0.15 + horizonP * 0.85).toFixed(4)})`;
-        horizonBeamRef.current.style.opacity = (0.3 + horizonP * 0.7).toFixed(
-          3,
-        );
+        horizonBeamRef.current.style.transform = `scaleX(${(0.08 + horizonP * 0.92).toFixed(4)})`;
+        horizonBeamRef.current.style.opacity = (0.2 + horizonP * 0.8).toFixed(3);
       }
 
       // 2. Top Editorial Motto & SKILLS Title: glide gracefully up into position
-      const headerP = easeOutCubic(clamp01((p - 0.03) / 0.68));
+      const headerP = easeOutCubic(clamp01((p - 0.02) / 0.65));
       if (mottoRef.current) {
         mottoRef.current.style.opacity = headerP.toFixed(3);
-        mottoRef.current.style.transform = `translate3d(0, ${((1 - headerP) * 28).toFixed(1)}px, 0)`;
+        mottoRef.current.style.transform = `translate3d(0, ${((1 - headerP) * (isMobile ? 22 : 28)).toFixed(1)}px, 0)`;
       }
       if (titleRef.current) {
         titleRef.current.style.opacity = headerP.toFixed(3);
-        titleRef.current.style.transform = `translate3d(0, ${((1 - headerP) * 36).toFixed(1)}px, 0)`;
+        titleRef.current.style.transform = `translate3d(0, ${((1 - headerP) * (isMobile ? 30 : 36)).toFixed(1)}px, 0)`;
       }
 
       // 3. Left Personal Portrait Card: dimensional depth emergence
-      const portraitP = easeOutCubic(clamp01((p - 0.06) / 0.7));
+      const portraitP = easeOutCubic(clamp01((p - 0.05) / 0.68));
       if (portraitRef.current) {
         portraitRef.current.style.opacity = portraitP.toFixed(3);
-        portraitRef.current.style.transform = `translate3d(0, ${((1 - portraitP) * 50).toFixed(1)}px, 0) scale(${(0.96 + portraitP * 0.04).toFixed(4)})`;
+        portraitRef.current.style.transform = `translate3d(0, ${((1 - portraitP) * (isMobile ? 38 : 50)).toFixed(1)}px, 0) scale(${(0.96 + portraitP * 0.04).toFixed(4)})`;
       }
       if (laserScanRef.current) {
-        const scanY = (portraitP * 340 - 20).toFixed(1);
+        const scanY = (portraitP * 460 - 20).toFixed(1);
         laserScanRef.current.style.transform = `translate3d(0, ${scanY}px, 0)`;
         laserScanRef.current.style.opacity =
           portraitP > 0.04 && portraitP < 0.96
-            ? (Math.sin(portraitP * Math.PI) * 0.75).toFixed(3)
+            ? (Math.sin(portraitP * Math.PI) * 0.85).toFixed(3)
             : "0";
       }
 
-      // 4. Staggered Skill Categories (Right): cascading wave
+      // 4. Staggered Skill Categories (Right): cascading wave on desktop, progressive viewport reveals on mobile
       SKILL_CATEGORIES.forEach((_, idx) => {
         const el = categoryRefs.current[idx];
         if (!el) return;
-        const start = 0.08 + idx * 0.065;
-        const cardP = easeOutCubic(clamp01((p - start) / 0.52));
-        el.style.opacity = cardP.toFixed(3);
-        el.style.transform = `translate3d(0, ${((1 - cardP) * 42).toFixed(1)}px, 0)`;
+
+        if (isMobile) {
+          // On mobile, each card gracefully glides up and activates as it scrolls into the viewport
+          const cardRect = el.getBoundingClientRect();
+          const cardStartY = vh * 0.96;
+          const cardEndY = vh * 0.40;
+          const cardProgress = clamp01((cardStartY - cardRect.top) / (cardStartY - cardEndY));
+          const cardP = easeOutCubic(cardProgress);
+          el.style.opacity = cardP.toFixed(3);
+          el.style.transform = `translate3d(0, ${((1 - cardP) * 32).toFixed(1)}px, 0) scale(${(0.96 + cardP * 0.04).toFixed(3)})`;
+        } else {
+          const start = 0.08 + idx * 0.065;
+          const cardP = easeOutCubic(clamp01((p - start) / 0.52));
+          el.style.opacity = cardP.toFixed(3);
+          el.style.transform = `translate3d(0, ${((1 - cardP) * 42).toFixed(1)}px, 0)`;
+        }
       });
     };
 
     const computeTarget = () => {
       const rect = section.getBoundingClientRect();
       const vh = Math.max(window.innerHeight, 1);
-      // Progress 0 when section enters bottom -> 1 when section top reaches near 20% viewport
-      target = clamp01((vh - rect.top) / (vh * 0.88));
+      const isMobile = window.innerWidth < 1024;
+
+      if (isMobile) {
+        // Smoothly triggers as Skills approaches and enters the mobile viewport
+        const startY = vh * 0.95;
+        const endY = vh * 0.30;
+        target = clamp01((startY - rect.top) / (startY - endY));
+      } else {
+        // Progress 0 when section enters bottom -> 1 when section top reaches near 20% viewport
+        target = clamp01((vh - rect.top) / (vh * 0.88));
+      }
     };
 
     const tick = () => {
@@ -971,7 +1011,7 @@ export function Skills() {
         return;
       }
       // Silky spring damping
-      current += diff * 0.055;
+      current += diff * 0.075;
       applyVisuals(current);
       rafId = requestAnimationFrame(tick);
     };
@@ -1001,9 +1041,9 @@ export function Skills() {
     <section
       ref={sectionRef}
       id="skills"
-      className="relative w-full overflow-hidden bg-[#010206] text-white pt-6 sm:pt-8 lg:pt-10 pb-14 sm:pb-20 px-3 sm:px-6 md:px-10 border-t border-cyan-950/60 select-none"
+      className="relative w-full overflow-hidden bg-[#010206] text-white pt-3 sm:pt-6 lg:pt-10 pb-8 sm:pb-14 lg:pb-20 px-3 sm:px-6 md:px-10 border-t border-blue-950/60 select-none"
     >
-      {/* 1. Ambient Obsidian & Sapphire/Cyan Architectural Background */}
+      {/* 1. Ambient Obsidian & Sapphire Architectural Background */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_22%_52%,rgba(14,165,233,0.16)_0%,rgba(30,64,175,0.09)_42%,transparent_75%)]"
@@ -1016,7 +1056,7 @@ export function Skills() {
       <div
         ref={horizonBeamRef}
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 inset-x-0 h-0.5 bg-linear-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_24px_rgba(56,189,248,0.7)] origin-center will-change-transform z-30"
+        className="pointer-events-none absolute top-0 inset-x-0 h-0.5 bg-linear-to-r from-transparent via-sky-400 to-transparent shadow-[0_0_24px_rgba(56,189,248,0.7)] origin-center will-change-transform z-30"
       />
       <div
         aria-hidden="true"
@@ -1031,7 +1071,7 @@ export function Skills() {
             <p className="font-mono text-[8.5px] sm:text-[10px] tracking-[0.24em] text-zinc-400 uppercase leading-relaxed">
               SKILLS TURN IDEAS
               <br />
-              <span className="text-cyan-400">INTO REALITY.</span>
+              <span className="text-sky-400">INTO REALITY.</span>
             </p>
           </div>
 
@@ -1043,7 +1083,7 @@ export function Skills() {
             <h2 className="font-cinzel text-2xl sm:text-4xl lg:text-5xl font-bold tracking-[0.18em] text-zinc-100 leading-none drop-shadow-[0_8px_24px_rgba(56,189,248,0.2)]">
               SKILLS
             </h2>
-            <p className="mt-0.5 sm:mt-1 font-cinzel text-[8px] sm:text-[10px] tracking-[0.32em] text-cyan-300/85 uppercase">
+            <p className="mt-0.5 sm:mt-1 font-cinzel text-[8px] sm:text-[10px] tracking-[0.32em] text-sky-300/85 uppercase">
               TOOLS THAT SHAPE MY VISION
             </p>
           </div>
@@ -1054,7 +1094,7 @@ export function Skills() {
           {/* Left Column (Desktop) / Top Banner (Mobile & Tablet): Thamalpath's Personal Portrait Framing */}
           <div
             ref={portraitRef}
-            className="lg:col-span-4 relative rounded-xl overflow-hidden border border-cyan-950/75 bg-[#030712]/90 h-64 sm:h-80 md:h-96 lg:h-full min-h-60 sm:min-h-80 lg:min-h-0 will-change-transform origin-center"
+            className="lg:col-span-4 relative rounded-xl overflow-hidden border border-blue-950/75 bg-[#030712]/90 h-95 xs:h-[420px] sm:h-117.5 md:h-125 lg:h-full min-h-90 xs:min-h-[400px] sm:min-h-112.5 lg:min-h-0 will-change-transform origin-center"
           >
             {/* Subtle Architectural Vertical Studio Light Beams behind Portrait */}
             <div
@@ -1063,7 +1103,7 @@ export function Skills() {
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 left-1/4 w-px h-full bg-linear-to-b from-cyan-400/35 via-cyan-500/10 to-transparent"
+              className="pointer-events-none absolute top-0 left-1/4 w-px h-full bg-linear-to-b from-sky-400/35 via-blue-500/10 to-transparent"
             />
             <div
               aria-hidden="true"
@@ -1086,7 +1126,7 @@ export function Skills() {
             <div
               ref={laserScanRef}
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 h-28 bg-linear-to-b from-transparent via-cyan-400/30 to-transparent z-15 will-change-transform"
+              className="pointer-events-none absolute inset-x-0 h-28 bg-linear-to-b from-transparent via-sky-400/30 to-transparent z-15 will-change-transform"
             />
 
             {/* Mobile / Tablet Overlay Badge */}
@@ -1094,7 +1134,7 @@ export function Skills() {
               <span className="font-cinzel text-xs sm:text-sm font-bold tracking-wider text-white">
                 THAMALPATH SATHIMANTHA
               </span>
-              <p className="font-mono text-[9px] sm:text-[10px] text-cyan-400 tracking-wide mt-0.5">
+              <p className="font-mono text-[9px] sm:text-[10px] text-sky-400 tracking-wide mt-0.5">
                 Full-Stack Software Engineer
               </p>
             </div>
@@ -1114,17 +1154,17 @@ export function Skills() {
                 ref={(el) => {
                   categoryRefs.current[catIdx] = el;
                 }}
-                className="group relative rounded-xl border border-cyan-950/75 bg-[#040914]/85 backdrop-blur-md p-2.5 sm:p-3 overflow-hidden transition-[border-color,background-color,box-shadow] duration-500 ease-out hover:border-cyan-400/55 hover:bg-[#061024]/90 hover:shadow-[0_0_24px_rgba(56,189,248,0.14)] will-change-transform"
+                className="group relative rounded-xl border border-blue-950/75 bg-[#040914]/85 backdrop-blur-md p-2.5 sm:p-3 overflow-hidden transition-[border-color,background-color,box-shadow] duration-500 ease-out hover:border-sky-400/55 hover:bg-[#061024]/90 hover:shadow-[0_0_24px_rgba(56,189,248,0.14)] will-change-transform"
               >
-                {/* Top Subtle Cyan Highlight Line on Hover */}
+                {/* Top Subtle Sky Highlight Line on Hover */}
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-cyan-400/0 to-transparent group-hover:via-cyan-400/70 transition-all duration-500"
+                  className="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-sky-400/0 to-transparent group-hover:via-sky-400/70 transition-all duration-500"
                 />
 
                 {/* Clean Category Header Row (Number + Title + Hairline) */}
                 <div className="flex items-center gap-2 mb-1.5 sm:mb-2">
-                  <span className="font-cinzel text-xs sm:text-sm font-bold text-cyan-400 drop-shadow-[0_0_8px_rgba(56,189,248,0.55)]">
+                  <span className="font-cinzel text-xs sm:text-sm font-bold text-sky-400 drop-shadow-[0_0_8px_rgba(56,189,248,0.55)]">
                     {category.number}
                   </span>
                   <h3 className="font-cinzel text-[11px] sm:text-xs font-bold tracking-[0.14em] text-zinc-100">
@@ -1132,7 +1172,7 @@ export function Skills() {
                   </h3>
                   <span
                     aria-hidden="true"
-                    className="flex-1 h-px bg-linear-to-r from-cyan-500/35 to-transparent"
+                    className="flex-1 h-px bg-linear-to-r from-sky-500/35 to-transparent"
                   />
                 </div>
 
@@ -1141,7 +1181,7 @@ export function Skills() {
                   {category.skills.map((skill) => (
                     <div
                       key={skill.name}
-                      className="group/tile relative flex flex-col items-center justify-center gap-1.5 rounded-lg bg-[#02050d]/95 border border-cyan-950/70 py-2 sm:py-2.5 px-1.5 overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.03] hover:border-cyan-400/80 hover:bg-linear-to-b hover:from-[#091b38] hover:to-[#02050e] hover:shadow-[0_8px_22px_rgba(14,165,233,0.28),0_0_10px_rgba(56,189,248,0.2)] cursor-pointer"
+                      className="group/tile relative flex flex-col items-center justify-center gap-1.5 rounded-lg bg-[#02050d]/95 border border-blue-950/70 py-2 sm:py-2.5 px-1.5 overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.03] hover:border-sky-400/80 hover:bg-linear-to-b hover:from-[#091b38] hover:to-[#02050e] hover:shadow-[0_8px_22px_rgba(14,165,233,0.28),0_0_10px_rgba(56,189,248,0.2)] cursor-pointer"
                     >
                       {/* Subtle Radial Blue Shimmer Core on Hover */}
                       <div
@@ -1152,7 +1192,7 @@ export function Skills() {
                       {/* Dynamic Diagonal Light Beam Sweep across the Tile */}
                       <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute -inset-full bg-linear-to-r from-transparent via-cyan-400/15 to-transparent -translate-x-full group-hover/tile:translate-x-full transition-transform duration-700 ease-out"
+                        className="pointer-events-none absolute -inset-full bg-linear-to-r from-transparent via-sky-400/15 to-transparent -translate-x-full group-hover/tile:translate-x-full transition-transform duration-700 ease-out"
                       />
 
                       {/* Icon with Scale, Float & Luminous Drop-Shadow */}
@@ -1172,6 +1212,12 @@ export function Skills() {
           </div>
         </div>
       </div>
+
+      {/* Smooth bottom transition fade towards Experience */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-16 sm:h-24 bg-linear-to-t from-[#010206] via-[#010206]/60 to-transparent z-20"
+      />
     </section>
   );
 }

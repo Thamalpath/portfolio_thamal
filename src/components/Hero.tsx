@@ -1,13 +1,50 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
-import { Menu, Volume2, VolumeX, X } from "lucide-react";
+import { Volume2, VolumeX } from "lucide-react";
 
 export function Hero() {
+  const [mounted, setMounted] = useState(false);
   const [activeNav, setActiveNav] = useState("HOME");
   const [soundEnabled, setSoundEnabled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuMounted, setMobileMenuMounted] = useState(false);
+  const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
+  const [isButtonOpening, setIsButtonOpening] = useState(false);
+  const [isClosingButton, setIsClosingButton] = useState(false);
+  const closingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleOpenMobileMenu = useCallback((e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (closingTimeoutRef.current) {
+      clearTimeout(closingTimeoutRef.current);
+      closingTimeoutRef.current = null;
+    }
+    setIsButtonOpening(true);
+    setMobileMenuMounted(true);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setMobileMenuVisible(true);
+      });
+    });
+    setTimeout(() => {
+      setIsButtonOpening(false);
+    }, 450);
+  }, []);
+
+  const handleCloseMobileMenu = useCallback((onComplete?: () => void) => {
+    setIsClosingButton(true);
+    setMobileMenuVisible(false);
+    if (closingTimeoutRef.current) clearTimeout(closingTimeoutRef.current);
+    closingTimeoutRef.current = setTimeout(() => {
+      setMobileMenuMounted(false);
+      setIsClosingButton(false);
+      closingTimeoutRef.current = null;
+      if (onComplete) onComplete();
+    }, 320);
+  }, []);
+
   const [introPhase, setIntroPhase] = useState<"walking" | "ignited" | "ready">(
     "walking",
   );
@@ -20,6 +57,10 @@ export function Hero() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
   const oscillatorsRef = useRef<OscillatorNode[]>([]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Page Load Entrance Sequence:
   // 1. Person walks forward into view (0s - 1.1s)
@@ -37,6 +78,24 @@ export function Hero() {
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
+    };
+  }, []);
+
+  // Lock background scrolling when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuMounted) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuMounted]);
+
+  useEffect(() => {
+    return () => {
+      if (closingTimeoutRef.current) clearTimeout(closingTimeoutRef.current);
     };
   }, []);
 
@@ -217,7 +276,7 @@ export function Hero() {
       maxAlpha: number;
       pulseSpeed: number;
       pulsePhase: number;
-      cyanHue: number;
+      blueHue: number;
     }
 
     const cloudCount = 22;
@@ -236,7 +295,7 @@ export function Hero() {
         maxAlpha: Math.random() * 0.15 + 0.08,
         pulseSpeed: Math.random() * 0.015 + 0.008,
         pulsePhase: Math.random() * Math.PI * 2,
-        cyanHue: Math.random() > 0.4 ? 195 : 210,
+        blueHue: Math.random() > 0.4 ? 205 : 215,
       };
     });
 
@@ -426,15 +485,15 @@ export function Hero() {
         );
         smokeGrad.addColorStop(
           0,
-          `hsla(${c.cyanHue}, 90%, 65%, ${currentAlpha * 0.9})`,
+          `hsla(${c.blueHue}, 90%, 65%, ${currentAlpha * 0.9})`,
         );
         smokeGrad.addColorStop(
           0.4,
-          `hsla(${c.cyanHue}, 85%, 45%, ${currentAlpha * 0.5})`,
+          `hsla(${c.blueHue}, 85%, 45%, ${currentAlpha * 0.5})`,
         );
         smokeGrad.addColorStop(
           0.75,
-          `hsla(${c.cyanHue + 15}, 80%, 25%, ${currentAlpha * 0.18})`,
+          `hsla(${c.blueHue + 15}, 80%, 25%, ${currentAlpha * 0.18})`,
         );
         smokeGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
 
@@ -721,14 +780,14 @@ export function Hero() {
         }`}
       >
         {/* Top Left Title Stack */}
-        <div className="flex flex-col text-[10px] sm:text-[11px] leading-tight font-semibold tracking-[0.22em] text-zinc-400">
-          <span className="hover:text-cyan-400 transition-colors">
+        <div className="flex flex-col text-[11px] sm:text-[11px] leading-tight font-semibold tracking-[0.24em] text-zinc-400">
+          <span className="hover:text-sky-400 transition-colors">
             DEVELOPER
           </span>
-          <span className="hover:text-cyan-400 transition-colors">
+          <span className="hover:text-sky-400 transition-colors">
             DESIGNER
           </span>
-          <span className="hover:text-cyan-400 transition-colors">
+          <span className="hover:text-sky-400 transition-colors">
             ENGINEER
           </span>
         </div>
@@ -752,7 +811,7 @@ export function Hero() {
                 {item.label}
               </span>
               {activeNav === item.label && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400 rounded-full shadow-[0_0_10px_#38bdf8]" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-sky-400 rounded-full shadow-[0_0_10px_#38bdf8]" />
               )}
             </a>
           ))}
@@ -762,50 +821,201 @@ export function Hero() {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-400 shadow-[0_0_8px_#38bdf8]" />
             </span>
             <span className="h-2 w-2 rounded-full bg-zinc-600 hidden sm:inline-block" />
           </div>
 
           <button
             type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-1.5 rounded-sm border border-cyan-900/70 bg-black/70 text-zinc-300 hover:text-cyan-300 hover:border-cyan-400/80 transition cursor-pointer"
-            aria-label="Toggle navigation menu"
+            onClick={handleOpenMobileMenu}
+            className={`lg:hidden relative z-40 p-2.5 rounded-sm border transition-all duration-300 cursor-pointer group flex items-center justify-center overflow-hidden ${
+              isButtonOpening
+                ? "border-sky-400 bg-blue-950/70 scale-95 shadow-[0_0_20px_rgba(56,189,248,0.7)]"
+                : "border-blue-900/70 bg-black/80 text-zinc-200 hover:text-sky-300 hover:border-sky-400/80 active:scale-90"
+            }`}
+            aria-label="Open navigation menu"
           >
-            {mobileMenuOpen ? (
-              <X className="w-4 h-4 text-cyan-400" />
-            ) : (
-              <Menu className="w-4 h-4" />
+            {/* Blue Expanding Ping Wave when tapped */}
+            {isButtonOpening && (
+              <span className="absolute inset-0 rounded-sm bg-sky-400/40 animate-ping pointer-events-none" />
             )}
+
+            {/* Kinetic 3-Bar Cyber Morphing Hamburger */}
+            <div className="w-5 h-3.5 flex flex-col justify-between items-end relative z-10">
+              <span
+                className={`h-0.5 rounded-full bg-current transition-all duration-300 ease-out origin-center ${
+                  isButtonOpening
+                    ? "w-5 rotate-45 translate-y-1.5 bg-sky-300 shadow-[0_0_8px_#38bdf8]"
+                    : "w-5 group-hover:bg-sky-300"
+                }`}
+              />
+              <span
+                className={`h-0.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8] transition-all duration-300 ease-out ${
+                  isButtonOpening ? "w-0 opacity-0" : "w-3.5 group-hover:w-5"
+                }`}
+              />
+              <span
+                className={`h-0.5 rounded-full bg-current transition-all duration-300 ease-out origin-center ${
+                  isButtonOpening
+                    ? "w-5 -rotate-45 -translate-y-1.5 bg-sky-300 shadow-[0_0_8px_#38bdf8]"
+                    : "w-4 group-hover:w-5 group-hover:bg-sky-300"
+                }`}
+              />
+            </div>
           </button>
         </div>
 
-        {/* Mobile Navigation Dropdown Overlay */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-full inset-x-4 sm:inset-x-8 mt-2 p-3.5 rounded-xl bg-[#030918]/95 backdrop-blur-2xl border border-cyan-500/30 shadow-[0_16px_40px_rgba(0,0,0,0.95),0_0_25px_rgba(6,182,212,0.2)] z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-            <nav className="flex flex-col gap-1.5">
-              {navItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  onClick={(e) => {
-                    setMobileMenuOpen(false);
-                    handleSmoothScroll(e, item.href, item.label);
-                  }}
-                  className={`px-3 py-2 rounded-lg text-xs font-bold tracking-[0.2em] font-cinzel transition-all ${
-                    activeNav === item.label
-                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
-                      : "text-zinc-300 hover:bg-white/5 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-          </div>
-        )}
+        {/* Full-Screen Mobile Navigation Sidebar Drawer (Portaled directly to document.body) */}
+        {mounted &&
+          mobileMenuMounted &&
+          createPortal(
+            <div
+              id="mobile-nav-overlay"
+              className={`lg:hidden fixed inset-0 z-99999 select-none transition-opacity duration-300 ${
+                mobileMenuVisible
+                  ? "opacity-100 pointer-events-auto"
+                  : "opacity-0 pointer-events-none"
+              }`}
+            >
+              {/* Dimmed Blurred Backdrop (Tappable to close smoothly) */}
+              <div
+                onClick={() => handleCloseMobileMenu()}
+                className={`absolute inset-0 bg-black/75 backdrop-blur-sm transition-opacity duration-300 ${
+                  mobileMenuVisible ? "opacity-100" : "opacity-0"
+                }`}
+              />
+
+              {/* Animated Sidebar Drawer Panel */}
+              <div
+                className={`relative ml-auto w-full max-w-full sm:max-w-md h-dvh bg-[#010206] text-white flex flex-col justify-between overflow-y-auto border-l border-blue-950/60 shadow-[-20px_0_60px_rgba(0,0,0,0.95)] transition-transform duration-350 ease-out will-change-transform ${
+                  mobileMenuVisible ? "translate-x-0" : "translate-x-full"
+                }`}
+                style={{ touchAction: "pan-y" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Atmospheric Glow inside Sidebar */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(14,165,233,0.12)_0%,rgba(30,64,175,0.06)_45%,transparent_80%)]"
+                />
+
+                {/* Top Bar with subtle divider line and Animated Close Button */}
+                <div className="relative z-10 w-full flex items-center justify-between px-6 py-4.5 border-b border-zinc-800/80 shrink-0 bg-[#010206]/80 backdrop-blur-md">
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-400 shadow-[0_0_8px_#38bdf8]" />
+                    </span>
+                    <span className="font-cinzel text-[10px] tracking-[0.28em] text-zinc-400 uppercase">
+                      Menu
+                    </span>
+                  </div>
+
+                  {/* Animated Kinetic Close Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleCloseMobileMenu()}
+                    className={`relative p-2.5 rounded-sm border transition-all duration-300 cursor-pointer group shadow-[0_0_14px_rgba(0,0,0,0.8)] overflow-hidden flex items-center justify-center ${
+                      isClosingButton
+                        ? "border-sky-400 bg-blue-950/80 scale-85 shadow-[0_0_24px_rgba(56,189,248,0.8)]"
+                        : "border-blue-900/60 bg-black/75 text-zinc-300 hover:text-sky-300 hover:border-sky-400/80 hover:bg-blue-950/40 active:scale-90"
+                    }`}
+                    aria-label="Close navigation menu"
+                  >
+                    {/* Sky Ping Burst on click */}
+                    {isClosingButton && (
+                      <span className="absolute inset-0 rounded-sm bg-sky-400/50 animate-ping pointer-events-none" />
+                    )}
+
+                    {/* Kinetic Morphing X Icon */}
+                    <div
+                      className={`relative w-4.5 h-4.5 flex items-center justify-center transition-all duration-350 ease-out ${
+                        isClosingButton
+                          ? "rotate-180 scale-85"
+                          : mobileMenuVisible
+                            ? "rotate-0 scale-100 group-hover:rotate-90"
+                            : "rotate-90 scale-75 opacity-0"
+                      }`}
+                    >
+                      <span className="absolute w-4.5 h-0.5 rounded-full bg-sky-300 rotate-45 shadow-[0_0_8px_#38bdf8] transition-all duration-300 group-hover:bg-white" />
+                      <span className="absolute w-4.5 h-0.5 rounded-full bg-sky-300 -rotate-45 shadow-[0_0_8px_#38bdf8] transition-all duration-300 group-hover:bg-white" />
+                    </div>
+                  </button>
+                </div>
+
+                {/* Centered Navigation Items List with Staggered Cascading Reveal */}
+                <nav className="relative z-10 flex-1 flex flex-col items-center justify-center py-6 gap-4 xs:gap-5 sm:gap-6 select-none">
+                  {navItems.map((item, idx) => {
+                    const isActive = activeNav === item.label;
+
+                    return (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleCloseMobileMenu(() => {
+                            handleSmoothScroll(e, item.href, item.label);
+                          });
+                        }}
+                        style={{
+                          transitionDelay: mobileMenuVisible
+                            ? `${60 + idx * 45}ms`
+                            : "0ms",
+                        }}
+                        className={`group flex flex-col items-center text-center cursor-pointer transition-all duration-400 ease-out ${
+                          mobileMenuVisible
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 translate-y-4"
+                        }`}
+                      >
+                        <span
+                          className={`font-cinzel text-xl xs:text-2xl sm:text-3xl font-semibold tracking-[0.26em] uppercase transition-all duration-300 ${
+                            isActive
+                              ? "text-sky-400 drop-shadow-[0_0_16px_rgba(56,189,248,0.9)] scale-105"
+                              : "text-zinc-200 hover:text-sky-300 hover:scale-105"
+                          }`}
+                        >
+                          {item.label}
+                        </span>
+
+                        {/* Active Glowing Dot (Directly beneath active item in current blue theme) */}
+                        {isActive && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8] mt-1.5 animate-pulse" />
+                        )}
+                      </a>
+                    );
+                  })}
+
+                  {/* Bottom Tagline: ••• WELCOME TO MY WORLD ••• */}
+                  <p
+                    style={{
+                      transitionDelay: mobileMenuVisible
+                        ? `${60 + navItems.length * 45}ms`
+                        : "0ms",
+                    }}
+                    className={`mt-4 sm:mt-6 font-cinzel text-[10px] xs:text-[11px] tracking-[0.34em] text-zinc-500 uppercase select-none transition-all duration-400 ease-out ${
+                      mobileMenuVisible
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-3"
+                    }`}
+                  >
+                    ••• WELCOME TO MY WORLD •••
+                  </p>
+                </nav>
+
+                {/* Bottom Padding Area */}
+                <div className="relative z-10 pb-6 w-full text-center shrink-0">
+                  <span className="font-mono text-[9px] tracking-[0.28em] text-zinc-600 uppercase">
+                    THAMALPATH SATHIMANTHA
+                  </span>
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )}
       </header>
 
       {/* 3. Left and Right Vertical Chevrons (▶ ▶ ▶ ▶ ▶) in Electric Cyan */}
@@ -839,11 +1049,11 @@ export function Hero() {
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center w-full px-2 sm:px-4 min-h-0">
         {/* Subtitle Above Name: "••• WELCOME TO MY WORLD •••" */}
         <div
-          className={`text-center mb-1 sm:mb-2 shrink-0 z-10 transition-all duration-700 delay-400 ${
+          className={`text-center mb-1.5 sm:mb-2 shrink-0 z-10 transition-all duration-700 delay-400 ${
             isIgnited ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
           }`}
         >
-          <p className="inline-flex items-center justify-center text-[10px] xs:text-xs sm:text-sm md:text-base lg:text-lg xl:text-[20px] font-cinzel font-semibold tracking-[0.24em] sm:tracking-[0.38em] text-zinc-100 uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+          <p className="inline-flex items-center justify-center text-[12px] xs:text-[13px] sm:text-sm md:text-base lg:text-lg xl:text-[20px] font-cinzel font-semibold tracking-[0.26em] sm:tracking-[0.38em] text-zinc-100 uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
             <span
               aria-hidden="true"
               className="inline-flex items-center gap-1 sm:gap-2 mr-2 sm:mr-5"
@@ -854,7 +1064,7 @@ export function Hero() {
             </span>
             <span>
               WELCOME TO{" "}
-              <span className="text-cyan-400 font-extrabold drop-shadow-[0_0_14px_rgba(56,189,248,0.95)]">
+              <span className="text-sky-400 font-extrabold drop-shadow-[0_0_14px_rgba(56,189,248,0.95)]">
                 MY
               </span>{" "}
               WORLD
@@ -871,7 +1081,7 @@ export function Hero() {
         </div>
 
         {/* Central Stage: Generous Vertical Space for Towering Typography and Hero Character */}
-        <div className="relative w-full flex items-center justify-center flex-1 min-h-0 max-h-[82vh] px-1 sm:px-3">
+        <div className="relative w-full flex items-center justify-center flex-1 min-h-0 max-h-[85vh] px-1 sm:px-3">
           {/* 
             A. STATIC SMOOTH FADE GRADIENT TEXTURED NAME: "THAMALPATH"
             Responsive scaling without horizontal cutoff on mobile screens
@@ -884,14 +1094,14 @@ export function Hero() {
                 : "opacity-0 scale-95 blur-sm"
             }`}
           >
-            <h1 className="textured-hero-name text-[16vw] xs:text-[18vw] sm:text-[19.5vw] md:text-[20vw] lg:text-[19.5vw] xl:text-[19vw] font-black uppercase tracking-[-0.035em] leading-none text-center transform scale-y-[1.5] origin-center whitespace-nowrap select-none max-w-full">
+            <h1 className="textured-hero-name text-[23.5vw] xs:text-[24.5vw] sm:text-[19.5vw] md:text-[20vw] lg:text-[19.5vw] xl:text-[19vw] font-black uppercase tracking-[-0.04em] leading-none text-center transform scale-y-[1.65] sm:scale-y-[1.5] origin-center whitespace-nowrap select-none max-w-full">
               THAMALPATH
             </h1>
           </div>
 
-          {/* Cyan Ambient Horizon Glow directly behind character */}
+          {/* Sapphire & Sky Ambient Horizon Glow directly behind character */}
           <div
-            className={`absolute bottom-6 w-[60vw] max-w-180 h-28 bg-linear-to-t from-cyan-400/28 via-blue-600/14 to-transparent blur-3xl pointer-events-none z-10 transition-opacity duration-1000 ${
+            className={`absolute bottom-6 w-[70vw] sm:w-[60vw] max-w-180 h-28 bg-linear-to-t from-sky-400/28 via-blue-600/14 to-transparent blur-3xl pointer-events-none z-10 transition-opacity duration-1000 ${
               isIgnited ? "opacity-100" : "opacity-0"
             }`}
           />
@@ -902,12 +1112,12 @@ export function Hero() {
           */}
           <div
             ref={characterRef}
-            className="relative z-20 flex flex-col items-center justify-end pointer-events-none will-change-transform animate-walking-entrance -translate-y-3 sm:-translate-y-5"
+            className="relative z-20 flex flex-col items-center justify-end pointer-events-none will-change-transform animate-walking-entrance -translate-y-2 sm:-translate-y-5"
           >
             {/* Walking Kinematics Container */}
             <div className="relative animate-stylish-walk flex flex-col items-center">
-              {/* Vertical Constraint Sizing: Enlarged heroic scale while preserving clear space above bottom HUD */}
-              <div className="relative z-10 h-[44vh] sm:h-[50vh] md:h-[58vh] lg:h-[65vh] max-h-170 min-h-60 sm:min-h-75 aspect-1312/3214 hero-character-shadow">
+              {/* Vertical Constraint Sizing: Enlarged heroic scale on mobile & tablet */}
+              <div className="relative z-10 h-[55vh] xs:h-[57vh] sm:h-[52vh] md:h-[58vh] lg:h-[65vh] max-h-170 min-h-80 sm:min-h-75 aspect-1312/3214 hero-character-shadow">
                 <Image
                   src="/hero-character-blue.png"
                   alt="Thamalpath in tailored suit walking forward"
@@ -915,16 +1125,16 @@ export function Hero() {
                   priority
                   unoptimized
                   className="object-contain contrast-105 brightness-100"
-                  sizes="(max-height: 550px) 270px, (max-height: 750px) 330px, 410px"
+                  sizes="(max-height: 550px) 320px, (max-height: 750px) 360px, 410px"
                 />
               </div>
 
               {/* Ground Contact Shadow & Wet Puddle Ripple Under Shoes */}
               <div className="absolute -bottom-2 w-[140%] h-7 bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.32)_0%,rgba(2,132,199,0.16)_45%,transparent_75%)] rounded-[100%] blur-[3px] animate-walk-shadow z-0" />
               <div className="absolute -bottom-1 w-[82%] h-4 sm:h-5 bg-black/95 rounded-[100%] blur-sm animate-walk-shadow z-10" />
-              <div className="absolute -bottom-1.5 w-[96%] h-4 bg-cyan-950/70 rounded-[100%] blur-md z-10" />
+              <div className="absolute -bottom-1.5 w-[96%] h-4 bg-blue-950/70 rounded-[100%] blur-md z-10" />
 
-              {/* Wet Floor Reflection (Pure cool sapphire & cyan reflection, zero red tint) */}
+              {/* Wet Floor Reflection (Pure cool sapphire & sky reflection, zero red tint) */}
               <div
                 aria-hidden="true"
                 className="absolute top-[98%] w-full h-[40%] origin-top opacity-35 blur-[1px] scale-y-[-1] pointer-events-none select-none overflow-hidden"
@@ -969,8 +1179,8 @@ export function Hero() {
           }}
         />
         {/* Crisp Horizon Reflection Line Where Smoke Meets Wet Floor */}
-        <div className="absolute top-[4%] left-1/2 -translate-x-1/2 w-[88%] h-0.5 bg-linear-to-r from-transparent via-cyan-400/45 to-transparent blur-[1px]" />
-        {/* Specular Cyan Puddle Light Spill Along Center Walking Path */}
+        <div className="absolute top-[4%] left-1/2 -translate-x-1/2 w-[88%] h-0.5 bg-linear-to-r from-transparent via-sky-400/45 to-transparent blur-[1px]" />
+        {/* Specular Sky Puddle Light Spill Along Center Walking Path */}
         <div className="absolute inset-x-0 bottom-0 h-full bg-[radial-gradient(ellipse_42%_65%_at_50%_35%,rgba(56,189,248,0.18)_0%,rgba(2,132,199,0.08)_50%,transparent_80%)] animate-ground-gleam" />
         {/* Subtle Bottom Edge Vignette for HUD Readability */}
         <div className="absolute inset-x-0 bottom-0 h-10 bg-linear-to-t from-[#010206]/80 to-transparent" />
@@ -991,21 +1201,21 @@ export function Hero() {
               ? "Mute ambient audio"
               : "Enable cinematic ambient audio"
           }
-          className="group inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-sm border border-zinc-700/70 bg-black/60 backdrop-blur-sm text-zinc-300 hover:border-cyan-400/80 hover:text-white transition-all shadow-[0_4px_20px_rgba(0,0,0,0.8)] cursor-pointer"
+          className="group inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-sm border border-zinc-700/70 bg-black/60 backdrop-blur-sm text-zinc-300 hover:border-sky-400/80 hover:text-white transition-all shadow-[0_4px_20px_rgba(0,0,0,0.8)] cursor-pointer"
         >
           {soundEnabled ? (
-            <Volume2 className="h-3 sm:h-3.5 w-3 sm:w-3.5 text-cyan-400 animate-pulse" />
+            <Volume2 className="h-3 sm:h-3.5 w-3 sm:w-3.5 text-sky-400 animate-pulse" />
           ) : (
-            <VolumeX className="h-3 sm:h-3.5 w-3 sm:w-3.5 text-zinc-500 group-hover:text-cyan-400" />
+            <VolumeX className="h-3 sm:h-3.5 w-3 sm:w-3.5 text-zinc-500 group-hover:text-sky-400" />
           )}
           <span className="font-mono text-[9px] sm:text-[11px] font-bold tracking-[0.16em] sm:tracking-[0.2em]">
             {soundEnabled ? "SOUND ON" : "SOUND OFF"}
           </span>
           {soundEnabled && (
             <span className="flex items-center gap-0.5 ml-0.5 sm:ml-1">
-              <span className="h-2 w-0.5 bg-cyan-400 animate-[bounce_1s_infinite_100ms]" />
+              <span className="h-2 w-0.5 bg-sky-400 animate-[bounce_1s_infinite_100ms]" />
               <span className="h-3 w-0.5 bg-sky-300 animate-[bounce_1s_infinite_300ms]" />
-              <span className="h-1.5 w-0.5 bg-cyan-400 animate-[bounce_1s_infinite_200ms]" />
+              <span className="h-1.5 w-0.5 bg-sky-400 animate-[bounce_1s_infinite_200ms]" />
             </span>
           )}
         </button>
@@ -1018,18 +1228,18 @@ export function Hero() {
           title="Explore Journey"
           className="group inline-flex flex-col items-center justify-center gap-1 p-1 rounded-full transition-all cursor-pointer"
         >
-          <span className="w-4.5 sm:w-5 h-7 sm:h-8 rounded-full border border-cyan-400/55 bg-black/55 backdrop-blur-xs flex items-start justify-center pt-1 sm:pt-1.5 group-hover:border-cyan-300 group-hover:shadow-[0_0_16px_rgba(56,189,248,0.55)] transition-all">
-            <span className="w-1 h-1 sm:h-1.5 rounded-full bg-cyan-400 animate-bounce shadow-[0_0_6px_#38bdf8]" />
+          <span className="w-4.5 sm:w-5 h-7 sm:h-8 rounded-full border border-sky-400/55 bg-black/55 backdrop-blur-xs flex items-start justify-center pt-1 sm:pt-1.5 group-hover:border-sky-300 group-hover:shadow-[0_0_16px_rgba(56,189,248,0.55)] transition-all">
+            <span className="w-1 h-1 sm:h-1.5 rounded-full bg-sky-400 animate-bounce shadow-[0_0_6px_#38bdf8]" />
           </span>
         </a>
 
-        {/* Bottom Right: Pagination Dots in Electric Cyan */}
+        {/* Bottom Right: Pagination Dots in Electric Sky */}
         <div className="flex items-center gap-1.5 sm:gap-2">
           <a
             href="#home"
             onClick={(e) => handleSmoothScroll(e, "#home", "HOME")}
             title="Home"
-            className="h-2 sm:h-2.5 w-2 sm:w-2.5 rounded-full bg-cyan-400 shadow-[0_0_10px_#38bdf8] transition-transform hover:scale-125"
+            className="h-2 sm:h-2.5 w-2 sm:w-2.5 rounded-full bg-sky-400 shadow-[0_0_10px_#38bdf8] transition-transform hover:scale-125"
           />
           {navItems.slice(1).map((item, idx) => (
             <a
