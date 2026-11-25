@@ -103,7 +103,11 @@ function IconCalendar({ className = "w-3 h-3" }: { className?: string }) {
   );
 }
 
-function IconChevronDown({ className = "w-3.5 h-3.5" }: { className?: string }) {
+function IconChevronDown({
+  className = "w-3.5 h-3.5",
+}: {
+  className?: string;
+}) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -136,7 +140,9 @@ function IconCheckCircle({ className = "w-3 h-3" }: { className?: string }) {
   );
 }
 
-function renderMilestoneIcon(type: "rocket" | "layers" | "building" | "education") {
+function renderMilestoneIcon(
+  type: "rocket" | "layers" | "building" | "education",
+) {
   switch (type) {
     case "rocket":
       return <IconRocket className="w-4 h-4 text-cyan-400" />;
@@ -388,7 +394,7 @@ export function Experience() {
     <section
       ref={sectionRef}
       id="experience"
-      className="relative w-full overflow-hidden bg-[#010206] text-white pt-6 sm:pt-8 lg:pt-10 pb-20 sm:pb-28 px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 select-none min-h-[750px]"
+      className="relative w-full overflow-hidden bg-[#010206] text-white pt-4 sm:pt-6 lg:pt-8 pb-20 sm:pb-28 px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 select-none min-h-187.5"
     >
       {/* ==================================================================== */}
       {/* Dynamic Animated Horizon Seam Bridge from Skills to Experience        */}
@@ -396,12 +402,12 @@ export function Experience() {
       <div
         ref={horizonSeamRef}
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 inset-x-0 h-[2px] bg-linear-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_24px_rgba(56,189,248,0.85),0_0_48px_rgba(14,165,233,0.5)] origin-center will-change-transform z-30"
+        className="pointer-events-none absolute top-0 inset-x-0 h-0.5 bg-linear-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_24px_rgba(56,189,248,0.85),0_0_48px_rgba(14,165,233,0.5)] origin-center will-change-transform z-30"
       />
       <div
         ref={horizonGlowRef}
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-20 bg-[radial-gradient(ellipse_at_top,rgba(56,189,248,0.32)_0%,rgba(14,165,233,0.12)_45%,transparent_75%)] origin-top will-change-transform z-20"
+        className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-150 h-20 bg-[radial-gradient(ellipse_at_top,rgba(56,189,248,0.32)_0%,rgba(14,165,233,0.12)_45%,transparent_75%)] origin-top will-change-transform z-20"
       />
 
       {/* ==================================================================== */}
@@ -462,26 +468,25 @@ export function Experience() {
       {/* 2. Main Executive 2-Column Showcase Content                          */}
       {/* ==================================================================== */}
       <div className="relative z-10 w-full max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-start">
-          
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 lg:gap-10 xl:gap-14 items-start">
           {/* ============================================================== */}
           {/* LEFT COLUMN: Clean Stacked Typography in Top Area              */}
-          {/* Positioned more above, inline with Core Philosophy, left-aligned*/}
+          {/* Positioned higher above, inline in row with Core Philosophy    */}
           {/* ============================================================== */}
           <div
             ref={leftColRef}
-            className="lg:col-span-5 flex flex-col will-change-transform lg:sticky lg:top-14 pb-6 lg:pb-0 text-left items-start"
+            className="md:col-span-5 flex flex-col will-change-transform md:sticky md:top-6 lg:top-8 pb-4 md:pb-0 text-left items-start pt-0 mt-0"
           >
             {/* The Exact Clean Title Stack (Top Area - Inline & Left-Aligned) */}
-            <div className="flex flex-col text-left items-start">
-              <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.32em] text-cyan-400 uppercase mb-1.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+            <div className="flex flex-col text-left items-start pt-0 mt-0">
+              <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.32em] text-cyan-400 uppercase mb-1.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight">
                 PERSPECTIVE &amp; MASTERY
               </span>
 
-              <h2 className="font-cinzel text-3xl sm:text-4xl xl:text-5xl font-extrabold tracking-[0.14em] leading-[1.08] uppercase text-zinc-100 drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
+              <h2 className="font-cinzel text-3xl sm:text-4xl xl:text-5xl font-extrabold tracking-[0.14em] leading-[1.08] uppercase text-zinc-100 drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] mt-0">
                 EXPERIENCE
                 <br />
-                <span className="relative inline-block font-cinzel font-black tracking-[0.18em] text-transparent bg-clip-text bg-linear-to-r from-white via-cyan-300 via-50% to-sky-300 drop-shadow-[0_0_24px_rgba(56,189,248,0.95)] drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+                <span className="relative inline-block font-cinzel font-black tracking-[0.18em] text-transparent bg-clip-text bg-linear-to-r from-white via-cyan-300 via-50% to-sky-300 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
                   BUILDS
                 </span>
                 <br />
@@ -490,7 +495,9 @@ export function Experience() {
 
               {/* Reflection Narrative */}
               <p className="font-montserrat text-xs sm:text-[13px] leading-relaxed text-zinc-300/90 mt-3 max-w-sm drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] text-left">
-                Every project, collaboration, and challenge has shaped the person I am today. Grateful for the journey, excited for what&rsquo;s next.
+                Every project, collaboration, and challenge has shaped the
+                person I am today. Grateful for the journey, excited for
+                what&rsquo;s next.
               </p>
 
               {/* Author signature underline */}
@@ -504,21 +511,22 @@ export function Experience() {
           {/* ============================================================== */}
           {/* RIGHT COLUMN: Right Side Top Quote + Cyber Cyan Timeline      */}
           {/* ============================================================== */}
-          <div ref={rightColRef} className="lg:col-span-7 flex flex-col will-change-transform">
-            
-            {/* Right Side Top Quote (Inline with Left Title) */}
-            <div className="mb-6 sm:mb-8 flex flex-col pl-6 sm:pl-16 md:pl-20 text-left">
-              <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.32em] text-cyan-400 uppercase mb-1.5">
+          <div
+            ref={rightColRef}
+            className="md:col-span-7 flex flex-col will-change-transform pt-0 mt-0"
+          >
+            {/* Right Side Top Quote (Inline in row with Left Title) */}
+            <div className="mb-6 sm:mb-8 flex flex-col pl-6 sm:pl-16 md:pl-20 text-left pt-0 mt-0">
+              <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.32em] text-cyan-400 uppercase mb-1.5 leading-tight">
                 CORE PHILOSOPHY
               </span>
-              <p className="font-playfair italic text-base sm:text-lg lg:text-xl text-zinc-200 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+              <p className="font-playfair italic text-base sm:text-lg lg:text-xl text-zinc-200 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] mt-0">
                 &ldquo;Not just experiences, but lessons for a better me.&rdquo;
               </p>
             </div>
 
             {/* Vertical Cyber Cyan Timeline */}
             <div className="relative pl-6 sm:pl-16 md:pl-20 flex flex-col gap-5 sm:gap-6">
-              
               {/* Luminous Vertical Cyan Line with Dynamic Scroll Draw-Down */}
               <div
                 ref={timelineLineRef}
@@ -534,7 +542,7 @@ export function Experience() {
                     {/* Glowing Circular Node on Timeline */}
                     <div
                       aria-hidden="true"
-                      className="absolute -left-6 sm:-left-16 md:-left-20 top-3 sm:top-4 -translate-x-[7px] sm:-translate-x-[7px] md:-translate-x-[7px] flex items-center justify-center z-20"
+                      className="absolute -left-6 sm:-left-16 md:-left-20 top-3 sm:top-4 -translate-x-1.75 sm:-translate-x-1.75 md:-translate-x-1.75 flex items-center justify-center z-20"
                     >
                       {/* Pulsing Outer Cyan Glow Ring */}
                       <span className="absolute w-5 h-5 rounded-full bg-cyan-400/20 group-hover:scale-150 transition-transform duration-500 animate-ping opacity-35" />
@@ -553,7 +561,9 @@ export function Experience() {
 
                     {/* Clean Minimalist Item (Without Heavy Card Box or Bulky Margins) */}
                     <div
-                      onClick={() => setExpandedCardId(isExpanded ? null : exp.id)}
+                      onClick={() =>
+                        setExpandedCardId(isExpanded ? null : exp.id)
+                      }
                       className="relative rounded-xl border border-cyan-500/20 hover:border-cyan-400/45 bg-[#030918]/75 hover:bg-[#06142e]/90 backdrop-blur-md transition-all duration-300 cursor-pointer overflow-hidden p-3.5 sm:p-4.5 shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
                     >
                       {/* Top Header Row */}
@@ -623,7 +633,10 @@ export function Experience() {
                       <div className="mt-2.5 pt-2 border-t border-cyan-500/15 flex flex-wrap items-center justify-between gap-1.5">
                         <div className="flex flex-wrap items-center gap-1 text-[8px] sm:text-[9px] font-mono font-semibold tracking-wider text-cyan-300/75 uppercase">
                           {exp.tags.map((tag, tIdx) => (
-                            <span key={tIdx} className="flex items-center gap-1">
+                            <span
+                              key={tIdx}
+                              className="flex items-center gap-1"
+                            >
                               <span className="hover:text-cyan-100 transition-colors">
                                 {tag}
                               </span>
@@ -645,9 +658,7 @@ export function Experience() {
                 );
               })}
             </div>
-
           </div>
-
         </div>
       </div>
 
