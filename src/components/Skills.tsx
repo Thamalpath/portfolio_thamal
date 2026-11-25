@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import {
   Lightbulb,
@@ -8,8 +8,6 @@ import {
   ShieldCheck,
   TrendingUp,
   Users,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 
 interface SkillItem {
@@ -899,36 +897,6 @@ export function Skills() {
   const laserScanRef = useRef<HTMLDivElement | null>(null);
   const categoryRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const [activeCategoryIdx, setActiveCategoryIdx] = useState(0);
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
-
-  const handlePrevCategory = () => {
-    setActiveCategoryIdx(
-      (prev) => (prev - 1 + SKILL_CATEGORIES.length) % SKILL_CATEGORIES.length,
-    );
-  };
-
-  const handleNextCategory = () => {
-    setActiveCategoryIdx((prev) => (prev + 1) % SKILL_CATEGORIES.length);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStartX(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX === null) return;
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (diff > 45) {
-      handleNextCategory();
-    } else if (diff < -45) {
-      handlePrevCategory();
-    }
-    setTouchStartX(null);
-  };
-
-  const activeCategory = SKILL_CATEGORIES[activeCategoryIdx];
-
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -1081,141 +1049,12 @@ export function Skills() {
           </div>
         </div>
 
-        {/* ============================================================== */}
-        {/* MOBILE & TABLET INTERACTIVE SKILLS SHOWCASE (< lg)            */}
-        {/* Fits complete content within viewport during slideshow pin     */}
-        {/* ============================================================== */}
-        <div className="lg:hidden w-full flex flex-col items-center">
-          {/* Executive Identity Bar */}
-          <div className="w-full max-w-md flex items-center justify-between gap-2.5 mb-2.5 p-2 rounded-xl bg-[#030816]/90 border border-cyan-950/80 shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
-            <div className="flex items-center gap-2.5">
-              <div className="relative w-11 h-11 sm:w-13 sm:h-13 rounded-lg overflow-hidden border border-cyan-400/50 shadow-[0_0_12px_rgba(56,189,248,0.35)] shrink-0 bg-[#020617]">
-                <Image
-                  src="/skills-portrait1.png"
-                  alt="Thamalpath Sathimantha"
-                  fill
-                  className="object-cover object-top"
-                  sizes="56px"
-                  priority
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-cinzel text-xs sm:text-sm font-bold tracking-wider text-white leading-tight">
-                  THAMALPATH S.
-                </span>
-                <span className="font-mono text-[9px] sm:text-[10px] text-cyan-400 tracking-wide">
-                  Full-Stack Engineer
-                </span>
-                <span className="text-[7.5px] sm:text-[8.5px] font-mono text-zinc-400 uppercase tracking-widest mt-0.5">
-                  Category {activeCategoryIdx + 1} of {SKILL_CATEGORIES.length}
-                </span>
-              </div>
-            </div>
-
-            {/* Prev / Next Category Arrows */}
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={handlePrevCategory}
-                aria-label="Previous Category"
-                className="p-1 sm:p-1.5 rounded-md border border-cyan-900/70 bg-[#050b18]/80 text-zinc-300 hover:text-cyan-300 hover:border-cyan-400/70 transition cursor-pointer"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={handleNextCategory}
-                aria-label="Next Category"
-                className="p-1 sm:p-1.5 rounded-md border border-cyan-900/70 bg-[#050b18]/80 text-zinc-300 hover:text-cyan-300 hover:border-cyan-400/70 transition cursor-pointer"
-              >
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Category Pill Scroller */}
-          <div className="w-full max-w-md flex items-center justify-between gap-1 overflow-x-auto py-1 px-0.5 no-scrollbar mb-2.5">
-            {SKILL_CATEGORIES.map((cat, idx) => {
-              const isSelected = idx === activeCategoryIdx;
-              return (
-                <button
-                  key={cat.number}
-                  type="button"
-                  onClick={() => setActiveCategoryIdx(idx)}
-                  className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md border text-[8.5px] sm:text-[9.5px] font-mono tracking-wider transition-all duration-300 cursor-pointer shrink-0 ${
-                    isSelected
-                      ? "bg-[#061838] border-cyan-400 text-cyan-300 shadow-[0_0_10px_rgba(56,189,248,0.5)] scale-105"
-                      : "bg-[#030712]/90 border-cyan-950/70 text-zinc-400 hover:text-zinc-200"
-                  }`}
-                >
-                  <span className="font-bold text-cyan-400">{cat.number}</span>
-                  <span className="truncate max-w-16 sm:max-w-none">
-                    {cat.title}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Active Category Skill Tiles Matrix (Fits mobile/tablet viewport cleanly) */}
-          <div
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            className="w-full max-w-md rounded-xl border border-cyan-500/60 bg-[#040914]/90 backdrop-blur-md p-2.5 sm:p-3.5 shadow-[0_8px_32px_rgba(0,0,0,0.8),0_0_24px_rgba(56,189,248,0.18)]"
-          >
-            {/* Category Header */}
-            <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-cyan-950/80">
-              <div className="flex items-center gap-2">
-                <span className="font-cinzel text-xs font-bold text-cyan-400 drop-shadow-[0_0_8px_rgba(56,189,248,0.55)]">
-                  {activeCategory.number}
-                </span>
-                <h3 className="font-cinzel text-xs font-bold tracking-[0.14em] text-zinc-100">
-                  {activeCategory.title}
-                </h3>
-              </div>
-              <span className="text-[8.5px] font-mono text-cyan-400/80 bg-cyan-950/70 px-1.5 py-0.5 rounded border border-cyan-500/30">
-                {activeCategory.skills.length} Tech
-              </span>
-            </div>
-
-            {/* Grid of Authentic Brand Skill Tiles */}
-            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-              {activeCategory.skills.map((skill) => (
-                <div
-                  key={skill.name}
-                  className="group/tile relative flex flex-col items-center justify-center gap-1 rounded-lg bg-[#02050d]/95 border border-cyan-950/70 py-2 sm:py-2.5 px-1 overflow-hidden transition-all duration-300 ease-out hover:border-cyan-400/80 hover:bg-linear-to-b hover:from-[#091b38] hover:to-[#02050e] hover:shadow-[0_8px_20px_rgba(14,165,233,0.25)]"
-                >
-                  <div className="relative z-10 flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10">
-                    {skill.icon}
-                  </div>
-                  <span className="relative z-10 text-[9px] sm:text-[9.5px] font-medium tracking-wide text-zinc-300 text-center leading-tight truncate max-w-full px-1">
-                    {skill.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Mobile Navigation Hint */}
-            <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-cyan-950/60 text-[8px] sm:text-[8.5px] font-mono text-zinc-500">
-              <span className="flex items-center gap-1">
-                <ChevronLeft className="w-3 h-3 text-cyan-400/60" />
-                Swipe or Tap tabs to explore
-              </span>
-              <span>
-                {activeCategoryIdx + 1} / {SKILL_CATEGORIES.length}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* ============================================================== */}
-        {/* DESKTOP ASYMMETRIC 2-COLUMN LAYOUT (lg: and above)            */}
-        {/* ============================================================== */}
-        <div className="hidden lg:grid lg:grid-cols-12 gap-3.5 sm:gap-4 lg:gap-5 items-stretch">
-          {/* Left Column: Thamalpath's Personal Portrait Framing with Depth Entrance */}
+        {/* 3. Main Asymmetric 2-Column Responsive Layout: Personal Portrait & All 6 Skill Categories */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 lg:gap-5 items-stretch">
+          {/* Left Column (Desktop) / Top Banner (Mobile & Tablet): Thamalpath's Personal Portrait Framing */}
           <div
             ref={portraitRef}
-            className="lg:col-span-4 relative rounded-xl overflow-hidden border border-cyan-950/75 bg-[#030712]/90 h-64 sm:h-80 md:h-96 lg:h-full min-h-65 sm:min-h-85 lg:min-h-0 will-change-transform origin-center"
+            className="lg:col-span-4 relative rounded-xl overflow-hidden border border-cyan-950/75 bg-[#030712]/90 h-64 sm:h-80 md:h-96 lg:h-full min-h-60 sm:min-h-80 lg:min-h-0 will-change-transform origin-center"
           >
             {/* Subtle Architectural Vertical Studio Light Beams behind Portrait */}
             <div
@@ -1249,6 +1088,16 @@ export function Skills() {
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 h-28 bg-linear-to-b from-transparent via-cyan-400/30 to-transparent z-15 will-change-transform"
             />
+
+            {/* Mobile / Tablet Overlay Badge */}
+            <div className="lg:hidden absolute bottom-0 inset-x-0 z-20 p-3 sm:p-4 bg-linear-to-t from-[#010206] via-[#010206]/85 to-transparent">
+              <span className="font-cinzel text-xs sm:text-sm font-bold tracking-wider text-white">
+                THAMALPATH SATHIMANTHA
+              </span>
+              <p className="font-mono text-[9px] sm:text-[10px] text-cyan-400 tracking-wide mt-0.5">
+                Full-Stack Software Engineer
+              </p>
+            </div>
 
             {/* Subtle bottom edge vignette for clean integration */}
             <div

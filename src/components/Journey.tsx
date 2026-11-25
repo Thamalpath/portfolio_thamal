@@ -808,102 +808,9 @@ export function Journey() {
         </div>
       </div>
 
-      {/* 4. Stepped Year Headers & Milestone Cards (2021 – 2026) */}
+      {/* 4. Stepped Year Headers & Milestone Cards (2021 – 2026) - All 6 Milestones Visible On All Screen Resolutions */}
       <div className="relative z-20 w-full max-w-7xl mx-auto mt-4 sm:mt-6 lg:mt-16 xl:mt-20 mb-2">
-        {/* MOBILE & TABLET INTERACTIVE MILESTONE SHOWCASE (< lg) */}
-        <div className="lg:hidden w-full flex flex-col items-center">
-          {/* Timeline Year Tabs Scroller */}
-          <div className="w-full flex items-center justify-between sm:justify-center gap-1.5 sm:gap-2.5 overflow-x-auto py-1 px-1 no-scrollbar mb-3">
-            {MILESTONES.map((item, idx) => {
-              const isSelected = idx === activeIndex;
-              return (
-                <button
-                  key={item.year}
-                  type="button"
-                  onClick={() => setActiveIndex(idx)}
-                  className={`flex flex-col items-center px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border transition-all duration-300 cursor-pointer ${
-                    isSelected
-                      ? "bg-[#061838] border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(56,189,248,0.5)] scale-105"
-                      : "bg-[#030712]/90 border-cyan-950/70 text-zinc-400 hover:text-zinc-200"
-                  }`}
-                >
-                  <span className="font-cinzel text-xs sm:text-sm font-bold tracking-wider">
-                    {item.year}
-                  </span>
-                  <span className="text-[8px] font-mono tracking-widest uppercase opacity-75">
-                    {item.chapter.slice(0, 5)}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Active Milestone Card (Fits mobile/tablet viewport without scroll trapping) */}
-          <div className="relative w-full max-w-xs sm:max-w-sm rounded-xl border border-cyan-400/80 bg-[#061126]/95 shadow-[0_0_26px_rgba(56,189,248,0.22)] overflow-hidden">
-            <MilestoneVisual
-              year={activeMilestone.year}
-              chapter={activeMilestone.chapter}
-              image={activeMilestone.image}
-              isActive={true}
-            />
-
-            <div className="p-3 sm:p-3.5">
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="font-cinzel text-base sm:text-lg font-bold tracking-wider text-cyan-300">
-                  {activeMilestone.year}
-                </span>
-                <span className="text-[9px] font-mono tracking-[0.2em] text-cyan-400 uppercase bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-500/30">
-                  {activeMilestone.chapter}
-                </span>
-              </div>
-
-              <h3 className="mt-1 text-xs font-bold text-white leading-snug">
-                {activeMilestone.role}
-              </h3>
-              <p className="text-[10px] text-cyan-300/85 font-medium mt-0.5">
-                {activeMilestone.institution}
-              </p>
-
-              <ul className="mt-2 space-y-0.5 border-t border-cyan-950/80 pt-1.5">
-                {activeMilestone.highlights.map((line, lIdx) => (
-                  <li
-                    key={lIdx}
-                    className="text-[9px] font-mono tracking-wider text-zinc-300 leading-relaxed flex items-center gap-1.5"
-                  >
-                    <span className="w-1 h-1 rounded-full bg-cyan-400 shrink-0" />
-                    <span className="truncate">{line}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Quick Prev / Next controls */}
-            <div className="flex items-center justify-between px-3 pb-2 pt-0.5 text-xs text-zinc-400 border-t border-cyan-950/50">
-              <button
-                type="button"
-                onClick={handlePrev}
-                className="inline-flex items-center gap-0.5 text-[10px] font-cinzel text-cyan-400/80 hover:text-cyan-300 py-0.5 px-1 cursor-pointer"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" />
-                <span>Prev</span>
-              </button>
-              <span className="text-[8.5px] font-mono text-zinc-500">
-                {activeIndex + 1} / {MILESTONES.length}
-              </span>
-              <button
-                type="button"
-                onClick={handleNext}
-                className="inline-flex items-center gap-0.5 text-[10px] font-cinzel text-cyan-400/80 hover:text-cyan-300 py-0.5 px-1 cursor-pointer"
-              >
-                <span>Next</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* DESKTOP STEPPED CASCADE (lg: and above) */}
-        <div className="hidden lg:grid lg:grid-cols-6 gap-3 items-start lg:pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-3 items-start pb-6 sm:pb-8">
           {MILESTONES.map((item, idx) => {
             const isActive = idx === activeIndex;
             return (
@@ -912,10 +819,10 @@ export function Journey() {
                 onClick={() => setActiveIndex(idx)}
                 onMouseEnter={() => setActiveIndex(idx)}
                 style={{
-                  // Stepped diagonal cascade applied to both year header & card together for uniform gap
+                  // Stepped diagonal cascade applied on desktop
                   ["--step-y" as string]: `${item.stepOffsetY}px`,
                 }}
-                className={`group flex flex-col items-center cursor-pointer lg:translate-y-(--step-y) ${
+                className={`group flex flex-col items-center cursor-pointer translate-y-0 lg:translate-y-(--step-y) ${
                   isActive ? "z-20" : "z-10"
                 }`}
               >
