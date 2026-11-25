@@ -48,6 +48,40 @@ export function JourneySkillsDeck() {
     let currentY = 0;
 
     const measureMetrics = () => {
+      const isMobile = window.innerWidth < 1024;
+      if (isMobile) {
+        if (containerRef.current) {
+          containerRef.current.style.height = "auto";
+        }
+        if (slide1Ref.current) {
+          slide1Ref.current.style.transform = "";
+          slide1Ref.current.style.opacity = "";
+          slide1Ref.current.style.pointerEvents = "";
+        }
+        if (slide2Ref.current) {
+          slide2Ref.current.style.transform = "";
+          slide2Ref.current.style.opacity = "";
+          slide2Ref.current.style.pointerEvents = "";
+        }
+        if (content1Ref.current) {
+          content1Ref.current.style.transform = "";
+        }
+        if (content2Ref.current) {
+          content2Ref.current.style.transform = "";
+        }
+        metricsRef.current = {
+          vh: window.innerHeight,
+          c1Height: 0,
+          c2Height: 0,
+          delta1: 0,
+          delta2: 0,
+          transDist: 0,
+          totalScroll: 0,
+          totalHeight: 0,
+        };
+        return metricsRef.current;
+      }
+
       const vh = Math.max(window.innerHeight, 1);
       const c1 = content1Ref.current ? content1Ref.current.offsetHeight : vh;
       const c2 = content2Ref.current ? content2Ref.current.offsetHeight : vh;
@@ -57,8 +91,7 @@ export function JourneySkillsDeck() {
       const delta2 = Math.max(0, c2 - vh);
 
       // Dedicated scroll distance for the horizontal slideshow transition
-      const transRatio = window.innerWidth >= 1024 ? 1.25 : 1.0;
-      const transDist = Math.max(Math.round(vh * transRatio), 450);
+      const transDist = Math.max(Math.round(vh * 1.25), 500);
 
       const totalScroll = delta1 + transDist + delta2;
       const totalHeight = totalScroll + vh;
@@ -82,6 +115,23 @@ export function JourneySkillsDeck() {
     };
 
     const applyTransforms = (scrolledY: number) => {
+      const isMobile = window.innerWidth < 1024;
+      if (isMobile) {
+        if (slide1Ref.current) {
+          slide1Ref.current.style.transform = "";
+          slide1Ref.current.style.opacity = "";
+          slide1Ref.current.style.pointerEvents = "";
+        }
+        if (slide2Ref.current) {
+          slide2Ref.current.style.transform = "";
+          slide2Ref.current.style.opacity = "";
+          slide2Ref.current.style.pointerEvents = "";
+        }
+        if (content1Ref.current) content1Ref.current.style.transform = "";
+        if (content2Ref.current) content2Ref.current.style.transform = "";
+        return { transP: 0, activeSlide: 0 };
+      }
+
       const s1 = slide1Ref.current;
       const s2 = slide2Ref.current;
       const c1 = content1Ref.current;
@@ -91,8 +141,8 @@ export function JourneySkillsDeck() {
       const y = Math.min(Math.max(scrolledY, 0), m.totalScroll);
 
       // Vertical centering offset when content fits within viewport
-      const center1 = m.delta1 === 0 ? Math.max(0, (m.vh - m.c1Height) / 2) : 0;
-      const center2 = m.delta2 === 0 ? Math.max(0, (m.vh - m.c2Height) / 2) : 0;
+      const center1 = m.delta1 > 0 ? 0 : Math.max(0, (m.vh - m.c1Height) / 2);
+      const center2 = m.delta2 > 0 ? 0 : Math.max(0, (m.vh - m.c2Height) / 2);
 
       let y1 = center1;
       let transP = 0;
@@ -134,15 +184,24 @@ export function JourneySkillsDeck() {
       }
 
       // 2. Horizontal slideshow translation between sections
+      const s1Scale = isMobile ? 1 : 1 - transP * 0.05;
+      const s2Scale = isMobile ? 1 : 0.95 + transP * 0.05;
+      const s1Opacity = isMobile ? 1 - transP * 0.95 : 1 - transP * 0.65;
+      const s2Opacity = isMobile
+        ? transP > 0.02
+          ? 1
+          : 0.4
+        : 0.35 + transP * 0.65;
+
       if (s1) {
-        s1.style.transform = `translate3d(${(-transP * 100).toFixed(2)}%, 0, 0) scale(${(1 - transP * 0.05).toFixed(4)})`;
-        s1.style.opacity = (1 - transP * 0.65).toFixed(3);
+        s1.style.transform = `translate3d(${(-transP * 100).toFixed(2)}%, 0, 0) scale(${s1Scale.toFixed(4)})`;
+        s1.style.opacity = s1Opacity.toFixed(3);
         s1.style.pointerEvents = transP > 0.45 ? "none" : "auto";
       }
 
       if (s2) {
-        s2.style.transform = `translate3d(${((1 - transP) * 100).toFixed(2)}%, 0, 0) scale(${(0.95 + transP * 0.05).toFixed(4)})`;
-        s2.style.opacity = (0.35 + transP * 0.65).toFixed(3);
+        s2.style.transform = `translate3d(${((1 - transP) * 100).toFixed(2)}%, 0, 0) scale(${s2Scale.toFixed(4)})`;
+        s2.style.opacity = s2Opacity.toFixed(3);
         s2.style.pointerEvents = transP < 0.55 ? "none" : "auto";
       }
 
@@ -150,12 +209,23 @@ export function JourneySkillsDeck() {
     };
 
     const computeTarget = () => {
+      const isMobile = window.innerWidth < 1024;
+      if (isMobile) {
+        targetY = 0;
+        return;
+      }
       const rect = container.getBoundingClientRect();
       const scrolled = Math.max(0, -rect.top);
       targetY = Math.min(Math.max(scrolled, 0), metricsRef.current.totalScroll);
     };
 
     const tick = () => {
+      const isMobile = window.innerWidth < 1024;
+      if (isMobile) {
+        rafId = 0;
+        return;
+      }
+
       const diff = targetY - currentY;
       if (Math.abs(diff) < 0.4) {
         currentY = targetY;
@@ -172,6 +242,8 @@ export function JourneySkillsDeck() {
     };
 
     const onScroll = () => {
+      const isMobile = window.innerWidth < 1024;
+      if (isMobile) return;
       computeTarget();
       if (!rafId) {
         rafId = requestAnimationFrame(tick);
@@ -218,42 +290,38 @@ export function JourneySkillsDeck() {
       id="journey-skills-deck"
       className="relative w-full"
     >
-      {/* Pinned Viewport Deck Stage (h-screen, overflow-hidden) */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#010206]">
-        {/* Slide 1: Journey Timeline (Glides to the left on scroll once bottom is reached) */}
+      {/* Pinned Viewport Deck Stage (Desktop only; on mobile, flows naturally without fixed screen or dead space) */}
+      <div className="relative lg:sticky lg:top-0 h-auto lg:h-screen w-full overflow-visible lg:overflow-hidden bg-[#010206]">
+        {/* Slide 1: Journey Timeline (Glides to the left on desktop once bottom is reached) */}
         <div
           ref={slide1Ref}
-          className="absolute inset-0 w-full h-full overflow-hidden will-change-transform z-10"
-          style={{ transform: "translate3d(0%, 0, 0)" }}
+          className="relative lg:absolute lg:inset-0 w-full h-auto lg:h-full overflow-visible lg:overflow-hidden will-change-transform z-10"
         >
           <div
             ref={content1Ref}
             className="w-full will-change-transform"
-            style={{ transform: "translate3d(0, 0px, 0)" }}
           >
             <Journey />
           </div>
         </div>
 
-        {/* Slide 2: Skills Arsenal (Glides in from the right, then scrolls down to its bottom) */}
+        {/* Slide 2: Skills Arsenal (Glides in from the right on desktop, then scrolls down to its bottom) */}
         <div
           ref={slide2Ref}
-          className="absolute inset-0 w-full h-full overflow-hidden will-change-transform z-20"
-          style={{ transform: "translate3d(100%, 0, 0)" }}
+          className="relative lg:absolute lg:inset-0 w-full h-auto lg:h-full overflow-visible lg:overflow-hidden will-change-transform z-20"
         >
           <div
             ref={content2Ref}
             className="w-full will-change-transform"
-            style={{ transform: "translate3d(0, 0px, 0)" }}
           >
             <Skills />
           </div>
         </div>
 
-        {/* Atmospheric Bottom Horizon Bridge to Experience */}
+        {/* Atmospheric Bottom Horizon Bridge to Experience (Desktop only) */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-[#010206] via-[#010206]/70 to-transparent z-30"
+          className="hidden lg:block pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-[#010206] via-[#010206]/70 to-transparent z-30"
         />
       </div>
     </div>
