@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Hero } from "@/components/Hero";
 import { JourneySkillsDeck } from "@/components/JourneySkillsDeck";
 import { Experience } from "@/components/Experience";
+import { Projects } from "@/components/Projects";
 import { PageLoader } from "@/components/PageLoader";
 
 export function PortfolioShell() {
@@ -89,6 +90,7 @@ export function PortfolioShell() {
             />
             <JourneySkillsDeck />
             <Experience />
+            <Projects />
           </div>
         </>
       )}
