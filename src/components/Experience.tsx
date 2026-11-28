@@ -781,6 +781,12 @@ export function Experience() {
           </div>
         </div>
       </div>
+
+      {/* Atmospheric Bottom Horizon Bridge into Projects */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-16 sm:h-24 bg-linear-to-t from-[#010206] via-[#010206]/85 to-transparent z-20"
+      />
     </section>
   );
 }

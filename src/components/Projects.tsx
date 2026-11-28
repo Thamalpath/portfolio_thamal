@@ -17,18 +17,13 @@ import {
   Layers,
   Play,
   Pause,
-  Server,
-  Database,
-  ShieldCheck,
-  Zap,
-  Activity,
   CheckCircle2,
   X,
-  Sparkles,
-  TrendingUp,
-  Cpu,
-  Globe,
-  SlidersHorizontal,
+  AppWindow,
+  Maximize2,
+  ZoomIn,
+  ZoomOut,
+  Lock,
 } from "lucide-react";
 
 // ============================================================================
@@ -81,6 +76,7 @@ export interface ProjectItem {
     | "pms";
   liveUrl?: string;
   githubUrl?: string;
+  previewImage?: string;
   gallery?: ProjectGalleryImage[];
   modules?: ProjectModuleHighlight[];
 }
@@ -99,7 +95,8 @@ export const PROJECTS_DATA: ProjectItem[] = [
     role: "Full-Stack Software Engineer & System Architect",
     clientOrScope: "Venpaa Multi-Branch Bookshop (Colombo & Jaffna)",
     summary:
-      "All-in-one enterprise ERP, CRM, and omnichannel retail management ecosystem powering Venpaa's multi-branch bookstore network and online eCommerce store. Engineered with Next.js 14 and Laravel 8, unifying 25+ mission-critical modules including catalog master records, Good Receive Notes (GRN), PO supply chain workflows, POS billing, COD reconciliation, and automated analytics.",
+      "All-in-one enterprise ERP, CRM, and multi-branch retail management ecosystem powering Venpaa's bookstore network and online eCommerce store. Engineered with Next.js 14 and Laravel 8, unifying 25+ mission-critical modules including catalog master records, Good Receive Notes (GRN), PO supply chain workflows, POS billing, COD reconciliation, and automated analytics.",
+    previewImage: "/images/projects/venpaa-3d-preview.png",
     techStack: [
       "Next.js 14 (App Router)",
       "Laravel 8 REST API",
@@ -123,14 +120,14 @@ export const PROJECTS_DATA: ProjectItem[] = [
     highlights: [
       "Engineered an end-to-end multi-branch supply chain workflow: Purchase Orders (PO), Good Receive Notes (GRN), Accept Good Notes (AGN), inter-branch Transfer Good Notes (TGN), and Supplier Return Notes (SRN).",
       "Developed high-throughput POS Bills & Cashier management supporting thermal receipt printing, daily shift cash reconciliations, salesperson commission tracking, and multi-tier pricing.",
-      "Integrated omnichannel order fulfillment tracking web, Android, and iOS store sales across PayHere, Koko Pay, Mintpay, and courier Cash-on-Delivery (COD) reconciliation.",
+      "Integrated multi-channel order fulfillment tracking web, Android, and iOS store sales across PayHere, Koko Pay, Mintpay, and courier Cash-on-Delivery (COD) reconciliation.",
       "Built real-time executive analytics dashboards monitoring LKR 12.6M+ annual turnover, comparing in-store POS velocity (78%) versus online digital revenue (22%).",
       "Implemented granular enterprise Role-Based Access Control (RBAC) via Spatie Permissions, securing financial ledgers, inventory write-offs, and multi-user audit trails.",
     ],
     architectureOverview:
       "High-performance client-server ERP architecture: Next.js 14 (App Router) with TanStack Table and Radix UI components connecting to a secure Laravel 8 REST API authenticated via Sanctum. Features Spatie dynamic RBAC, automated daily database snapshots, multi-branch inventory bin-cards, and AWS S3 document storage.",
     mockupType: "ecommerce",
-    liveUrl: "https://github.com/Thamalpath",
+    liveUrl: "https://web.venpaa.lk/",
     githubUrl: "https://github.com/Thamalpath",
     gallery: [
       {
@@ -149,7 +146,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       },
       {
         src: "/images/projects/venpaa4.png",
-        title: "Omnichannel eCommerce & Mobile Order Pipeline",
+        title: "eCommerce & Mobile Order Pipeline",
         caption:
           "Real-time fulfillment tracking orders across Web, Android, and iOS channels with Koko Pay, Mintpay, Card, and COD status reconciliation.",
         badge: "Order Fulfillment",
@@ -206,7 +203,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
         ],
       },
       {
-        title: "Omnichannel POS & Cashier Operations",
+        title: "POS & Cashier Operations",
         category: "Point of Sale",
         features: [
           "Fast-response POS billing with 80mm thermal receipt printing and A4 invoices.",
@@ -526,7 +523,84 @@ const CATEGORY_TABS = [
 ] as const;
 
 // ============================================================================
-// Interactive Cyber Project Mockup UI Renderers (Custom Bespoke Mini-UIs)
+// Modern Simple Classic Project Visual Mockup Renderers
+// ============================================================================
+function getProjectDomain(item: ProjectItem): string {
+  switch (item.id) {
+    case "venpaa-crm-ecommerce":
+    case "venpaa-erp":
+      return "web.venpaa.lk";
+    case "samudra-distribution":
+      return "logistics.samudra.lk";
+    case "hotel-reservation-system":
+      return "resort.bookingengine.lk";
+    case "smart-school-system":
+      return "campus.smartschool.edu";
+    case "multi-tenant-pms":
+      return "pms.luxuryvillas.cloud";
+    case "financial-analytics-intelligence":
+      return "telemetry.analytics.internal";
+    case "notification-reporting-microservice":
+      return "api.microservices.cloud";
+    case "rbac-identity-gateway":
+      return "auth.gateway.internal";
+    default:
+      return `${item.id}.cloud`;
+  }
+}
+
+// ============================================================================
+// Cyber-Glass Browser Mockup Window Frame (Pixel-Aligned & Crystal Clear)
+// ============================================================================
+function CyberBrowserWindow({
+  item,
+  children,
+}: {
+  item: ProjectItem;
+  children: React.ReactNode;
+}) {
+  const domain = getProjectDomain(item);
+
+  return (
+    <div className="relative w-full h-full p-2 sm:p-2.5 flex items-center justify-center bg-[#01030a] overflow-hidden select-none">
+      {/* Ambient Electric Sapphire Halo */}
+      <div
+        aria-hidden="true"
+        className="absolute -inset-4 bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.18),transparent_70%)] opacity-70 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none blur-xl"
+      />
+
+      {/* The Razor-Sharp Modern Browser Window Frame */}
+      <div className="relative w-full h-full max-h-[98%] flex flex-col rounded-xl overflow-hidden border border-sky-400/40 bg-white shadow-[0_12px_32px_rgba(0,0,0,0.85),0_0_20px_rgba(56,189,248,0.14)] group-hover:border-sky-400/70 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.95),0_0_28px_rgba(56,189,248,0.25)] transition-[border-color,box-shadow] duration-500">
+        {/* Simple & Clean Browser Chrome Bar */}
+        <div className="h-7 sm:h-8 px-3 bg-[#0a1527] border-b border-sky-500/25 flex items-center justify-between shrink-0">
+          {/* macOS Jewel Buttons */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500/90 shadow-[0_0_5px_rgba(244,63,94,0.6)]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500/90 shadow-[0_0_5px_rgba(245,158,11,0.6)]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/90 shadow-[0_0_5px_rgba(52,211,153,0.7)]" />
+          </div>
+
+          {/* Clean HTTPS SSL Address Bar */}
+          <div className="flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#020612] border border-sky-500/30 text-[7.5px] sm:text-[8.5px] font-mono text-zinc-300">
+            <Lock className="w-2.5 h-2.5 text-emerald-400 shrink-0" />
+            <span className="text-zinc-500 select-none">https://</span>
+            <span className="text-sky-300 font-semibold">{domain}</span>
+          </div>
+
+          {/* Right Spacer for Balance */}
+          <div className="w-7 sm:w-8" />
+        </div>
+
+        {/* Viewport Canvas: 100% crisp & razor sharp */}
+        <div className="relative flex-1 w-full overflow-hidden bg-[#f8fafc]">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+// ============================================================================
+// Modern Simple Classic Project Visual Mockup Renderers
 // ============================================================================
 function ProjectMockupVisual({
   type,
@@ -537,301 +611,313 @@ function ProjectMockupVisual({
 }) {
   const gradientId = useId();
 
-  // If project has real photographic enterprise screenshots, render real preview!
-  if (item.gallery && item.gallery.length > 0) {
+  // If project has custom 3D studio preview image, render it directly without nested browser chrome
+  if (item.previewImage) {
     return (
-      <div className="relative w-full h-full overflow-hidden group/thumb bg-[#01030a] select-none">
-        <Image
-          src={item.gallery[0].src}
-          alt={item.title}
-          fill
-          sizes="(max-width: 768px) 100vw, 550px"
-          className="object-cover object-top transition-transform duration-700 group-hover/thumb:scale-105"
+      <div className="relative w-full h-full overflow-hidden bg-[#01030b] flex items-center justify-center select-none group/preview">
+        {/* Ambient Electric Sapphire Halo */}
+        <div
+          aria-hidden="true"
+          className="absolute -inset-4 bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.22),transparent_70%)] opacity-70 group-hover/preview:opacity-100 transition-opacity duration-700 pointer-events-none blur-xl"
         />
-        {/* Subtle Cyber Gradient Vignette */}
-        <div className="absolute inset-0 bg-linear-to-t from-[#01040f] via-transparent to-[#01040f]/60 pointer-events-none" />
-
-        {/* Top Floating Telemetry Pills */}
-        <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none z-10">
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#020614]/90 border border-sky-400/50 backdrop-blur-md shadow-[0_0_12px_rgba(56,189,248,0.35)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[7.5px] font-mono tracking-widest text-sky-200 uppercase font-semibold">
-              {item.gallery[0].badge}
-            </span>
-          </div>
-          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#020614]/90 border border-sky-500/30 backdrop-blur-md text-[7.5px] font-mono text-sky-300">
-            <span>{item.gallery.length} REAL SCREENS</span>
-          </div>
-        </div>
-
-        {/* Bottom Floating Caption Bar */}
-        <div className="absolute bottom-2 inset-x-2 flex items-center justify-between px-2.5 py-1.5 rounded bg-[#01030a]/90 border border-sky-500/30 backdrop-blur-md z-10">
-          <span className="font-mono text-[8px] text-zinc-200 tracking-wider uppercase truncate max-w-[210px] font-medium">
-            {item.gallery[0].title}
-          </span>
-          <span className="text-[7.5px] font-mono text-emerald-400 font-bold tracking-wider shrink-0">
-            ENTERPRISE LIVE
-          </span>
+        <div className="relative w-full h-full">
+          <Image
+            src={item.previewImage}
+            alt={item.title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 900px"
+            className="object-contain object-center scale-[1.02] transition-transform duration-700 group-hover/preview:scale-[1.06]"
+            style={{ imageRendering: "-webkit-optimize-contrast" }}
+            priority
+          />
         </div>
       </div>
     );
   }
 
-  switch (type) {
-    case "ecommerce":
+  const renderInnerContent = () => {
+    // If project has gallery screenshots:
+    const imageSrc =
+      item.gallery && item.gallery.length > 0 ? item.gallery[0].src : null;
+
+    if (imageSrc) {
       return (
-        <div className="relative w-full h-full p-3 flex flex-col justify-between bg-linear-to-b from-[#051124] to-[#020712] overflow-hidden select-none">
-          {/* Top Bar with Microservices Indicator */}
-          <div className="flex items-center justify-between text-[8px] font-mono border-b border-sky-500/20 pb-2">
-            <span className="flex items-center gap-1.5 text-sky-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              PAYHERE LIVE · DUAL MICROSERVICES
-            </span>
-            <span className="text-zinc-500">25+ MODULES ACTIVE</span>
-          </div>
-
-          {/* Metric Cards Row */}
-          <div className="grid grid-cols-3 gap-2 my-1.5">
-            <div className="bg-[#030919]/90 border border-sky-500/25 rounded p-1.5">
-              <p className="text-[7.5px] font-mono text-zinc-400">
-                SALES VELOCITY
-              </p>
-              <p className="text-xs font-bold text-sky-300 font-cinzel">
-                +30% SPD
-              </p>
-            </div>
-            <div className="bg-[#030919]/90 border border-sky-500/25 rounded p-1.5">
-              <p className="text-[7.5px] font-mono text-zinc-400">INVENTORY</p>
-              <p className="text-xs font-bold text-emerald-400 font-cinzel">
-                SYNCED
-              </p>
-            </div>
-            <div className="bg-[#030919]/90 border border-sky-500/25 rounded p-1.5">
-              <p className="text-[7.5px] font-mono text-zinc-400">GATEWAY</p>
-              <p className="text-xs font-bold text-sky-400 font-cinzel">
-                256-BIT
-              </p>
-            </div>
-          </div>
-
-          {/* Mini Real-Time Sparkline Wave */}
-          <div className="relative h-12 w-full bg-[#02050f]/80 rounded border border-sky-500/15 overflow-hidden flex items-end px-2 pt-1">
-            <svg
-              className="w-full h-full"
-              viewBox="0 0 100 40"
-              preserveAspectRatio="none"
-            >
-              <defs>
-                <linearGradient
-                  id={`${gradientId}-ecom`}
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.45" />
-                  <stop offset="100%" stopColor="#0284c7" stopOpacity="0.0" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M0,32 Q15,10 30,22 T60,8 T85,18 T100,5 L100,40 L0,40 Z"
-                fill={`url(#${gradientId}-ecom)`}
-              />
-              <path
-                d="M0,32 Q15,10 30,22 T60,8 T85,18 T100,5"
-                fill="none"
-                stroke="#38bdf8"
-                strokeWidth="1.8"
-              />
-            </svg>
-            <div className="absolute top-1 left-2 text-[7px] font-mono text-sky-400/80">
-              REAL-TIME TRANSACTION THROUGHPUT
-            </div>
-          </div>
+        <div className="relative w-full h-full bg-[#f8fafc]">
+          <Image
+            src={imageSrc}
+            alt={item.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 850px"
+            className="object-contain object-center"
+            style={{ imageRendering: "-webkit-optimize-contrast" }}
+            priority
+          />
         </div>
       );
+    }
 
-    case "distribution":
-      return (
-        <div className="relative w-full h-full p-3 flex flex-col justify-between bg-linear-to-b from-[#041122] to-[#010611] overflow-hidden select-none">
-          <div className="flex items-center justify-between text-[8px] font-mono border-b border-sky-500/20 pb-2">
-            <span className="flex items-center gap-1.5 text-sky-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
-              SAMUDRA DISTRIBUTION · LOGISTICS MAP
-            </span>
-            <span className="text-zinc-500">RBAC SECURED</span>
-          </div>
-
-          {/* Supply Chain Node Map */}
-          <div className="relative h-14 w-full bg-[#02050e] rounded border border-sky-500/20 my-1.5 flex items-center justify-between px-3 overflow-hidden">
-            <div className="relative z-10 flex flex-col items-center">
-              <span className="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]" />
-              <span className="text-[7px] font-mono text-zinc-300 mt-1">
-                HQ DEPOT
+    switch (type) {
+      case "ecommerce":
+        return (
+          <div className="relative w-full h-full p-3 flex flex-col justify-between bg-linear-to-b from-[#051124] to-[#020712] overflow-hidden select-none">
+            {/* Top Bar with Microservices Indicator */}
+            <div className="flex items-center justify-between text-[8px] font-mono border-b border-sky-500/20 pb-2">
+              <span className="flex items-center gap-1.5 text-sky-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                PAYHERE LIVE · DUAL MICROSERVICES
               </span>
+              <span className="text-zinc-500">25+ MODULES ACTIVE</span>
             </div>
-            <div className="flex-1 h-0.5 bg-linear-to-r from-sky-400 via-sky-300 to-blue-500 mx-2 relative overflow-hidden">
-              <div className="absolute inset-0 bg-white/70 animate-[move-right_2s_linear_infinite] w-1/3" />
+
+            {/* Metric Cards Row */}
+            <div className="grid grid-cols-3 gap-2 my-1.5">
+              <div className="bg-[#030919]/90 border border-sky-500/25 rounded p-1.5">
+                <p className="text-[7.5px] font-mono text-zinc-400">
+                  SALES VELOCITY
+                </p>
+                <p className="text-xs font-bold text-sky-300 font-cinzel">
+                  +30% SPD
+                </p>
+              </div>
+              <div className="bg-[#030919]/90 border border-sky-500/25 rounded p-1.5">
+                <p className="text-[7.5px] font-mono text-zinc-400">
+                  INVENTORY
+                </p>
+                <p className="text-xs font-bold text-emerald-400 font-cinzel">
+                  SYNCED
+                </p>
+              </div>
+              <div className="bg-[#030919]/90 border border-sky-500/25 rounded p-1.5">
+                <p className="text-[7.5px] font-mono text-zinc-400">GATEWAY</p>
+                <p className="text-xs font-bold text-sky-400 font-cinzel">
+                  256-BIT
+                </p>
+              </div>
             </div>
-            <div className="relative z-10 flex flex-col items-center">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_#0ea5e9]" />
-              <span className="text-[7px] font-mono text-zinc-300 mt-1">
-                REGIONAL
-              </span>
-            </div>
-            <div className="flex-1 h-0.5 bg-linear-to-r from-blue-500 via-sky-400 to-emerald-400 mx-2 relative overflow-hidden">
-              <div className="absolute inset-0 bg-white/70 animate-[move-right_2s_linear_infinite_0.5s] w-1/3" />
-            </div>
-            <div className="relative z-10 flex flex-col items-center">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]" />
-              <span className="text-[7px] font-mono text-zinc-300 mt-1">
-                OUTLET
-              </span>
-            </div>
-          </div>
 
-          {/* Metrics summary */}
-          <div className="flex items-center justify-between text-[7.5px] font-mono text-zinc-400 bg-[#030919] px-2 py-1 rounded border border-sky-500/15">
-            <span>INVENTORY DISPATCH: 100%</span>
-            <span className="text-sky-300">QUERY VELOCITY: +40%</span>
-          </div>
-        </div>
-      );
-
-    case "hotel":
-      return (
-        <div className="relative w-full h-full p-3 flex flex-col justify-between bg-linear-to-b from-[#051126] to-[#010613] overflow-hidden select-none">
-          <div className="flex items-center justify-between text-[8px] font-mono border-b border-sky-500/20 pb-2">
-            <span className="flex items-center gap-1.5 text-sky-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
-              HOTEL PMS · ROOM CALENDAR MATRIX
-            </span>
-            <span className="text-zinc-500">0% CONFLICT SLA</span>
-          </div>
-
-          {/* Calendar Room Grid */}
-          <div className="grid grid-cols-6 gap-1 my-1.5 bg-[#02050f] p-1.5 rounded border border-sky-500/20">
-            {["R101", "R102", "R103", "R201", "R202", "VILLA 1"].map(
-              (room, idx) => (
-                <div
-                  key={room}
-                  className={`flex flex-col items-center justify-center py-1.5 rounded text-[7px] font-mono border ${
-                    idx === 1 || idx === 4
-                      ? "bg-sky-950/80 border-sky-400 text-sky-200 shadow-[0_0_6px_rgba(56,189,248,0.3)]"
-                      : "bg-[#030815] border-zinc-800 text-zinc-400"
-                  }`}
-                >
-                  <span>{room}</span>
-                  <span
-                    className={
-                      idx === 1 || idx === 4
-                        ? "text-emerald-400"
-                        : "text-sky-400"
-                    }
-                  >
-                    {idx === 1 || idx === 4 ? "BOOKED" : "OPEN"}
-                  </span>
-                </div>
-              ),
-            )}
-          </div>
-
-          <div className="flex items-center justify-between text-[7.5px] font-mono text-zinc-400 bg-[#030919] px-2 py-1 rounded border border-sky-500/15">
-            <span>AVAILABILITY ENGINE: ACTIVE</span>
-            <span className="text-sky-300">API LATENCY: &lt;120MS</span>
-          </div>
-        </div>
-      );
-
-    case "school":
-      return (
-        <div className="relative w-full h-full p-3 flex flex-col justify-between bg-linear-to-b from-[#041021] to-[#01050e] overflow-hidden select-none">
-          <div className="flex items-center justify-between text-[8px] font-mono border-b border-sky-500/20 pb-2">
-            <span className="flex items-center gap-1.5 text-sky-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
-              SMART SCHOOL · ACADEMIC ANALYTICS
-            </span>
-            <span className="text-zinc-500">99.9% INTEGRITY</span>
-          </div>
-
-          {/* Academic Percentile Bar Chart */}
-          <div className="flex items-end justify-between gap-1.5 h-12 bg-[#02050e] p-2 rounded border border-sky-500/20 my-1">
-            {[45, 78, 62, 92, 85, 74, 96].map((height, i) => (
-              <div
-                key={i}
-                className="flex-1 flex flex-col items-center gap-0.5"
+            {/* Mini Real-Time Sparkline Wave */}
+            <div className="relative h-12 w-full bg-[#02050f]/80 rounded border border-sky-500/15 overflow-hidden flex items-end px-2 pt-1">
+              <svg
+                className="w-full h-full"
+                viewBox="0 0 100 40"
+                preserveAspectRatio="none"
               >
-                <div
-                  style={{ height: `${height * 0.35}px` }}
-                  className={`w-full rounded-t ${
-                    i === 3 || i === 6
-                      ? "bg-sky-400 shadow-[0_0_8px_#38bdf8]"
-                      : "bg-sky-800/80"
-                  }`}
+                <defs>
+                  <linearGradient
+                    id={`${gradientId}-ecom`}
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.45" />
+                    <stop offset="100%" stopColor="#0284c7" stopOpacity="0.0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M0,32 Q15,10 30,22 T60,8 T85,18 T100,5 L100,40 L0,40 Z"
+                  fill={`url(#${gradientId}-ecom)`}
                 />
-                <span className="text-[6.5px] font-mono text-zinc-500">
-                  M{i + 1}
+                <path
+                  d="M0,32 Q15,10 30,22 T60,8 T85,18 T100,5"
+                  fill="none"
+                  stroke="#38bdf8"
+                  strokeWidth="1.8"
+                />
+              </svg>
+              <div className="absolute top-1 left-2 text-[7px] font-mono text-sky-400/80">
+                REAL-TIME TRANSACTION THROUGHPUT
+              </div>
+            </div>
+          </div>
+        );
+
+      case "distribution":
+        return (
+          <div className="relative w-full h-full p-3 flex flex-col justify-between bg-linear-to-b from-[#041122] to-[#010611] overflow-hidden select-none">
+            <div className="flex items-center justify-between text-[8px] font-mono border-b border-sky-500/20 pb-2">
+              <span className="flex items-center gap-1.5 text-sky-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
+                SAMUDRA DISTRIBUTION · LOGISTICS MAP
+              </span>
+              <span className="text-zinc-500">RBAC SECURED</span>
+            </div>
+
+            {/* Supply Chain Node Map */}
+            <div className="relative h-14 w-full bg-[#02050e] rounded border border-sky-500/20 my-1.5 flex items-center justify-between px-3 overflow-hidden">
+              <div className="relative z-10 flex flex-col items-center">
+                <span className="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]" />
+                <span className="text-[7px] font-mono text-zinc-300 mt-1">
+                  HQ DEPOT
                 </span>
               </div>
-            ))}
-          </div>
-
-          <div className="flex items-center justify-between text-[7.5px] font-mono text-zinc-400 bg-[#030919] px-2 py-1 rounded border border-sky-500/15">
-            <span>ATTENDANCE RADAR: 98.4%</span>
-            <span className="text-emerald-400">APPROVALS: OK</span>
-          </div>
-        </div>
-      );
-
-    case "analytics":
-    case "pms":
-    case "microservice":
-    case "security":
-    default:
-      return (
-        <div className="relative w-full h-full p-3 flex flex-col justify-between bg-linear-to-b from-[#051124] to-[#020712] overflow-hidden select-none">
-          <div className="flex items-center justify-between text-[8px] font-mono border-b border-sky-500/20 pb-2">
-            <span className="flex items-center gap-1.5 text-sky-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
-              {item.category}
-            </span>
-            <span className="text-zinc-500">RESTful MICROSERVICES</span>
-          </div>
-
-          {/* Central Architecture Telemetry HUD */}
-          <div className="grid grid-cols-2 gap-2 my-1.5">
-            <div className="bg-[#02050f] border border-sky-500/20 rounded p-1.5 flex flex-col justify-center">
-              <span className="text-[7.5px] font-mono text-zinc-400">
-                ARCHITECTURE
-              </span>
-              <span className="text-[11px] font-bold text-sky-300 font-cinzel">
-                REST & JWT
-              </span>
+              <div className="flex-1 h-0.5 bg-linear-to-r from-sky-400 via-sky-300 to-blue-500 mx-2 relative overflow-hidden">
+                <div className="absolute inset-0 bg-white/70 animate-[move-right_2s_linear_infinite] w-1/3" />
+              </div>
+              <div className="relative z-10 flex flex-col items-center">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_#0ea5e9]" />
+                <span className="text-[7px] font-mono text-zinc-300 mt-1">
+                  REGIONAL
+                </span>
+              </div>
+              <div className="flex-1 h-0.5 bg-linear-to-r from-blue-500 via-sky-400 to-emerald-400 mx-2 relative overflow-hidden">
+                <div className="absolute inset-0 bg-white/70 animate-[move-right_2s_linear_infinite_0.5s] w-1/3" />
+              </div>
+              <div className="relative z-10 flex flex-col items-center">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]" />
+                <span className="text-[7px] font-mono text-zinc-300 mt-1">
+                  OUTLET
+                </span>
+              </div>
             </div>
-            <div className="bg-[#02050f] border border-sky-500/20 rounded p-1.5 flex flex-col justify-center">
-              <span className="text-[7.5px] font-mono text-zinc-400">
-                DATA RELIABILITY
-              </span>
-              <span className="text-[11px] font-bold text-emerald-400 font-cinzel">
-                99.9% PROD
-              </span>
+
+            {/* Metrics summary */}
+            <div className="flex items-center justify-between text-[7.5px] font-mono text-zinc-400 bg-[#030919] px-2 py-1 rounded border border-sky-500/15">
+              <span>INVENTORY DISPATCH: 100%</span>
+              <span className="text-sky-300">QUERY VELOCITY: +40%</span>
             </div>
           </div>
+        );
 
-          {/* Tech Pills Footer */}
-          <div className="flex items-center gap-1 overflow-x-hidden text-[7px] font-mono text-sky-300/80">
-            {item.techStack.slice(0, 4).map((tech) => (
-              <span
-                key={tech}
-                className="bg-sky-950/70 border border-sky-500/30 px-1 py-0.5 rounded"
-              >
-                {tech}
+      case "hotel":
+        return (
+          <div className="relative w-full h-full p-3 flex flex-col justify-between bg-linear-to-b from-[#051126] to-[#010613] overflow-hidden select-none">
+            <div className="flex items-center justify-between text-[8px] font-mono border-b border-sky-500/20 pb-2">
+              <span className="flex items-center gap-1.5 text-sky-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+                HOTEL PMS · ROOM CALENDAR MATRIX
               </span>
-            ))}
+              <span className="text-zinc-500">0% CONFLICT SLA</span>
+            </div>
+
+            {/* Calendar Room Grid */}
+            <div className="grid grid-cols-6 gap-1 my-1.5 bg-[#02050f] p-1.5 rounded border border-sky-500/20">
+              {["R101", "R102", "R103", "R201", "R202", "VILLA 1"].map(
+                (room, idx) => (
+                  <div
+                    key={room}
+                    className={`flex flex-col items-center justify-center py-1.5 rounded text-[7px] font-mono border ${
+                      idx === 1 || idx === 4
+                        ? "bg-sky-950/80 border-sky-400 text-sky-200 shadow-[0_0_6px_rgba(56,189,248,0.3)]"
+                        : "bg-[#030815] border-zinc-800 text-zinc-400"
+                    }`}
+                  >
+                    <span>{room}</span>
+                    <span
+                      className={
+                        idx === 1 || idx === 4
+                          ? "text-emerald-400"
+                          : "text-sky-400"
+                      }
+                    >
+                      {idx === 1 || idx === 4 ? "BOOKED" : "OPEN"}
+                    </span>
+                  </div>
+                ),
+              )}
+            </div>
+
+            <div className="flex items-center justify-between text-[7.5px] font-mono text-zinc-400 bg-[#030919] px-2 py-1 rounded border border-sky-500/15">
+              <span>AVAILABILITY ENGINE: ACTIVE</span>
+              <span className="text-sky-300">API LATENCY: &lt;120MS</span>
+            </div>
           </div>
-        </div>
-      );
-  }
+        );
+
+      case "school":
+        return (
+          <div className="relative w-full h-full p-3 flex flex-col justify-between bg-linear-to-b from-[#041021] to-[#01050e] overflow-hidden select-none">
+            <div className="flex items-center justify-between text-[8px] font-mono border-b border-sky-500/20 pb-2">
+              <span className="flex items-center gap-1.5 text-sky-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
+                SMART SCHOOL · ACADEMIC ANALYTICS
+              </span>
+              <span className="text-zinc-500">99.9% INTEGRITY</span>
+            </div>
+
+            {/* Academic Percentile Bar Chart */}
+            <div className="flex items-end justify-between gap-1.5 h-12 bg-[#02050e] p-2 rounded border border-sky-500/20 my-1">
+              {[45, 78, 62, 92, 85, 74, 96].map((height, i) => (
+                <div
+                  key={i}
+                  className="flex-1 flex flex-col items-center gap-0.5"
+                >
+                  <div
+                    style={{ height: `${height * 0.35}px` }}
+                    className={`w-full rounded-t ${
+                      i === 3 || i === 6
+                        ? "bg-sky-400 shadow-[0_0_8px_#38bdf8]"
+                        : "bg-sky-800/80"
+                    }`}
+                  />
+                  <span className="text-[6.5px] font-mono text-zinc-500">
+                    M{i + 1}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between text-[7.5px] font-mono text-zinc-400 bg-[#030919] px-2 py-1 rounded border border-sky-500/15">
+              <span>ATTENDANCE RADAR: 98.4%</span>
+              <span className="text-emerald-400">APPROVALS: OK</span>
+            </div>
+          </div>
+        );
+
+      case "analytics":
+      case "pms":
+      case "microservice":
+      case "security":
+      default:
+        return (
+          <div className="relative w-full h-full p-3 flex flex-col justify-between bg-linear-to-b from-[#051124] to-[#020712] overflow-hidden select-none">
+            <div className="flex items-center justify-between text-[8px] font-mono border-b border-sky-500/20 pb-2">
+              <span className="flex items-center gap-1.5 text-sky-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
+                {item.category}
+              </span>
+              <span className="text-zinc-500">RESTful MICROSERVICES</span>
+            </div>
+
+            {/* Central Architecture Telemetry HUD */}
+            <div className="grid grid-cols-2 gap-2 my-1.5">
+              <div className="bg-[#02050f] border border-sky-500/20 rounded p-1.5 flex flex-col justify-center">
+                <span className="text-[7.5px] font-mono text-zinc-400">
+                  ARCHITECTURE
+                </span>
+                <span className="text-[11px] font-bold text-sky-300 font-cinzel">
+                  REST & JWT
+                </span>
+              </div>
+              <div className="bg-[#02050f] border border-sky-500/20 rounded p-1.5 flex flex-col justify-center">
+                <span className="text-[7.5px] font-mono text-zinc-400">
+                  DATA RELIABILITY
+                </span>
+                <span className="text-[11px] font-bold text-emerald-400 font-cinzel">
+                  99.9% PROD
+                </span>
+              </div>
+            </div>
+
+            {/* Tech Pills Footer */}
+            <div className="flex items-center gap-1 overflow-x-hidden text-[7px] font-mono text-sky-300/80">
+              {item.techStack.slice(0, 4).map((tech) => (
+                <span
+                  key={tech}
+                  className="bg-sky-950/70 border border-sky-500/30 px-1 py-0.5 rounded"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <CyberBrowserWindow item={item}>{renderInnerContent()}</CyberBrowserWindow>
+  );
 }
 
 // ============================================================================
@@ -845,6 +931,182 @@ export function Projects() {
     null,
   );
   const [modalGalleryIndex, setModalGalleryIndex] = useState<number>(0);
+  const [isFullscreenLightbox, setIsFullscreenLightbox] =
+    useState<boolean>(false);
+  const [isLightboxZoomed, setIsLightboxZoomed] = useState<boolean>(false);
+  const [lightboxTouchStartX, setLightboxTouchStartX] = useState<number | null>(
+    null,
+  );
+
+  const handleLightboxTouchStart = (e: React.TouchEvent) => {
+    setLightboxTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleLightboxTouchEnd = (e: React.TouchEvent) => {
+    if (lightboxTouchStartX === null || !selectedProject?.gallery) return;
+    const diffX = e.changedTouches[0].clientX - lightboxTouchStartX;
+    if (diffX > 45) {
+      setModalGalleryIndex((prev) =>
+        prev > 0 ? prev - 1 : selectedProject.gallery!.length - 1,
+      );
+    } else if (diffX < -45) {
+      setModalGalleryIndex((prev) =>
+        prev < selectedProject.gallery!.length - 1 ? prev + 1 : 0,
+      );
+    }
+    setLightboxTouchStartX(null);
+  };
+
+  // Responsive mobile screen tracking for 3D carousel spacing
+  const [isMobileScreen, setIsMobileScreen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth < 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Section refs for scroll animation transition between Experience and Projects
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const horizonSeamRef = useRef<HTMLDivElement | null>(null);
+  const horizonGlowRef = useRef<HTMLDivElement | null>(null);
+  const bgArenaRef = useRef<HTMLDivElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const mobileTabsRef = useRef<HTMLDivElement | null>(null);
+  const carouselStageRef = useRef<HTMLDivElement | null>(null);
+  const bottomBarRef = useRef<HTMLDivElement | null>(null);
+
+  // 60fps lerped scroll transition from Experience into Projects
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    let rafId = 0;
+    let target = 0;
+    let current = 0;
+
+    const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+    const easeOutQuad = (t: number) => 1 - (1 - t) * (1 - t);
+
+    const applyVisuals = (p: number) => {
+      const isMobile = window.innerWidth < 640;
+      const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+
+      // 1. Dynamic Horizon Laser Seam expansion on section boundary
+      const seamP = easeOutQuad(clamp01(p * 1.35));
+      if (horizonSeamRef.current) {
+        horizonSeamRef.current.style.transform = `scaleX(${(0.15 + seamP * 0.85).toFixed(3)})`;
+        horizonSeamRef.current.style.opacity = (0.25 + seamP * 0.75).toFixed(3);
+      }
+      if (horizonGlowRef.current) {
+        horizonGlowRef.current.style.opacity = (seamP * 0.95).toFixed(3);
+        horizonGlowRef.current.style.transform = `translate(-50%, -50%) scale(${(0.5 + seamP * 0.5).toFixed(3)})`;
+      }
+
+      // 2. Cyber Arena Background Parallax & Cinematic Depth Pull
+      const bgP = easeOutQuad(clamp01(p * 1.25));
+      if (bgArenaRef.current) {
+        const bgScale = (1.05 - bgP * 0.05).toFixed(4);
+        const bgY = ((1 - bgP) * (isMobile ? 12 : 24)).toFixed(1);
+        bgArenaRef.current.style.transform = `scale(${bgScale}) translate3d(0, ${bgY}px, 0)`;
+        bgArenaRef.current.style.opacity = (0.4 + bgP * 0.5).toFixed(3);
+      }
+
+      // 3. Top Executive Header Bar (Title, Category Tabs, Navigation)
+      const headP = easeOutCubic(clamp01((p - 0.06) / 0.65));
+      if (headerRef.current) {
+        const headY = ((1 - headP) * (isMobile ? -14 : -24)).toFixed(1);
+        headerRef.current.style.opacity = headP.toFixed(3);
+        headerRef.current.style.transform = `translate3d(0, ${headY}px, 0)`;
+      }
+
+      // 4. Mobile Category Tabs Row (< lg)
+      if (mobileTabsRef.current) {
+        mobileTabsRef.current.style.opacity = headP.toFixed(3);
+        mobileTabsRef.current.style.transform = `translate3d(0, ${((1 - headP) * -10).toFixed(1)}px, 0)`;
+      }
+
+      // 5. 3D Amphitheater Carousel Stage with Floating Project Cards
+      const stageP = easeOutCubic(clamp01((p - 0.14) / 0.72));
+      if (carouselStageRef.current) {
+        const stageY = ((1 - stageP) * (isMobile ? 24 : 45)).toFixed(1);
+        const stageScale = (0.95 + stageP * 0.05).toFixed(3);
+        carouselStageRef.current.style.opacity = stageP.toFixed(3);
+        carouselStageRef.current.style.transform = `translate3d(0, ${stageY}px, 0) scale(${stageScale})`;
+      }
+
+      // 6. Bottom Navigation Controls & Pagination Dots
+      const bottomP = easeOutCubic(clamp01((p - 0.3) / 0.62));
+      if (bottomBarRef.current) {
+        const bottomY = ((1 - bottomP) * 16).toFixed(1);
+        bottomBarRef.current.style.opacity = bottomP.toFixed(3);
+        bottomBarRef.current.style.transform = `translate3d(0, ${bottomY}px, 0)`;
+      }
+    };
+
+    const computeTarget = () => {
+      const rect = section.getBoundingClientRect();
+      const vh = Math.max(window.innerHeight, 1);
+      const isMobile = window.innerWidth < 640;
+      const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+
+      if (isMobile) {
+        const startY = vh * 0.96;
+        const endY = vh * 0.15;
+        target = clamp01((startY - rect.top) / (startY - endY));
+      } else if (isTablet) {
+        const startY = vh * 0.98;
+        const endY = vh * 0.2;
+        target = clamp01((startY - rect.top) / (startY - endY));
+      } else {
+        target = clamp01((vh - rect.top) / (vh * 0.85));
+      }
+    };
+
+    const tick = () => {
+      const diff = target - current;
+      if (Math.abs(diff) < 0.001) {
+        current = target;
+        applyVisuals(current);
+        rafId = 0;
+        return;
+      }
+      current += diff * 0.09;
+      applyVisuals(current);
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const onScroll = () => {
+      computeTarget();
+      if (!rafId) {
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+
+    computeTarget();
+    current = target;
+    applyVisuals(current);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   // Touch and drag tracking
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
@@ -906,11 +1168,34 @@ export function Projects() {
     return () => clearInterval(interval);
   }, [isAutoOrbit, isHovered, selectedProject, filteredProjects.length]);
 
-  // Keyboard navigation & ESC handler
+  // Keyboard navigation & ESC handler (supports modal & fullscreen lightbox)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setSelectedProject(null);
+        if (isFullscreenLightbox) {
+          setIsFullscreenLightbox(false);
+          setIsLightboxZoomed(false);
+        } else {
+          setSelectedProject(null);
+        }
+      } else if (isFullscreenLightbox) {
+        if (e.key === "ArrowLeft") {
+          setModalGalleryIndex((prev) =>
+            selectedProject?.gallery
+              ? prev > 0
+                ? prev - 1
+                : selectedProject.gallery.length - 1
+              : 0,
+          );
+        } else if (e.key === "ArrowRight") {
+          setModalGalleryIndex((prev) =>
+            selectedProject?.gallery
+              ? prev < selectedProject.gallery.length - 1
+                ? prev + 1
+                : 0
+              : 0,
+          );
+        }
       } else if (!selectedProject) {
         if (e.key === "ArrowLeft") handlePrev();
         if (e.key === "ArrowRight") handleNext();
@@ -919,12 +1204,13 @@ export function Projects() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedProject, handlePrev, handleNext]);
+  }, [isFullscreenLightbox, selectedProject, handlePrev, handleNext]);
 
   return (
     <section
+      ref={sectionRef}
       id="projects"
-      className="relative w-full overflow-hidden bg-[#010206] text-white pt-5 sm:pt-6 lg:pt-8 pb-6 sm:pb-8 px-3 sm:px-6 md:px-10 lg:px-12 select-none min-h-165 lg:min-h-185 flex flex-col justify-between"
+      className="relative w-full overflow-hidden bg-[#010206] text-white pt-2 sm:pt-3 lg:pt-3.5 pb-4 sm:pb-5 px-3 sm:px-6 md:px-10 lg:px-12 select-none flex flex-col"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -932,8 +1218,9 @@ export function Projects() {
       {/* 1. Cinematic Realistic Cyber Arena Background (public/project_bg.png) */}
       {/* ==================================================================== */}
       <div
+        ref={bgArenaRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+        className="pointer-events-none absolute inset-0 z-0 overflow-hidden will-change-transform"
       >
         <Image
           src="/project_bg.png"
@@ -945,28 +1232,37 @@ export function Projects() {
         />
 
         {/* Top Horizon Fade - Seamlessly melts into previous section */}
-        <div className="absolute inset-x-0 top-0 h-24 sm:h-36 bg-linear-to-b from-[#010206] via-[#010206]/80 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-16 sm:h-24 bg-linear-to-b from-[#010206] via-[#010206]/80 to-transparent" />
 
         {/* Bottom Horizon Fade - Dissolves smoothly into pure #010206 */}
-        <div className="absolute inset-x-0 bottom-0 h-24 sm:h-36 bg-linear-to-t from-[#010206] via-[#010206]/85 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-16 sm:h-24 bg-linear-to-t from-[#010206] via-[#010206]/85 to-transparent" />
 
         {/* Soft Center Vignette for Enhanced Card Readability */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(1,2,6,0.5)_75%,#010206_100%)]" />
       </div>
 
-      {/* Dynamic Laser Horizon Seam on Section Boundary */}
+      {/* Dynamic Laser Horizon Seam & Ambient Glow on Section Boundary */}
       <div
+        ref={horizonSeamRef}
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 inset-x-0 h-0.5 bg-linear-to-r from-transparent via-sky-400 to-transparent shadow-[0_0_24px_rgba(56,189,248,0.85)] z-30"
+        className="pointer-events-none absolute top-0 inset-x-0 h-0.5 bg-linear-to-r from-transparent via-sky-400 to-transparent shadow-[0_0_24px_rgba(56,189,248,0.85),0_0_48px_rgba(14,165,233,0.5)] origin-center will-change-transform z-30"
+      />
+      <div
+        ref={horizonGlowRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-160 h-10 sm:h-16 bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.35)_0%,rgba(14,165,233,0.12)_45%,transparent_75%)] blur-md origin-center will-change-transform z-30"
       />
 
       {/* ==================================================================== */}
-      {/* 2. Top Executive HUD Bar: Left Editorial Motto & Right Navigation    */}
+      {/* 2. Top Executive HUD Bar: Left Editorial Motto, Center Tabs & Right Controls */}
       {/* ==================================================================== */}
-      <div className="relative z-30 w-full max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1760px] mx-auto flex items-start justify-between gap-4 mb-2 sm:mb-3">
+      <div
+        ref={headerRef}
+        className="relative z-30 w-full max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1760px] mx-auto flex items-start justify-between gap-3 sm:gap-4 mb-2 sm:mb-3 will-change-transform"
+      >
         {/* Top-Left Stacked Typography (Matching Reference Image 1) */}
-        <div className="flex flex-col text-left items-start">
-          <div className="flex items-center gap-2 mb-1">
+        <div className="flex flex-col text-left items-start shrink-0">
+          <div className="flex items-center gap-2 mb-0.5">
             <span className="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8] animate-pulse" />
             <h2 className="font-cinzel text-xl sm:text-2xl md:text-3xl font-extrabold tracking-[0.24em] text-white uppercase drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
               PROJECTS
@@ -974,7 +1270,7 @@ export function Projects() {
           </div>
 
           {/* Editorial Hairline Divider */}
-          <div className="w-12 h-px bg-linear-to-r from-sky-400/70 to-transparent my-0.5 sm:my-1" />
+          <div className="w-12 h-px bg-linear-to-r from-sky-400/70 to-transparent my-0.5" />
 
           {/* 4 Stacked Motto Words */}
           <div className="flex flex-col gap-0.5 font-cinzel text-[9px] sm:text-[10px] tracking-[0.26em] text-zinc-400 uppercase leading-relaxed">
@@ -987,30 +1283,54 @@ export function Projects() {
           </div>
         </div>
 
+        {/* Center Category Filter Selector Pills (Aligned inline in row with navigation controls on desktop, nudged slightly up) */}
+        <div className="hidden lg:flex flex-1 items-center justify-center gap-1.5 xl:gap-2 flex-wrap self-end -translate-y-1 sm:-translate-y-1.5 px-2">
+          {CATEGORY_TABS.map((tab) => {
+            const isActive = activeCategory === tab.key;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => {
+                  setActiveCategory(tab.key);
+                  setActiveIndex(0);
+                }}
+                className={`px-3 py-1 sm:px-3.5 sm:py-1 rounded-full text-[8.5px] sm:text-[9.5px] font-mono tracking-widest uppercase transition-all duration-300 cursor-pointer ${
+                  isActive
+                    ? "border border-sky-400 bg-sky-950/80 text-sky-200 shadow-[0_0_14px_rgba(56,189,248,0.45)] scale-105"
+                    : "border border-zinc-800/80 bg-[#030713]/60 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700"
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Top-Right Stacked Guidance & Navigation (Matching Reference Image 1) */}
-        <div className="flex flex-col items-end text-right">
-          <div className="flex flex-col gap-0.5 font-cinzel text-[9px] sm:text-[10px] tracking-[0.26em] text-zinc-400 uppercase leading-relaxed mb-1 sm:mb-2">
+        <div className="flex flex-col items-end text-right shrink-0">
+          <div className="hidden sm:flex flex-col gap-0.5 font-cinzel text-[9px] sm:text-[10px] tracking-[0.26em] text-zinc-400 uppercase leading-relaxed mb-0.5 sm:mb-1">
             <span>SCROLL</span>
             <span>EXPLORE</span>
             <span className="text-zinc-200">INTERACT</span>
           </div>
 
           {/* Subtle Hairline */}
-          <div className="w-10 h-px bg-linear-to-l from-sky-400/60 to-transparent mb-2" />
+          <div className="hidden sm:block w-10 h-px bg-linear-to-l from-sky-400/60 to-transparent mb-1.5" />
 
           {/* Interactive Prev / Next / Auto-Orbit HUD Controls */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
               type="button"
               onClick={handlePrev}
               aria-label="Previous project"
-              className="p-1.5 sm:p-2 rounded-sm border border-blue-900/70 bg-[#050b18]/85 text-zinc-300 hover:text-sky-300 hover:border-sky-400/80 active:scale-95 transition shadow-[0_0_12px_rgba(0,0,0,0.8)] cursor-pointer"
+              className="p-1 sm:p-2 rounded-sm border border-blue-900/70 bg-[#050b18]/85 text-zinc-300 hover:text-sky-300 hover:border-sky-400/80 active:scale-95 transition shadow-[0_0_12px_rgba(0,0,0,0.8)] cursor-pointer"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
             </button>
 
             {/* Project Index Counter */}
-            <div className="font-cinzel text-xs sm:text-sm font-bold tracking-[0.2em] text-sky-300 px-1.5 min-w-16 text-center">
+            <div className="font-cinzel text-xs sm:text-sm font-bold tracking-[0.2em] text-sky-300 px-1 sm:px-1.5 min-w-14 sm:min-w-16 text-center">
               {String(safeIndex + 1).padStart(2, "0")} /{" "}
               {String(filteredProjects.length).padStart(2, "0")}
             </div>
@@ -1019,9 +1339,9 @@ export function Projects() {
               type="button"
               onClick={handleNext}
               aria-label="Next project"
-              className="p-1.5 sm:p-2 rounded-sm border border-blue-900/70 bg-[#050b18]/85 text-zinc-300 hover:text-sky-300 hover:border-sky-400/80 active:scale-95 transition shadow-[0_0_12px_rgba(0,0,0,0.8)] cursor-pointer"
+              className="p-1 sm:p-2 rounded-sm border border-blue-900/70 bg-[#050b18]/85 text-zinc-300 hover:text-sky-300 hover:border-sky-400/80 active:scale-95 transition shadow-[0_0_12px_rgba(0,0,0,0.8)] cursor-pointer"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
             </button>
 
             {/* Orbit / Autoplay Toggle */}
@@ -1029,26 +1349,27 @@ export function Projects() {
               type="button"
               onClick={() => setIsAutoOrbit((prev) => !prev)}
               title={isAutoOrbit ? "Pause auto-orbit" : "Resume auto-orbit"}
-              className={`p-1.5 sm:p-2 rounded-sm border transition-all cursor-pointer ${
+              className={`p-1 sm:p-2 rounded-sm border transition-all cursor-pointer ${
                 isAutoOrbit
                   ? "border-sky-400 bg-sky-950/80 text-sky-300 shadow-[0_0_14px_rgba(56,189,248,0.4)]"
                   : "border-zinc-800 bg-[#050b18]/80 text-zinc-500 hover:text-zinc-300"
               }`}
             >
               {isAutoOrbit ? (
-                <Pause className="w-3.5 h-3.5" />
+                <Pause className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
               ) : (
-                <Play className="w-3.5 h-3.5" />
+                <Play className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
               )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* ==================================================================== */}
-      {/* 4. Category Filter Selector Pills                                    */}
-      {/* ==================================================================== */}
-      <div className="relative z-30 w-full max-w-7xl mx-auto flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap mb-1 sm:mb-2">
+      {/* Category Filter Selector Pills for Mobile / Tablet (< lg) */}
+      <div
+        ref={mobileTabsRef}
+        className="lg:hidden relative z-30 w-full max-w-7xl mx-auto flex items-center justify-start sm:justify-center gap-1.5 overflow-x-auto no-scrollbar py-1 px-1 -mt-0.5 mb-2 will-change-transform"
+      >
         {CATEGORY_TABS.map((tab) => {
           const isActive = activeCategory === tab.key;
           return (
@@ -1059,7 +1380,7 @@ export function Projects() {
                 setActiveCategory(tab.key);
                 setActiveIndex(0);
               }}
-              className={`px-3 py-1 sm:px-3.5 sm:py-1 rounded-full text-[8.5px] sm:text-[9.5px] font-mono tracking-widest uppercase transition-all duration-300 cursor-pointer ${
+              className={`px-3 py-1 rounded-full text-[8.5px] font-mono tracking-widest uppercase transition-all duration-300 shrink-0 cursor-pointer ${
                 isActive
                   ? "border border-sky-400 bg-sky-950/80 text-sky-200 shadow-[0_0_14px_rgba(56,189,248,0.45)] scale-105"
                   : "border border-zinc-800/80 bg-[#030713]/60 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700"
@@ -1075,7 +1396,8 @@ export function Projects() {
       {/* 5. Central 3D Amphitheater Arena with Floating Project Cards          */}
       {/* ==================================================================== */}
       <div
-        className="relative z-20 w-full max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1760px] mx-auto flex-1 flex flex-col items-center justify-center my-0 py-0"
+        ref={carouselStageRef}
+        className="relative z-20 w-full max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1760px] mx-auto flex flex-col items-center justify-center my-0 py-0 will-change-transform"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -1083,7 +1405,7 @@ export function Projects() {
         {/* 3D Curved Cylindrical Carousel of Floating Cards                 */}
         {/* ================================================================ */}
         <div
-          className="relative w-full h-[350px] sm:h-[390px] md:h-[420px] lg:h-[440px] flex items-center justify-center"
+          className="relative w-full h-105 sm:h-90 md:h-97.5 lg:h-105 xl:h-110 flex items-center justify-center"
           style={{ perspective: "1500px" }}
         >
           {filteredProjects.map((project, idx) => {
@@ -1099,15 +1421,23 @@ export function Projects() {
 
             if (!isVisible) return null;
 
-            // Compute 3D Cylindrical Geometry
-            // center card: rotY=0, transX=0, scale=1
-            // left card: rotY=22, transX=-340px, scale=0.88
-            // right card: rotY=-22, transX=340px, scale=0.88
+            // Responsive 3D Cylindrical Geometry
             const rotateY = diff * -18;
-            const translateX = diff * 320;
+            const stepX = isMobileScreen ? 235 : 350;
+            const translateX = diff * stepX;
             const translateZ =
-              Math.abs(diff) === 0 ? 80 : -Math.abs(diff) * 110;
-            const scale = isCenter ? 1.05 : isImmediate ? 0.88 : 0.76;
+              Math.abs(diff) === 0
+                ? isMobileScreen
+                  ? 40
+                  : 80
+                : -Math.abs(diff) * (isMobileScreen ? 70 : 110);
+            const scale = isCenter
+              ? 1.0
+              : isImmediate
+                ? isMobileScreen
+                  ? 0.85
+                  : 0.88
+                : 0.74;
             const opacity = isCenter ? 1 : isImmediate ? 0.72 : 0.38;
             const zIndex = 30 - Math.abs(diff) * 10;
 
@@ -1121,94 +1451,66 @@ export function Projects() {
                   zIndex,
                   transition: "all 600ms cubic-bezier(0.25, 1, 0.5, 1)",
                 }}
-                className={`absolute w-[92vw] max-w-[370px] sm:max-w-[430px] md:max-w-[480px] lg:max-w-[530px] rounded-xl border overflow-hidden cursor-pointer backdrop-blur-xl transition-[border-color,box-shadow] duration-500 will-change-transform ${
+                className={`group absolute w-[94vw] max-w-85 sm:max-w-130 md:max-w-150 lg:max-w-170 xl:max-w-185 h-117.5 sm:h-80 md:h-86.25 lg:h-92.5 xl:h-96.25 rounded-2xl border overflow-hidden cursor-pointer transition-[border-color,box-shadow] duration-500 ${
                   isCenter
-                    ? "bg-[#030919]/95 border-sky-400/90 shadow-[0_0_35px_rgba(56,189,248,0.38),0_20px_50px_rgba(0,0,0,0.95)]"
-                    : "bg-[#02050f]/85 border-sky-500/25 shadow-[0_10px_30px_rgba(0,0,0,0.85)] hover:border-sky-400/50 hover:opacity-90"
+                    ? "bg-[#020614] border-sky-400/80 shadow-[0_0_35px_rgba(56,189,248,0.22),0_25px_60px_rgba(0,0,0,0.95)]"
+                    : "bg-[#02050f] border-sky-500/20 shadow-[0_15px_40px_rgba(0,0,0,0.85)] hover:border-sky-400/40 hover:opacity-90"
                 }`}
               >
                 {/* Luminous Top Seam Beam for Active Card */}
                 {isCenter && (
                   <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute top-0 inset-x-0 h-1 bg-linear-to-r from-transparent via-sky-300 to-transparent shadow-[0_0_14px_#38bdf8] z-30"
+                    className="pointer-events-none absolute top-0 inset-x-0 h-0.5 bg-linear-to-r from-transparent via-sky-300 to-transparent shadow-[0_0_12px_#38bdf8] z-30"
                   />
                 )}
 
-                {/* Card Top Window HUD Bar */}
-                <div className="relative z-10 w-full flex items-center justify-between px-3.5 py-2.5 bg-[#01030a]/90 border-b border-sky-500/20">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-sky-400 tracking-wider">
-                      {project.number}
-                    </span>
-                    <span className="text-zinc-600">/</span>
-                    <span className="font-mono text-[8.5px] tracking-[0.22em] text-zinc-300 uppercase truncate max-w-[200px] sm:max-w-[280px]">
-                      {project.category}
-                    </span>
-                  </div>
-
-                  {/* Window Control LED Dots */}
-                  <div className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-400/80" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-300/60" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40" />
-                  </div>
-                </div>
-
-                {/* Card Main Body: Split between Title Info & Live Visual Mockup */}
-                <div className="p-3.5 sm:p-4 flex flex-col justify-between gap-3">
-                  {/* Title & Client Scope */}
-                  <div>
-                    <h3 className="font-cinzel text-base sm:text-lg md:text-xl font-bold tracking-wide text-white leading-snug line-clamp-1 group-hover:text-sky-200">
-                      {project.title}
-                    </h3>
-                    <p className="font-mono text-[9px] sm:text-[9.5px] text-sky-400/90 tracking-widest uppercase mt-0.5">
-                      {project.clientOrScope}
-                    </p>
-                  </div>
-
-                  {/* High-Tech Visual Mockup Screen Frame */}
-                  <div className="relative w-full h-32 sm:h-36 md:h-40 rounded-lg border border-sky-500/30 overflow-hidden bg-[#02050f] shadow-inner">
-                    <ProjectMockupVisual
-                      type={project.mockupType}
-                      item={project}
-                    />
-                  </div>
-
-                  {/* Key Metrics Chips */}
-                  <div className="grid grid-cols-2 gap-2 text-[8px] sm:text-[8.5px] font-mono">
-                    {project.metrics.slice(0, 2).map((m, mIdx) => (
-                      <div
-                        key={mIdx}
-                        className="bg-[#020612]/90 border border-sky-500/20 px-2 py-1 rounded flex items-center justify-between"
-                      >
-                        <span className="text-zinc-400">{m.label}:</span>
-                        <span className="font-bold text-sky-300">
-                          {m.value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Card Footer: Tech Stack Badges & CTA */}
-                  <div className="flex items-center justify-between pt-1 border-t border-sky-500/15 gap-2">
-                    <div className="flex items-center gap-1 overflow-x-hidden flex-1">
-                      {project.techStack.slice(0, 3).map((tech) => (
-                        <span
-                          key={tech}
-                          className="text-[8px] font-mono text-zinc-400 bg-sky-950/40 border border-sky-500/20 px-1.5 py-0.5 rounded truncate"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                      {project.techStack.length > 3 && (
-                        <span className="text-[8px] font-mono text-zinc-500">
-                          +{project.techStack.length - 3}
-                        </span>
-                      )}
+                {/* Modern Classic Landscape 2-Column Split (Stacked on Mobile) */}
+                <div className="flex flex-col-reverse sm:flex-row h-full w-full">
+                  {/* Left Column: Minimalist Editorial Typography & Details */}
+                  <div className="w-full sm:w-[42%] lg:w-[38%] p-3.5 sm:p-4.5 lg:p-5 flex flex-col justify-between shrink-0 bg-[#020614] sm:bg-[#020614]/90 relative z-20 flex-1 border-b sm:border-b-0 sm:border-r border-sky-500/20">
+                    {/* Top: Project Number & Category */}
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs sm:text-sm font-bold text-sky-400 tracking-wider">
+                        {project.number}
+                      </span>
+                      <span className="text-zinc-600">/</span>
+                      <span className="font-mono text-[8.5px] sm:text-[9.5px] tracking-[0.22em] text-zinc-300 uppercase truncate">
+                        {project.category}
+                      </span>
                     </div>
 
-                    {/* View Project Button */}
+                    {/* Middle: Elegant Serif Title, Scope, Summary & Tech Stack */}
+                    <div className="my-auto py-1 sm:py-0">
+                      <h3 className="font-cinzel text-base sm:text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-white leading-snug group-hover:text-sky-200 transition-colors">
+                        {project.shortTitle || project.title}
+                      </h3>
+                      <p className="font-mono text-[8.5px] sm:text-[9.5px] text-sky-300 font-semibold tracking-wider uppercase mt-1 leading-snug">
+                        {project.clientOrScope}
+                      </p>
+                      <p className="font-montserrat text-xs text-zinc-100 leading-relaxed mt-2 sm:mt-2.5 line-clamp-2 sm:line-clamp-3 font-normal">
+                        {project.summary}
+                      </p>
+
+                      {/* Understated Tech Stack Badges */}
+                      <div className="flex items-center gap-1.5 flex-wrap mt-2.5 sm:mt-3">
+                        {project.techStack.slice(0, 4).map((tech) => (
+                          <span
+                            key={tech}
+                            className="text-[7.5px] sm:text-[8px] font-mono text-sky-200 bg-sky-950/80 border border-sky-400/40 px-2 py-0.5 rounded-md font-semibold"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                        {project.techStack.length > 4 && (
+                          <span className="text-[7.5px] sm:text-[8px] font-mono text-zinc-400">
+                            +{project.techStack.length - 4}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Bottom: Modern Classic, User-Friendly CTA Button */}
                     <button
                       type="button"
                       onClick={(e) => {
@@ -1216,11 +1518,19 @@ export function Projects() {
                         setSelectedProject(project);
                         setModalGalleryIndex(0);
                       }}
-                      className="group/cta inline-flex items-center gap-1 px-3 py-1.5 rounded-sm border border-sky-400/70 bg-sky-950/70 hover:bg-sky-400 hover:text-black text-sky-300 font-mono text-[9px] tracking-wider uppercase transition-all duration-300 shrink-0 cursor-pointer shadow-[0_0_12px_rgba(56,189,248,0.25)]"
+                      className="group/cta inline-flex items-center gap-2.5 self-start px-5 sm:px-5.5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-montserrat font-bold text-xs tracking-wider uppercase transition-all duration-300 cursor-pointer shadow-[0_4px_20px_rgba(56,189,248,0.4)] hover:bg-sky-300 hover:shadow-[0_6px_28px_rgba(56,189,248,0.65)] hover:-translate-y-0.5 active:translate-y-0 mt-2 sm:mt-0"
                     >
-                      <span>VIEW PROJECT</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5" />
+                      <span>View Project</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5 text-slate-950" />
                     </button>
+                  </div>
+
+                  {/* Right Column: Cyber-Browser Visual Preview (Cleanly Set in Area) */}
+                  <div className="w-full sm:w-[58%] lg:w-[62%] h-52 sm:h-full relative overflow-hidden bg-[#01030a] shrink-0">
+                    <ProjectMockupVisual
+                      type={project.mockupType}
+                      item={project}
+                    />
                   </div>
                 </div>
               </div>
@@ -1232,13 +1542,16 @@ export function Projects() {
       {/* ==================================================================== */}
       {/* 6. Bottom Navigation Controls & Interactive Pagination Dots          */}
       {/* ==================================================================== */}
-      <div className="relative z-30 w-full max-w-7xl mx-auto flex items-center justify-between pt-4 pb-2 border-t border-sky-500/15">
-        <span className="font-mono text-[8.5px] sm:text-[9.5px] tracking-[0.24em] text-zinc-500 uppercase">
+      <div
+        ref={bottomBarRef}
+        className="relative z-30 w-full max-w-7xl mx-auto flex items-center justify-between mt-2 sm:mt-3 pt-2.5 pb-1 border-t border-sky-500/15 will-change-transform gap-2"
+      >
+        <span className="hidden sm:inline font-mono text-[8.5px] sm:text-[9.5px] tracking-[0.24em] text-zinc-500 uppercase">
           PROJECT MATRIX · 3D ORBIT ARTIFACT
         </span>
 
         {/* Interactive Dots for all projects */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 mx-auto sm:mx-0">
           {filteredProjects.map((p, idx) => {
             const isActive = idx === safeIndex;
             return (
@@ -1249,7 +1562,7 @@ export function Projects() {
                 aria-label={`Jump to ${p.title}`}
                 className={`transition-all duration-300 rounded-full cursor-pointer ${
                   isActive
-                    ? "w-6 sm:w-8 h-1.5 bg-sky-400 shadow-[0_0_10px_#38bdf8]"
+                    ? "w-5 sm:w-8 h-1.5 bg-sky-400 shadow-[0_0_10px_#38bdf8]"
                     : "w-1.5 sm:w-2 h-1.5 bg-zinc-700 hover:bg-sky-500/70"
                 }`}
               />
@@ -1263,7 +1576,7 @@ export function Projects() {
             setSelectedProject(activeProject);
             setModalGalleryIndex(0);
           }}
-          className="inline-flex items-center gap-1 font-mono text-[8.5px] sm:text-[9.5px] tracking-[0.2em] text-sky-400 uppercase hover:text-white transition cursor-pointer"
+          className="inline-flex items-center gap-1 font-mono text-[8px] sm:text-[9.5px] tracking-[0.2em] text-sky-400 uppercase hover:text-white transition cursor-pointer shrink-0"
         >
           <span>INSPECT DETAILS</span>
           <ArrowUpRight className="w-3 h-3" />
@@ -1320,121 +1633,131 @@ export function Projects() {
               </div>
 
               {/* Interactive Enterprise Gallery Showcase */}
-              {selectedProject.gallery && selectedProject.gallery.length > 0 && (
-                <div className="space-y-3 bg-[#01040e] border border-sky-500/30 rounded-xl p-3 sm:p-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-mono text-xs tracking-widest text-sky-400 uppercase flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-sky-400" />
-                      <span>ENTERPRISE SYSTEM SCREENSHOTS & REAL WORKFLOWS</span>
-                    </h4>
-                    <div className="flex items-center gap-1.5 font-mono text-[9.5px] text-zinc-400">
-                      <span className="text-sky-300 font-bold">
-                        {String(modalGalleryIndex + 1).padStart(2, "0")}
-                      </span>
-                      <span>/</span>
-                      <span>
-                        {String(selectedProject.gallery.length).padStart(2, "0")}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Primary Image Viewport */}
-                  <div className="relative w-full aspect-16/9 rounded-lg overflow-hidden border border-sky-500/30 bg-[#010206] shadow-[0_0_35px_rgba(0,0,0,0.95)]">
-                    <Image
-                      src={selectedProject.gallery[modalGalleryIndex].src}
-                      alt={selectedProject.gallery[modalGalleryIndex].title}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 980px"
-                      className="object-contain sm:object-cover object-top transition-all duration-300"
-                      priority
-                    />
-
-                    {/* Top Floating Badge */}
-                    <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
-                      <span className="px-2.5 py-1 rounded-full bg-[#02050f]/90 border border-sky-400/60 text-[9px] font-mono tracking-widest text-sky-200 uppercase font-bold shadow-[0_0_12px_rgba(56,189,248,0.4)] backdrop-blur-md">
-                        {selectedProject.gallery[modalGalleryIndex].badge}
-                      </span>
-                    </div>
-
-                    {/* Prev / Next Chevrons */}
-                    {selectedProject.gallery.length > 1 && (
-                      <div className="absolute inset-y-0 inset-x-2 flex items-center justify-between pointer-events-none z-10">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setModalGalleryIndex((prev) =>
-                              prev > 0
-                                ? prev - 1
-                                : selectedProject.gallery!.length - 1,
-                            );
-                          }}
-                          aria-label="Previous screenshot"
-                          className="pointer-events-auto p-2 rounded-full bg-[#02050f]/85 border border-sky-500/40 text-zinc-200 hover:text-white hover:border-sky-400 hover:scale-110 active:scale-95 transition-all shadow-[0_0_14px_rgba(0,0,0,0.8)] cursor-pointer"
-                        >
-                          <ChevronLeft className="w-4 h-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setModalGalleryIndex((prev) =>
-                              prev < selectedProject.gallery!.length - 1
-                                ? prev + 1
-                                : 0,
-                            );
-                          }}
-                          aria-label="Next screenshot"
-                          className="pointer-events-auto p-2 rounded-full bg-[#02050f]/85 border border-sky-500/40 text-zinc-200 hover:text-white hover:border-sky-400 hover:scale-110 active:scale-95 transition-all shadow-[0_0_14px_rgba(0,0,0,0.8)] cursor-pointer"
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </button>
+              {selectedProject.gallery &&
+                selectedProject.gallery.length > 0 && (
+                  <div className="space-y-3 bg-[#01040e] border border-sky-500/30 rounded-xl p-3 sm:p-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-mono text-xs tracking-widest text-sky-400 uppercase flex items-center gap-2">
+                        <AppWindow className="w-3.5 h-3.5 text-sky-400" />
+                        <span>
+                          ENTERPRISE SYSTEM SCREENSHOTS & REAL WORKFLOWS
+                        </span>
+                      </h4>
+                      <div className="flex items-center gap-1.5 font-mono text-[9.5px] text-zinc-400">
+                        <span className="text-sky-300 font-bold">
+                          {String(modalGalleryIndex + 1).padStart(2, "0")}
+                        </span>
+                        <span>/</span>
+                        <span>
+                          {String(selectedProject.gallery.length).padStart(
+                            2,
+                            "0",
+                          )}
+                        </span>
                       </div>
-                    )}
-                  </div>
-
-                  {/* Caption Box */}
-                  <div className="bg-[#030919]/90 border border-sky-500/20 rounded-lg p-3">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <h5 className="font-cinzel text-sm sm:text-base font-bold text-sky-200">
-                        {selectedProject.gallery[modalGalleryIndex].title}
-                      </h5>
                     </div>
-                    <p className="font-montserrat text-xs text-zinc-300 leading-relaxed mt-1">
-                      {selectedProject.gallery[modalGalleryIndex].caption}
-                    </p>
-                  </div>
 
-                  {/* Thumbnail Strip */}
-                  <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
-                    {selectedProject.gallery.map((thumb, tIdx) => {
-                      const isCurrent = tIdx === modalGalleryIndex;
-                      return (
-                        <button
-                          key={thumb.src}
-                          type="button"
-                          onClick={() => setModalGalleryIndex(tIdx)}
-                          aria-label={`View ${thumb.title}`}
-                          className={`relative shrink-0 w-20 sm:w-24 aspect-16/10 rounded-md overflow-hidden border transition-all cursor-pointer ${
-                            isCurrent
-                              ? "border-sky-400 ring-2 ring-sky-400/80 shadow-[0_0_14px_rgba(56,189,248,0.6)] scale-105 opacity-100"
-                              : "border-sky-500/25 opacity-55 hover:opacity-90 hover:border-sky-400/60"
-                          }`}
-                        >
-                          <Image
-                            src={thumb.src}
-                            alt={thumb.title}
-                            fill
-                            sizes="100px"
-                            className="object-cover object-top"
-                          />
-                        </button>
-                      );
-                    })}
+                    {/* Primary Image Viewport with Hover Zoom & Click to Full Size */}
+                    <div
+                      className="group/img relative w-full aspect-video rounded-xl overflow-hidden border border-sky-500/30 bg-[#010206] shadow-[0_0_35px_rgba(0,0,0,0.95)] cursor-zoom-in"
+                      onClick={() => setIsFullscreenLightbox(true)}
+                    >
+                      <Image
+                        src={selectedProject.gallery[modalGalleryIndex].src}
+                        alt={selectedProject.gallery[modalGalleryIndex].title}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 980px"
+                        className="object-contain sm:object-cover object-top transition-transform duration-500 group-hover/img:scale-105"
+                        priority
+                      />
+
+                      {/* Top Floating Badge */}
+                      <div className="absolute top-3 left-3 z-10 flex items-center gap-2 pointer-events-none">
+                        <span className="px-2.5 py-1 rounded-full bg-[#02050f]/90 border border-sky-400/60 text-[9px] font-mono tracking-widest text-sky-200 uppercase font-bold shadow-[0_0_12px_rgba(56,189,248,0.4)] backdrop-blur-md">
+                          {selectedProject.gallery[modalGalleryIndex].badge}
+                        </span>
+                      </div>
+
+                      {/* Hover / Tap Click to Full Size Cue */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsFullscreenLightbox(true);
+                        }}
+                        className="absolute bottom-3 right-3 z-20 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#02050f]/90 border border-sky-400/70 text-sky-200 text-[10px] font-mono tracking-wider uppercase backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.8)] hover:bg-sky-400 hover:text-black hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                      >
+                        <Maximize2 className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">VIEW FULL SIZE</span>
+                        <span className="sm:hidden">EXPAND</span>
+                      </button>
+
+                      {/* Prev / Next Chevrons */}
+                      {selectedProject.gallery.length > 1 && (
+                        <div className="absolute inset-y-0 inset-x-2 flex items-center justify-between pointer-events-none z-10">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setModalGalleryIndex((prev) =>
+                                prev > 0
+                                  ? prev - 1
+                                  : selectedProject.gallery!.length - 1,
+                              );
+                            }}
+                            aria-label="Previous screenshot"
+                            className="pointer-events-auto p-2 rounded-full bg-[#02050f]/85 border border-sky-500/40 text-zinc-200 hover:text-white hover:border-sky-400 hover:scale-110 active:scale-95 transition-all shadow-[0_0_14px_rgba(0,0,0,0.8)] cursor-pointer"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setModalGalleryIndex((prev) =>
+                                prev < selectedProject.gallery!.length - 1
+                                  ? prev + 1
+                                  : 0,
+                              );
+                            }}
+                            aria-label="Next screenshot"
+                            className="pointer-events-auto p-2 rounded-full bg-[#02050f]/85 border border-sky-500/40 text-zinc-200 hover:text-white hover:border-sky-400 hover:scale-110 active:scale-95 transition-all shadow-[0_0_14px_rgba(0,0,0,0.8)] cursor-pointer"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Thumbnail Strip */}
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
+                      {selectedProject.gallery.map((thumb, tIdx) => {
+                        const isCurrent = tIdx === modalGalleryIndex;
+                        return (
+                          <button
+                            key={thumb.src}
+                            type="button"
+                            onClick={() => setModalGalleryIndex(tIdx)}
+                            aria-label={`View ${thumb.title}`}
+                            className={`relative shrink-0 w-20 sm:w-24 aspect-16/10 rounded-md overflow-hidden border transition-all cursor-pointer ${
+                              isCurrent
+                                ? "border-sky-400 ring-2 ring-sky-400/80 shadow-[0_0_14px_rgba(56,189,248,0.6)] scale-105 opacity-100"
+                                : "border-sky-500/25 opacity-55 hover:opacity-90 hover:border-sky-400/60"
+                            }`}
+                          >
+                            <Image
+                              src={thumb.src}
+                              alt={thumb.title}
+                              fill
+                              sizes="100px"
+                              className="object-cover object-top"
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Summary */}
               <p className="font-montserrat text-sm leading-relaxed text-zinc-300 bg-[#040a18]/70 p-4 rounded-xl border border-sky-500/20">
@@ -1464,44 +1787,45 @@ export function Projects() {
               </div>
 
               {/* Subsystem Modules Breakdown (If configured) */}
-              {selectedProject.modules && selectedProject.modules.length > 0 && (
-                <div>
-                  <h4 className="font-mono text-xs tracking-widest text-zinc-400 uppercase mb-3 flex items-center gap-2">
-                    <Layers className="w-3.5 h-3.5 text-sky-400" />
-                    <span>ENTERPRISE ARCHITECTURE & SUBSYSTEM MODULES</span>
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {selectedProject.modules.map((mod, mIdx) => (
-                      <div
-                        key={mIdx}
-                        className="bg-[#030919]/90 border border-sky-500/20 hover:border-sky-500/40 rounded-xl p-3.5 transition-colors"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <h5 className="font-cinzel text-xs sm:text-sm font-bold text-sky-200">
-                            {mod.title}
-                          </h5>
-                          <span className="font-mono text-[7.5px] px-2 py-0.5 rounded-full bg-sky-950/80 border border-sky-500/30 text-sky-300 uppercase">
-                            {mod.category}
-                          </span>
+              {selectedProject.modules &&
+                selectedProject.modules.length > 0 && (
+                  <div>
+                    <h4 className="font-mono text-xs tracking-widest text-zinc-400 uppercase mb-3 flex items-center gap-2">
+                      <Layers className="w-3.5 h-3.5 text-sky-400" />
+                      <span>ENTERPRISE ARCHITECTURE & SUBSYSTEM MODULES</span>
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {selectedProject.modules.map((mod, mIdx) => (
+                        <div
+                          key={mIdx}
+                          className="bg-[#030919]/90 border border-sky-500/20 hover:border-sky-500/40 rounded-xl p-3.5 transition-colors"
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <h5 className="font-cinzel text-xs sm:text-sm font-bold text-sky-200">
+                              {mod.title}
+                            </h5>
+                            <span className="font-mono text-[7.5px] px-2 py-0.5 rounded-full bg-sky-950/80 border border-sky-500/30 text-sky-300 uppercase">
+                              {mod.category}
+                            </span>
+                          </div>
+                          <ul className="space-y-1.5">
+                            {mod.features.map((feat, fIdx) => (
+                              <li
+                                key={fIdx}
+                                className="flex items-start gap-1.5 text-[11px] text-zinc-300 leading-snug"
+                              >
+                                <span className="text-sky-400 font-bold shrink-0">
+                                  ›
+                                </span>
+                                <span>{feat}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                        <ul className="space-y-1.5">
-                          {mod.features.map((feat, fIdx) => (
-                            <li
-                              key={fIdx}
-                              className="flex items-start gap-1.5 text-[11px] text-zinc-300 leading-snug"
-                            >
-                              <span className="text-sky-400 font-bold shrink-0">
-                                ›
-                              </span>
-                              <span>{feat}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Engineering Highlights */}
               <div>
@@ -1569,6 +1893,182 @@ export function Projects() {
                 )}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==================================================================== */}
+      {/* 8. Fullscreen High-Resolution Image Lightbox & Zoom Viewer           */}
+      {/* ==================================================================== */}
+      {isFullscreenLightbox && selectedProject?.gallery && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-100 flex flex-col bg-black/95 backdrop-blur-2xl animate-in fade-in duration-300 select-none"
+          onClick={() => {
+            setIsFullscreenLightbox(false);
+            setIsLightboxZoomed(false);
+          }}
+        >
+          {/* Top Controls Bar */}
+          <div
+            className="flex items-center justify-between px-3 sm:px-6 py-2.5 sm:py-3 border-b border-sky-500/20 bg-[#02050f]/95 z-20 shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-2 sm:gap-3 truncate pr-2">
+              <span className="font-mono text-xs sm:text-sm font-bold text-sky-400 shrink-0">
+                {String(modalGalleryIndex + 1).padStart(2, "0")} /{" "}
+                {String(selectedProject.gallery.length).padStart(2, "0")}
+              </span>
+              <span className="text-zinc-600 hidden sm:inline">|</span>
+              <span className="font-cinzel text-xs sm:text-sm font-bold text-white truncate">
+                {selectedProject.gallery[modalGalleryIndex].title}
+              </span>
+            </div>
+
+            {/* Lightbox Controls */}
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+              {/* Zoom Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setIsLightboxZoomed((prev) => !prev)}
+                title={
+                  isLightboxZoomed
+                    ? "Zoom out (Fit screen)"
+                    : "Zoom in (Full size)"
+                }
+                className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-sky-500/40 bg-sky-950/60 text-sky-200 text-[10px] sm:text-xs font-mono hover:bg-sky-400 hover:text-black transition cursor-pointer"
+              >
+                {isLightboxZoomed ? (
+                  <>
+                    <ZoomOut className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">FIT SCREEN</span>
+                  </>
+                ) : (
+                  <>
+                    <ZoomIn className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">ZOOM IN</span>
+                  </>
+                )}
+              </button>
+
+              {/* Close Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsFullscreenLightbox(false);
+                  setIsLightboxZoomed(false);
+                }}
+                aria-label="Close full size view"
+                className="p-1 sm:p-1.5 rounded-full border border-zinc-700 bg-zinc-900/80 text-zinc-300 hover:text-white hover:border-sky-400 transition cursor-pointer"
+              >
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Main Image Stage with Pan/Zoom & Swipe */}
+          <div
+            className={`relative flex-1 w-full overflow-auto flex items-center justify-center p-2 sm:p-6 ${
+              isLightboxZoomed
+                ? "cursor-grab active:cursor-grabbing"
+                : "cursor-zoom-in"
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsLightboxZoomed((prev) => !prev);
+            }}
+            onTouchStart={handleLightboxTouchStart}
+            onTouchEnd={handleLightboxTouchEnd}
+          >
+            {/* Prev Chevron */}
+            {selectedProject.gallery.length > 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModalGalleryIndex((prev) =>
+                    prev > 0 ? prev - 1 : selectedProject.gallery!.length - 1,
+                  );
+                }}
+                aria-label="Previous screenshot"
+                className="absolute left-2 sm:left-6 z-30 p-2 sm:p-3 rounded-full bg-black/75 border border-sky-500/40 text-white hover:border-sky-400 hover:scale-110 active:scale-95 transition shadow-[0_0_20px_rgba(0,0,0,0.8)] cursor-pointer"
+              >
+                <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+              </button>
+            )}
+
+            {/* High-Resolution Screen Display */}
+            <div
+              className={`relative transition-all duration-300 flex items-center justify-center ${
+                isLightboxZoomed
+                  ? "w-[160vw] sm:w-[135vw] h-[160vh] sm:h-[135vh] max-w-none max-h-none shrink-0"
+                  : "w-full h-full max-h-[80vh] sm:max-h-[82vh]"
+              }`}
+            >
+              <Image
+                src={selectedProject.gallery[modalGalleryIndex].src}
+                alt={selectedProject.gallery[modalGalleryIndex].title}
+                fill
+                sizes="100vw"
+                className="object-contain"
+                priority
+              />
+            </div>
+
+            {/* Next Chevron */}
+            {selectedProject.gallery.length > 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModalGalleryIndex((prev) =>
+                    prev < selectedProject.gallery!.length - 1 ? prev + 1 : 0,
+                  );
+                }}
+                aria-label="Next screenshot"
+                className="absolute right-2 sm:right-6 z-30 p-2 sm:p-3 rounded-full bg-black/75 border border-sky-500/40 text-white hover:border-sky-400 hover:scale-110 active:scale-95 transition shadow-[0_0_20px_rgba(0,0,0,0.8)] cursor-pointer"
+              >
+                <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+              </button>
+            )}
+          </div>
+
+          {/* Bottom Thumbnail Strip & Mobile Guidance */}
+          <div
+            className="px-3 sm:px-6 py-2 sm:py-2.5 border-t border-sky-500/20 bg-[#02050f]/95 z-20 shrink-0 flex items-center justify-between gap-3"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1">
+              {selectedProject.gallery.map((thumb, tIdx) => {
+                const isCurrent = tIdx === modalGalleryIndex;
+                return (
+                  <button
+                    key={thumb.src}
+                    type="button"
+                    onClick={() => setModalGalleryIndex(tIdx)}
+                    aria-label={`View ${thumb.title}`}
+                    className={`relative shrink-0 w-14 sm:w-20 aspect-16/10 rounded-md overflow-hidden border transition-all cursor-pointer ${
+                      isCurrent
+                        ? "border-sky-400 ring-2 ring-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.7)] scale-105 opacity-100"
+                        : "border-sky-500/30 opacity-50 hover:opacity-90 hover:border-sky-400/60"
+                    }`}
+                  >
+                    <Image
+                      src={thumb.src}
+                      alt={thumb.title}
+                      fill
+                      sizes="80px"
+                      className="object-cover object-top"
+                    />
+                  </button>
+                );
+              })}
+            </div>
+
+            <span className="hidden sm:inline font-mono text-[9px] text-zinc-400 shrink-0">
+              Tap image to toggle 100% zoom · Swipe or arrow keys to browse
+            </span>
           </div>
         </div>
       )}
